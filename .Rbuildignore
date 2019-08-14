@@ -3,3 +3,4 @@
 ^working$
 ^README\.Rmd$
 ^crap.pdf$
+^\.travis\.yml$

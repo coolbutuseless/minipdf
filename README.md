@@ -5,7 +5,8 @@
 
 <!-- badges: start -->
 
-![](http://img.shields.io/badge/cool-useless-green.svg)
+![](http://img.shields.io/badge/cool-useless-green.svg) [![Travis build
+status](https://travis-ci.org/coolbutuseless/minipdf.svg?branch=master)](https://travis-ci.org/coolbutuseless/minipdf)
 <!-- badges: end -->
 
 `minipdf` is a package for creating simple, single-page PDF documents
