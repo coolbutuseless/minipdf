@@ -1,0 +1,5 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^working$
+^README\.Rmd$
+^crap.pdf$
