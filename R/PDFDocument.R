@@ -605,7 +605,7 @@ PDFDocument$set(
   function(text, x, y, size = 12, angle = 0, fill = '#000000', stroke = '#000000',
            text_mode = 0, linewidth = 1, linetype = 0) {
 
-    geom <- glue("BT /F1 {size} Tf {x} {y} Td {text_mode} Tr s({text})Tj ET")
+    geom <- glue("BT /F1 {size} Tf {x} {y} Td {text_mode} Tr ({text})Tj ET")
     self$add_geom_stream(geom = geom, fill = fill, stroke = stroke, angle = angle,
                          rx = x, ry = y,
                          linewidth = linewidth, linetype = linetype)
@@ -872,6 +872,13 @@ if (FALSE) {
 
 }
 
+
+
+if (FALSE) {
+  pdfdoc <- minipdf::PDFDocument$new(width = 400, height = 400)
+  pdfdoc$add_text(text = "hello", x = 200, y = 200)
+  pdfdoc$write_pdf("only-text.pdf")
+}
 
 
 
