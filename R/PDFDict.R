@@ -1,0 +1,109 @@
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' PDF Dictionary object creator
+#'
+#' @import R6
+#' @import glue
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PDFDict <- R6::R6Class(
+  "PDFDict",
+
+  public = list(
+    dict = NULL,
+
+    initialize = function(...) {
+      varargs <- list(...)
+      if (!all_named(varargs)) {
+        stop("PDFDict$new(): All arguments must be named")
+      }
+      self$dict <- varargs
+      invisible(self)
+    },
+
+    update = function(...) {
+      varargs <- list(...)
+      if (!all_named(varargs)) {
+        stop("PDFDict$update(): All arguments must be named")
+      }
+      self$dict <- modifyList(self$dict, varargs)
+      invisible(self)
+    },
+
+    as_character = function(depth = 0) {
+      indent1 <- paste0(rep("  ", depth     ), collapse = "")
+      indent2 <- paste0(rep("  ", depth + 1L), collapse = "")
+
+
+      contents <- c()
+      for (i in seq_along(self$dict)) {
+        name <- names(self$dict[i])
+        item <- self$dict[[i]]
+        item_content <- as.character(item, depth = depth + 1L)
+        item_content <- glue("{indent2}/{name} {item_content}")
+        contents <- c(contents, item_content)
+      }
+
+      contents <- paste(contents, collapse = "\n")
+
+      paste0("<<\n", contents, "\n", indent1, ">>")
+    },
+
+    print = function() {
+      cat(self$as_character(), "\n")
+    },
+
+    as_object = function(obj_idx) {
+      glue("{obj_idx} 0 obj\n{self$as_character()}\nendobj")
+    },
+
+    copy = function() {
+      self$clone(deep = TRUE)
+    }
+  ),
+
+  private = list(
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # When called with `$clone(deep = TRUE)`, the 'deep_clone' function is
+    # called for every name/value pair in the object.
+    # See: https://r6.r-lib.org/articles/Introduction.html
+    # Need special handling for:
+    #   - 'dict' as it a list of R6 objects
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    deep_clone = function(name, value) {
+      if (name == 'dict') {
+        lapply(value, function(x) {if (inherits(x, "R6")) x$clone(deep = TRUE) else x})
+      } else {
+        value
+      }
+    }
+  )
+)
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Wrapper to help create a PDFDict object
+#'
+#' @param ... arguments passed to \code{PDFDict$new()}
+#'
+#' @return PDFDict R6 object
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dict <- function(...) {
+  PDFDict$new(...)
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' S3 method for converting PDFDict to character
+#'
+#' @param x object
+#' @param ... unused
+#'
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+as.character.PDFDict <- function(x, ...) {
+  x$as_character(...)
+}
+

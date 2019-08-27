@@ -1,0 +1,104 @@
+%PDF-1.2
+1 0 obj
+<<
+  /Type /Catalog
+  /Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+  /Type /Pages
+  /Kids [3 0 R]
+  /Count 1
+>>
+endobj
+3 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /Resources 4 0 R
+  /MediaBox [0 0 200 60]
+  /Contents [6 0 R 7 0 R 8 0 R 9 0 R]
+>>
+endobj
+4 0 obj
+<<
+  /Font <<
+    /F1 5 0 R
+  >>
+  /ExtGState << /GS11 <</ca 1 /CA 1>> >>
+>>
+endobj
+5 0 obj
+<<
+  /Type /Font
+  /Subtype /Type1
+  /BaseFont /Helvetica-Bold
+>>
+endobj
+6 0 obj
+<< /Length 48 >>
+stream
+/GS11 gs
+0 0 m
+200 0 l
+200 60 l
+0 60 l
+0 0 l W n
+endstream
+endobj
+7 0 obj
+<< /Length 90 >>
+stream
+q
+1 w
+/GS11 gs
+0.0705882352941176 0.203921568627451 0.337254901960784 rg
+0 0 200 60 re f
+Q
+endstream
+endobj
+8 0 obj
+<< /Length 90 >>
+stream
+q
+1 w
+/GS11 gs
+1 1 1 rg
+0 0 0 RG
+BT
+  /F1 20 Tf
+  10 15 Td
+  0 Tr
+  (Hello World!) Tj
+ET
+Q
+endstream
+endobj
+9 0 obj
+<< /Length 49 >>
+stream
+q
+1 w
+/GS11 gs
+0.8 0.8 0.8 RG
+0 10 m 200 10 l s
+Q
+endstream
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000008 00000 n 
+0000000061 00000 n 
+0000000124 00000 n 
+0000000257 00000 n 
+0000000349 00000 n 
+0000000430 00000 n 
+0000000528 00000 n 
+0000000668 00000 n 
+0000000808 00000 n 
+trailer <</Size 10/Root 1 0 R>>
+startxref
+907
+%%EOF

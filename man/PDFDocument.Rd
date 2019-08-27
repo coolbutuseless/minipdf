@@ -3,60 +3,22 @@
 \docType{data}
 \name{PDFDocument}
 \alias{PDFDocument}
-\title{PDF Document Class}
+\title{PDF Document creator}
 \format{An object of class \code{R6ClassGenerator} of length 24.}
 \usage{
 PDFDocument
 }
 \description{
-R6 class for creating simple, single-page PDF documents
-}
-\details{
 \itemize{
-\item{\code{$initialize()}} \itemize{
-  \item{\code{width,height}} - Page dimensions (pixels)
-  \item{\code{font}} - name of font. One of: Times-Roman, Times-Bold, Times-Italic,
-       Times-BoldItalic, Helvetica, Helvetica-Bold, Helvetica-Oblique,
-       Helvetica-BoldOblique, Courier, Courier-Bold, Courier-Oblique,
-       Courier-BoldOblique, Symbol, ZapfDingbats
-  \item{\code{version}} - PDF version. Default: 1.2
-}
-\item{\code{$write_pdf()}} \itemize{
-  \item{\code{filename}} - name of output file
-}
-\item{\code{$set_clip_rect()}} \itemize{
-  \item{\code{x,y,width,height}} - dimensions of clipping rectangle
-}
-\item{\code{$add_text()}} \itemize{
-  \item{\code{text}} - string
-  \item{\code{x,y}} - location of text
-  \item{\code{size}} - font size. Default: 12
-  \item{\code{angle}} - rotation angle. Default: 0
-  \item{\code{text_mode}} - Integer. 0 = fill only. 1 = stroke only. 2 = stroke and fill. Default: 0
-  \item{\code{fill,stroke}} - Colours. May be given as hex-colour \code{'#123456'}, RGB vector \code{c(0, 200, 12)}, or RGBA vector e.g. \code{c(0, 156, 255, 255)}
-  \item{\code{linewidth}} - line width in pixels
-  \item{\code{linetype}} - Integer from 0 (solid) to 6 (twodash)
-}
-\item{\code{$add_rect()}} \itemize{
-  \item{\code{x,y,width,height}} - location and size of rectangle
-  \item{\code{fill,stroke,linewidth,linetype}} - See documentation for other methods
-}
-\item{\code{$add_circle()}} \itemize{
-  \item{\code{x,y,r}} - Location and radius of circle
-  \item{\code{fill,stroke,linewidth,linetype}} - See documentation for other methods
-}
-\item{\code{$add_line()}} \itemize{
-  \item{\code{x1,y1,x2,y2}} - Coordinates of line endpoints
-  \item{\code{stroke,linewidth,linetype}} - See documentation for other methods
-}
-\item{\code{$add_polyline()}} \itemize{
-  \item{\code{xs,ys}} - vectors of coordinates of each point along the polyline
-  \item{\code{stroke,linewidth,linetype}} - See documentation for other methods
-}
-\item{\code{$add_polygon()}} \itemize{
-  \item{\code{xs,ys}} - vectors of coordinates of each point along the polygon
-  \item{\code{fill,stroke,linewidth,linetype}} - See documentation for other methods
-}
+\item{\code{fontname} - default: Helvetica. Choose one of the standard PDF
+fonts: Times-Roman, Times-Bold,
+Times-Italic, Times-BoldItalic, Helvetica, Helvetica-Bold, Helvetica-Oblique,
+Helvetica-BoldOblique, Courier, Courier-Bold, Courier-Oblique, Courier-BoldOblique,
+Symbol, ZapfDingbats}
+\item{\code{width.height} document dimensions. Default 400x400}
+\item{\code{version} Default: 1.2.  Doesn't do anything other than set the string at the
+       beginning of the PDF document.}
+\item{\code{...} PDF objects}
 }
 }
 \keyword{datasets}

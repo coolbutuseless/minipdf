@@ -1,0 +1,155 @@
+%PDF-1.2
+1 0 obj
+<<
+  /Type /Catalog
+  /Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+  /Type /Pages
+  /Kids [3 0 R]
+  /Count 1
+>>
+endobj
+3 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /Resources 4 0 R
+  /MediaBox [0 0 450 200]
+  /Contents [6 0 R 7 0 R 8 0 R 9 0 R 10 0 R 11 0 R 12 0 R 13 0 R]
+>>
+endobj
+4 0 obj
+<<
+  /Font <<
+    /F1 5 0 R
+  >>
+  /ExtGState << /GS11 <</ca 1 /CA 1>> /GS0.191 <</ca 0.19 /CA 1>> >>
+>>
+endobj
+5 0 obj
+<<
+  /Type /Font
+  /Subtype /Type1
+  /BaseFont /Helvetica
+>>
+endobj
+6 0 obj
+<< /Length 96 >>
+stream
+q
+1 0 0 1 0 50 cm
+1 w
+/GS11 gs
+0.545098039215686 0 0 rg
+0 0 m 75 -50 l 150 0 l 75 50 l 0 0 l f
+Q
+endstream
+endobj
+7 0 obj
+<< /Length 131 >>
+stream
+q
+1 0 0 1 150 50 cm
+1 w
+/GS11 gs
+0.0705882352941176 0.203921568627451 0.337254901960784 rg
+0 0 m 75 -50 l 150 0 l 75 50 l 0 0 l f
+Q
+endstream
+endobj
+8 0 obj
+<< /Length 98 >>
+stream
+q
+1 0 0 1 300 50 cm
+1 w
+/GS11 gs
+0.545098039215686 0 0 rg
+0 0 m 75 -50 l 150 0 l 75 50 l 0 0 l f
+Q
+endstream
+endobj
+9 0 obj
+<< /Length 130 >>
+stream
+q
+1 0 0 1 0 150 cm
+1 w
+/GS11 gs
+0.0705882352941176 0.203921568627451 0.337254901960784 rg
+0 0 m 75 -50 l 150 0 l 75 50 l 0 0 l f
+Q
+endstream
+endobj
+10 0 obj
+<< /Length 99 >>
+stream
+q
+1 0 0 1 150 150 cm
+1 w
+/GS11 gs
+0.545098039215686 0 0 rg
+0 0 m 75 -50 l 150 0 l 75 50 l 0 0 l f
+Q
+endstream
+endobj
+11 0 obj
+<< /Length 132 >>
+stream
+q
+1 0 0 1 300 150 cm
+1 w
+/GS11 gs
+0.0705882352941176 0.203921568627451 0.337254901960784 rg
+0 0 m 75 -50 l 150 0 l 75 50 l 0 0 l f
+Q
+endstream
+endobj
+12 0 obj
+<< /Length 158 >>
+stream
+q
+1 0 0 1 75 100 cm
+2 0 0 2 0 0 cm
+2 w
+/GS0.191 gs
+0.0705882352941176 0.203921568627451 0.337254901960784 rg
+1 1 1 RG
+0 0 m 75 -50 l 150 0 l 75 50 l 0 0 l b
+Q
+endstream
+endobj
+13 0 obj
+<< /Length 50 >>
+stream
+/GS11 gs
+0 0 m
+450 0 l
+450 200 l
+0 200 l
+0 0 l W n
+endstream
+endobj
+xref
+0 14
+0000000000 65535 f 
+0000000008 00000 n 
+0000000061 00000 n 
+0000000124 00000 n 
+0000000286 00000 n 
+0000000406 00000 n 
+0000000482 00000 n 
+0000000628 00000 n 
+0000000810 00000 n 
+0000000958 00000 n 
+0000001139 00000 n 
+0000001289 00000 n 
+0000001473 00000 n 
+0000001683 00000 n 
+trailer <</Size 14/Root 1 0 R>>
+startxref
+1784
+%%EOF

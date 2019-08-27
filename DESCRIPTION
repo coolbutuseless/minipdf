@@ -1,7 +1,7 @@
 Package: minipdf
 Type: Package
 Title: Pure R Minimal PDF Document Builder
-Version: 0.1.0
+Version: 0.2.0
 Author: mikefc
 Maintainer: mikefc <mikefc@coolbutuseless.com>
 Description: Minimal PDF document builder.
@@ -12,3 +12,8 @@ RoxygenNote: 6.1.1
 Imports:
     R6,
     glue
+Suggests: 
+    knitr,
+    rmarkdown,
+    viridisLite
+VignetteBuilder: knitr

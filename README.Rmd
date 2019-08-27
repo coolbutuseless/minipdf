@@ -19,6 +19,49 @@ suppressPackageStartupMessages({
   library(minipdf)
 })
 ```
+
+
+
+
+
+```{r echo = FALSE, eval = FALSE}
+# Quick logo generation. Borrowed heavily from Nick Tierney's Syn logo process
+library(magick)
+library(showtext)
+font_add_google("Abril Fatface", "gf")
+
+
+# pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/package/minipdf"))
+```
+
+
+```{r echo = FALSE, eval = FALSE}
+img <- image_read("man/figures/mini-cooper-s.gif") %>%
+  image_transparent(color = "#f9fafb", fuzz = 10) %>%
+  image_trim() %>%
+  image_threshold()
+
+
+hexSticker::sticker(subplot  = img,
+                    s_x      = 0.92,
+                    s_y      = 1.2,
+                    s_width  = 1.5,
+                    s_height = 0.95,
+                    package  = "pdf",
+                    p_x      = 1,
+                    p_y      = 0.5,
+                    p_color  = "#223344",
+                    p_family = "gf",
+                    p_size   = 11,
+                    h_size   = 1.2,
+                    h_fill   = "#ffffff",
+                    h_color  = "#223344",
+                    filename = "man/figures/logo.png")
+
+image_read("man/figures/logo.png")
+```
+
+
 # minipdf <img src="man/figures/logo.png" align="right" height=230/>
 
 <!-- badges: start -->
@@ -26,32 +69,8 @@ suppressPackageStartupMessages({
 [![Travis build status](https://travis-ci.org/coolbutuseless/minipdf.svg?branch=master)](https://travis-ci.org/coolbutuseless/minipdf)
 <!-- badges: end -->
 
-`minipdf` is a package for creating simple, single-page PDF documents written in pure R.
+`minipdf` is a package for creating simple, single-page PDF documents.
 
-This package is very, very far from supporting the full [PDF spec](https://www.adobe.com/devnet/pdf/pdf_reference.html) 
-(which is over 750 pages!), but it supports enough to draw simple figures - for
-example the package logo was created with the package itself.
-
-
-#### Supported features
-
-* Documents with a single page only
-* Only one font per document (set during initialization)
-* Objects: Text, lines, polylines, polygons, rectangles and circles
-* Attributes: Fill colour (including alpha), stroke colour (including alpha), linewidth, linetype
-* Clipping regions
-
-Currently there is no support for annotations or any sort of text layout.
-
-
-## What's in the box
-
-* `PDFDocument` 
-    - an R6 class for building a PDF document
-    - object methods: `add_line()`, `add_rect()`, `add_polyline()`, `add_polygon()`, `add_text()`,
-      `add_circle()`, 
-    - other methods: `set_clip_rect()`, `write_pdf()`
-* A suite of functions that wrap the R6 class for easier use with a pipe.
 
 
 ## Installation
@@ -63,16 +82,88 @@ You can install the development version from [GitHub](https://github.com/coolbut
 devtools::install_github("coolbutuseless/minipdf")
 ```
 
-## Future possibilities
-
-* Better text handling (multiple fonts per document)
-* Annotations
+See the online documentation [here](https://coolbutuseless.github.io/package/minipdf/index.html) (thanks to [pkgdown](https://cran.r-project.org/package=pkgdown))
 
 
-## Shoulders of Giants
 
-* [R6 authors](https://cran.r-project.org/package=R6) for putting together such an intuitive OO system for R
-* [Raphael Sonabend](https://twitter.com/RaphaelS101) for writing the [R62S3](https://cran.r-project.org/package=R62S3) package - this package automatically creates wrappers for R6 methods so that they be called as regular functions. I've re-implemented a cut-down version of `R62S3::R62Fun()` as part of `minipdf`
+## `Hello-world.pdf`
+
+```{r}
+doc <- PDFDocument$new(width = 200, height = 60, fontname = 'Helvetica-Bold')
+doc$add_rect(0, 0, 200, 60, fill = '#123456', stroke = NULL)
+doc$add_text("Hello World!", x = 10, y = 15, fontsize = 20, fill = 'white')
+doc$add_line(0, 10, 200, 10, stroke = 'grey80')
+doc$save("man/figures/helloworld.pdf")
+```
+
+
+
+```{r echo = FALSE}
+system("convert -density 300 man/figures/helloworld.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/helloworld.png")
+knitr::include_graphics("man/figures/helloworld.png")
+```
+
+
+## Creating geometric patterns
+
+By copying and modifying/transforming a basic shape (e.g. a diamond) complex
+patterns can be built.
+
+```{r}
+xs <- c(0, 75, 150, 75, 0)
+ys <- c(0, -50, 0, 50, 0)
+diamond <- PDFPolygon$new(xs = xs, ys = ys, stroke = NULL)
+d1a <- diamond$copy()$update(fill = 'darkred', transform = c(tf$translate(  0,  50)))
+d1b <- diamond$copy()$update(fill = '#123456', transform = c(tf$translate(150,  50)))
+d1c <- diamond$copy()$update(fill = 'darkred', transform = c(tf$translate(300,  50)))
+d2a <- diamond$copy()$update(fill = '#123456', transform = c(tf$translate(  0, 150)))
+d2b <- diamond$copy()$update(fill = 'darkred', transform = c(tf$translate(150, 150)))
+d2c <- diamond$copy()$update(fill = '#123456', transform = c(tf$translate(300, 150)))
+d3  <- diamond$copy()$update(fill = '#12345630', stroke = 'white', linewidth = 2,
+                             transform = c(tf$translate(75, 100), tf$scale(2)))
+doc <- pdfdoc(width = 450, height = 200, d1a, d1b, d1c, d2a, d2b, d2c, d3)
+doc$save("man/figures/diamonds.pdf")
+```
+
+```{r echo = FALSE}
+system("convert -density 300 man/figures/diamonds.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/diamonds.png")
+knitr::include_graphics("man/figures/diamonds.png")
+```
+
+
+
+
+## Supported features
+
+* Documents with a single page only
+* Only one font per document (set during initialization)
+* Objects: Text, lines, polylines, polygons, rectangles and circles
+* Attributes: Fill colour (including alpha), stroke colour (including alpha), linewidth, linetype
+* Clipping regions - per object clipping region as well as the global document clipping region.
+
+Currently there is no support for annotations or any sort of text layout.
+
+
+## News
+
+* `minipdf v0.2.0` 
+    * huge internal refactor.
+    * much more structured document building process
+    * removed the 'tidy-friendly' helper functions (too finnicky and too much
+      namespace pollution)
+    * R6 reference semantics allow user to manipulate objects in a document
+      after it's been created
+
+
+
+## Gallery
+
+<div>
+<img width="45%" src="vignettes/figures/example1.png">
+<img width="45%" src="vignettes/figures/example2.png">
+<img width="45%" src="vignettes/figures/logo-alternate.png">
+<img width="45%" src="vignettes/figures/logo-alternate-clipped.png">
+</div>
 
 
 ## References
@@ -80,184 +171,4 @@ devtools::install_github("coolbutuseless/minipdf")
 * [PDF specification document](https://www.adobe.com/devnet/pdf/pdf_reference.html)
 * [PDF: An Introduction for Programmers](http://preserve.mactech.com/articles/mactech/Vol.15/15.09/PDFIntro/index.html)
 * [Make your own PDF file](https://blog.idrsolutions.com/2010/09/grow-your-own-pdf-file-part-1-pdf-objects-and-data-types/)
-
-
-
-
-## Creating a simple PDF with the R6 interface
-
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Initialise the document
-# Draw a pretty geometric pattern
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdfdoc <- minipdf::PDFDocument$new(width = 400, height = 400)
-
-for (i in seq(0, 400, 20)) {
-  pdfdoc$add_line(i    ,     0,   400,     i, stroke = '#00000020')
-  pdfdoc$add_line(400  ,     i, 400-i,   400, stroke = '#00000020')
-  pdfdoc$add_line(400-i,   400,     0, 400-i, stroke = '#00000020')
-  pdfdoc$add_line(0    , 400-i,     i,     0, stroke = '#00000020')
-}
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Draw a circle in the centre with some text around
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdfdoc$add_circle(200, 200, 50, fill = "#12345680", stroke = NULL)
-
-ncolours <- 40
-pal <- rainbow(ncolours)
-for (i in seq(ncolours)) {
-  pdfdoc$add_text("                        #Rstats", x = 200, y = 200, 
-                  angle = (1 - i)/ncolours * 360, fill = pal[i])
-}
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Write the PDF to file
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdfdoc$write_pdf("man/figures/example1.pdf")
-```
-
-
-
-```{r include = FALSE}
-system("convert -density 300 man/figures/example1.pdf -resize 100% man/figures/example1.png")
-```
-
-```{r echo = FALSE}
-knitr::include_graphics("man/figures/example1.png")
-```
-
-
-
-## Creating a simple PDF with the pipe-compatible functions
-
-For those more used to working with pipes, there are pipe-friendly versions of
-most methods.  These all take the R6 `PDFDocument` class as their first argument.
-
-```{r}
-pdfdoc <- create_pdfdoc(width = 400, height = 400, font = 'Helvetica-Bold')
-
-pal <- viridisLite::viridis(80)
-i   <- 0
-for (x in seq(20, 400, 40)) {
-  for (y in seq(100, 400, 40)) {
-    i <- i + 1
-    pdfdoc <- pdfdoc %>% 
-      add_circle(x, y, r = 20, fill = pal[i])
-  }
-}
-
-pdfdoc <- pdfdoc %>%
-  add_text("Pipe-friendly!", x = 10, y = 20, size = 65, stroke = 'grey50', fill = 'lightblue', text_mode = 2) %>%
-  add_rect(0, 0, 400, 400, fill = NULL, stroke = 'grey70')
-
-pdfdoc %>% write_pdf("man/figures/example-pipe.pdf")
-```
-
-
-```{r include = FALSE}
-system("convert -density 300 man/figures/example-pipe.pdf -resize 100% man/figures/example-pipe.png")
-```
-
-```{r echo = FALSE}
-knitr::include_graphics("man/figures/example-pipe.png")
-```
-
-
-
-
-## Creating the logo for this package
-
-* Design inspiration: the whole decade of the 1970s.
-
-```{r}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Create the hexagonal clipping path
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-spacing <- 200
-w <- sqrt(3) * spacing
-h <- 2       * spacing
-
-qh <- h/4
-hw <- w/2
-
-path <- glue("
-{hw} {     0} m
-{ 0} {    qh} l
-{ 0} {3 * qh} l
-{hw} {4 * qh} l
-{ w} {3 * qh} l
-{ w} {    qh} l
-{hw} {     0} l
-")
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Setup circles
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-o1 <- 80
-o2 <- 60
-o3 <- 40
-o4 <- 30
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Create the PDF document with hexagonal clipping path
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdfdoc <- PDFDocument$new(width = w, height = h, font = 'Courier-Bold')
-pdfdoc$add_clip_stream(clip_path = path)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Solid Background colour
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdfdoc$add_rect(0, 0, w, h, fill = "#A84128", stroke = NULL)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Circles. Lots of circles
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdfdoc$add_circle(x = hw + o1, y = 2*qh + o1, r = o1    , fill = '#f8b918', stroke = NULL)
-pdfdoc$add_circle(x = hw + o1, y = 2*qh - o1, r = o1    , fill = '#f8b918', stroke = NULL)
-pdfdoc$add_circle(x = hw - o1, y = 2*qh + o1, r = o1    , fill = '#f8b918', stroke = NULL)
-pdfdoc$add_circle(x = hw - o1, y = 2*qh - o1, r = o1    , fill = '#f8b918', stroke = NULL)
-
-pdfdoc$add_circle(x = hw + o2, y = 2*qh + o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
-pdfdoc$add_circle(x = hw + o2, y = 2*qh - o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
-pdfdoc$add_circle(x = hw - o2, y = 2*qh + o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
-pdfdoc$add_circle(x = hw - o2, y = 2*qh - o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
-
-pdfdoc$add_circle(x = hw + o3, y = 2*qh + o3, r = o3-17 , fill = '#e75920', stroke = NULL)
-pdfdoc$add_circle(x = hw + o3, y = 2*qh - o3, r = o3-17 , fill = '#e75920', stroke = NULL)
-pdfdoc$add_circle(x = hw - o3, y = 2*qh + o3, r = o3-17 , fill = '#e75920', stroke = NULL)
-pdfdoc$add_circle(x = hw - o3, y = 2*qh - o3, r = o3-17 , fill = '#e75920', stroke = NULL)
-
-pdfdoc$add_circle(x = hw + o4, y = 2*qh + o4, r = 10    , fill = '#Af2a33', stroke = NULL)
-pdfdoc$add_circle(x = hw + o4, y = 2*qh - o4, r = 10    , fill = '#Af2a33', stroke = NULL)
-pdfdoc$add_circle(x = hw - o4, y = 2*qh + o4, r = 10    , fill = '#Af2a33', stroke = NULL)
-pdfdoc$add_circle(x = hw - o4, y = 2*qh - o4, r = 10    , fill = '#Af2a33', stroke = NULL)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Label
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdfdoc$add_text("minipdf", x = hw+5, y = 15, fill = '#ffffff', size = 44, angle = 30)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Write the PDF to file
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdfdoc$write_pdf("man/figures/logo.pdf")
-```
-
-
-
-```{r include = FALSE}
-system("convert -density 300 man/figures/logo.pdf -resize 100% man/figures/logo.png")
-```
-
-```{r echo = FALSE}
-knitr::include_graphics("man/figures/logo.png")
-```
-
-
-
-
-
 
