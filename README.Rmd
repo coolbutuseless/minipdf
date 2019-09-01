@@ -114,14 +114,16 @@ patterns can be built.
 xs <- c(0, 75, 150, 75, 0)
 ys <- c(0, -50, 0, 50, 0)
 diamond <- PDFPolygon$new(xs = xs, ys = ys, stroke = NULL)
-d1a <- diamond$copy()$update(fill = 'darkred')$translate(  0,  50)
-d1b <- diamond$copy()$update(fill = '#123456')$translate(150,  50)
-d1c <- diamond$copy()$update(fill = 'darkred')$translate(300,  50)
-d2a <- diamond$copy()$update(fill = '#123456')$translate(  0, 150)
-d2b <- diamond$copy()$update(fill = 'darkred')$translate(150, 150)
-d2c <- diamond$copy()$update(fill = '#123456')$translate(300, 150)
-d3  <- diamond$copy()$update(fill = '#12345630', stroke = 'white', linewidth = 2)$
-                             translate(75, 100)$scale(2)
+d1a <- diamond$copy()$fill('darkred')$translate(  0,  50)
+d1b <- diamond$copy()$fill('#123456')$translate(150,  50)
+d1c <- diamond$copy()$fill('darkred')$translate(300,  50)
+d2a <- diamond$copy()$fill('#123456')$translate(  0, 150)
+d2b <- diamond$copy()$fill('darkred')$translate(150, 150)
+d2c <- diamond$copy()$fill('#123456')$translate(300, 150)
+d3  <- diamond$copy()$fill('#12345630')$
+  stroke('white')$
+  linewidth(2)$
+  translate(75, 100)$scale(2)
 doc <- pdfdoc(width = 450, height = 200, d1a, d1b, d1c, d2a, d2b, d2c, d3)
 doc$save("man/figures/diamonds.pdf")
 ```

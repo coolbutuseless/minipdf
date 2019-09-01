@@ -4,6 +4,7 @@ valid_pdf_fonts <- c('Times-Roman', 'Times-Bold', 'Times-Italic', 'Times-BoldIta
                'Courier'  , 'Courier-Bold'  , 'Courier-Oblique'  , 'Courier-BoldOblique'  ,
                'Symbol', 'ZapfDingbats')
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' PDF Text stream object creator
 #'
@@ -13,12 +14,7 @@ valid_pdf_fonts <- c('Times-Roman', 'Times-Bold', 'Times-Italic', 'Times-BoldIta
 #'\itemize{
 #' \item{text text string for PDFText}
 #' \item{x,y coordinates}
-#' \item{fontsize font size}
-#' \item{text_mode Integer. 0 = fill, 1 = stroke, 2 = fill and stroke. Default: 0}
-#' \item{fill,stroke colour specification}
-#' \item{linewidth,linetype line specification}
-#' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{... extra arguments ignored}
+#' \item{... extra arguments specifying initial state e.g. 'fill'}
 #'}
 #'
 #'
@@ -29,25 +25,14 @@ PDFText <- R6::R6Class(
 
   public = list(
 
-    initialize = function(text, x, y, fontsize = 12, text_mode = 0,
-                          fill = '#000000', stroke = '#000000',
-                          linewidth = 1, linetype = 0,
-                          clip_rect = NULL, ...) {
-
-
+    initialize = function(text, x, y, ...) {
       self$attrib <- list(
         text      = text,
         x         = x,
-        y         = y,
-        fontsize  = fontsize,
-        text_mode = text_mode,
-        fill      = fill,
-        stroke    = stroke,
-        linetype  = linetype,
-        linewidth = linewidth,
-        clip_rect = clip_rect
+        y         = y
       )
 
+      super$initialize(...)
       invisible(self)
     }
   ),
@@ -79,10 +64,7 @@ ET"
 #'
 #'\itemize{
 #' \item{x1,y1,x2,y2 pair of coordinates}
-#' \item{fill,stroke colour specification}
-#' \item{linewidth,linetype line specification}
-#' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{... extra arguments ignored}
+#' \item{... extra arguments specifying initial state e.g. 'fill'}
 #'}
 #'
 #'
@@ -93,23 +75,16 @@ PDFLine <- R6::R6Class(
 
   public = list(
 
-    initialize = function(x1, y1, x2, y2,
-                          stroke = '#000000',
-                          linewidth = 1, linetype = 0,
-                          clip_rect = NULL, ...) {
+    initialize = function(x1, y1, x2, y2, ...) {
 
       self$attrib <- list(
-        x1        = x1,
-        y1        = y1,
-        x2        = x2,
-        y2        = y2,
-        fill      = NULL,
-        stroke    = stroke,
-        linetype  = linetype,
-        linewidth = linewidth,
-        clip_rect = clip_rect
+        x1 = x1,
+        y1 = y1,
+        x2 = x2,
+        y2 = y2
       )
 
+      super$initialize(...)
       invisible(self)
     }
   ),
@@ -136,10 +111,7 @@ PDFLine <- R6::R6Class(
 #'\itemize{
 #' \item{x,y coordinates}
 #' \item{width,height rectangle width and height}
-#' \item{fill,stroke colour specification}
-#' \item{linewidth,linetype line specification}
-#' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{... extra arguments ignored}
+#' \item{... extra arguments specifying initial state e.g. 'fill'}
 #'}
 #'
 #'
@@ -150,23 +122,16 @@ PDFRect <- R6::R6Class(
 
   public = list(
 
-    initialize = function(x, y, width, height,
-                          fill = '#000000', stroke = '#000000',
-                          linewidth = 1, linetype = 0,
-                          clip_rect = NULL, ...) {
+    initialize = function(x, y, width, height, ...) {
 
       self$attrib <- list(
-        x         = x,
-        y         = y,
-        width     = width,
-        height    = height,
-        fill      = fill,
-        stroke    = stroke,
-        linetype  = linetype,
-        linewidth = linewidth,
-        clip_rect = clip_rect
+        x      = x,
+        y      = y,
+        width  = width,
+        height = height
       )
 
+      super$initialize(...)
       invisible(self)
     }
   ),
@@ -191,10 +156,7 @@ PDFRect <- R6::R6Class(
 #'
 #'\itemize{
 #' \item{x,y coordinates}
-#' \item{fill,stroke colour specification}
-#' \item{linewidth,linetype line specification}
-#' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{... extra arguments ignored}
+#' \item{... extra arguments specifying initial state e.g. 'fill'}
 #'}
 #'
 #'
@@ -205,21 +167,14 @@ PDFPolyline <- R6::R6Class(
 
   public = list(
 
-    initialize = function(xs, ys,
-                          stroke = '#000000',
-                          linewidth = 1, linetype = 0,
-                          clip_rect = NULL, ...) {
+    initialize = function(xs, ys, ...) {
 
       self$attrib <- list(
         xs        = xs,
-        ys        = ys,
-        fill      = NULL,
-        stroke    = stroke,
-        linetype  = linetype,
-        linewidth = linewidth,
-        clip_rect = clip_rect
+        ys        = ys
       )
 
+      super$initialize(...)
       invisible(self)
     }
   ),
@@ -247,10 +202,7 @@ PDFPolyline <- R6::R6Class(
 #'
 #'\itemize{
 #' \item{xs,ys vectors of x and y coordinates}
-#' \item{fill,stroke colour specification}
-#' \item{linewidth,linetype line specification}
-#' \item{clip_rect clipping rectangle for this object.  Must be a vector of 4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{... extra arguments ignored}
+#' \item{... extra arguments specifying initial state e.g. 'fill'}
 #'}
 #'
 #'
@@ -261,21 +213,14 @@ PDFPolygon <- R6::R6Class(
 
   public = list(
 
-    initialize = function(xs, ys,
-                          fill = '#000000', stroke = '#000000',
-                          linewidth = 1, linetype = 0,
-                          clip_rect = NULL, ...) {
+    initialize = function(xs, ys, ...) {
 
       self$attrib <- list(
         xs        = xs,
-        ys        = ys,
-        fill      = fill,
-        stroke    = stroke,
-        linetype  = linetype,
-        linewidth = linewidth,
-        clip_rect = clip_rect
+        ys        = ys
       )
 
+      super$initialize(...)
       invisible(self)
     }
   ),
@@ -308,10 +253,7 @@ PDFPolygon <- R6::R6Class(
 #'\itemize{
 #' \item{x,y coordinates}
 #' \item{r radius of circle}
-#' \item{fill,stroke colour specification}
-#' \item{linewidth,linetype line specification}
-#' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{... extra arguments ignored}
+#' \item{... extra arguments specifying initial state e.g. 'fill'}
 #'}
 #'
 #'
@@ -322,22 +264,15 @@ PDFCircle <- R6::R6Class(
 
   public = list(
 
-    initialize = function(x, y, r,
-                          fill = '#000000', stroke = NULL,
-                          linewidth = 1, linetype = 0,
-                          clip_rect = NULL, ...) {
+    initialize = function(x, y, r, ...) {
 
       self$attrib <- list(
         x         = x,
         y         = y,
-        r         = r,
-        fill      = fill,
-        stroke    = stroke,
-        linetype  = linetype,
-        linewidth = linewidth,
-        clip_rect = clip_rect
+        r         = r
       )
 
+      super$initialize(...)
       invisible(self)
     }
   ),
@@ -380,8 +315,7 @@ PDFCircle <- R6::R6Class(
 #'\itemize{
 #' \item{x,y coordinates}
 #' \item{width,height rectangle width and height}
-#' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{... extra arguments ignored}
+#' \item{... extra arguments specifying initial state e.g. 'fill'}
 #'}
 #'
 #'
@@ -392,18 +326,17 @@ PDFClipRect <- R6::R6Class(
 
   public = list(
 
-    initialize = function(x, y, width, height,
-                          clip_rect = NULL, ...) {
+    initialize = function(x, y, width, height, ...) {
 
       self$attrib <- list(
-        x         = x,
-        y         = y,
-        width     = width,
-        height    = height,
-        clip_rect = clip_rect,
+        x      = x,
+        y      = y,
+        width  = width,
+        height = height,
         new_graphics_state = FALSE
       )
 
+      super$initialize(...)
       invisible(self)
     }
   ),
@@ -436,8 +369,7 @@ PDFClipRect <- R6::R6Class(
 #'
 #'\itemize{
 #' \item{xs,ys vectors of x and y coordinates}
-#' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{... extra arguments ignored}
+#' \item{... extra arguments specifying initial state e.g. 'fill'}
 #'}
 #'
 #'
@@ -448,16 +380,15 @@ PDFClipPolygon <- R6::R6Class(
 
   public = list(
 
-    initialize = function(xs, ys,
-                          clip_rect = NULL, ...) {
+    initialize = function(xs, ys, ...) {
 
       self$attrib <- list(
         xs        = xs,
         ys        = ys,
-        new_graphics_state = FALSE,
-        clip_rect = clip_rect
+        new_graphics_state = FALSE
       )
 
+      super$initialize(...)
       invisible(self)
     }
   ),
@@ -486,11 +417,8 @@ PDFClipPolygon <- R6::R6Class(
 #'
 #'\itemize{
 #' \item{text text string for PDFText}
-#' \item{fill,stroke colour specification}
-#' \item{linewidth,linetype line specification}
-#' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
 #' \item{new_graphics_state Should the object be drawn in its own local graphics state? default: TRUE}
-#' \item{... extra arguments ignored}
+#' \item{... extra arguments specifying initial state e.g. 'fill'}
 #'}
 #'
 #'
@@ -501,21 +429,14 @@ PDFCustom <- R6::R6Class(
 
   public = list(
 
-    initialize = function(text,
-                          fill = 'black', stroke = 'black',
-                          linewidth = 1, linetype = 0, new_graphics_state = TRUE,
-                          clip_rect = NULL, ...) {
+    initialize = function(text, new_graphics_state = TRUE, ...) {
 
       self$attrib <- list(
-        text      = text,
-        fill      = fill,
-        stroke    = stroke,
-        linetype  = linetype,
-        linewidth = linewidth,
-        clip_rect = clip_rect,
+        text = text,
         new_graphics_state = new_graphics_state
       )
 
+      super$initialize(...)
       invisible(self)
     },
 

@@ -53,7 +53,7 @@ doc <- PDFDocument$new(width = 400, height = 100)
 the_text <- PDFText$new("#Rstats", x = 30, y = 20, fontsize = 100, fill = 'lightblue3')
 the_line <- PDFLine$new(x1=20, y1=10, x2=380, y2=10, linewidth = 5, stroke = '#123456')
 
-the_text$update(fill = 'darkgreen') # Adjust colour after creation
+the_text$fill('darkgreen') # Adjust colour after creation
 
 doc$append(the_text, the_line)
 
@@ -75,7 +75,7 @@ the_line <- stream$line(x1=20, y1=10, x2=380, y2=10, linewidth = 5, stroke = '#1
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Adjust the colour of the text
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-the_text$update(fill = 'hotpink')
+the_text$fill('hotpink')
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Initialise a document

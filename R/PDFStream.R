@@ -1,5 +1,20 @@
 
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Default draw state to use if not specified/over-ridden
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+default_draw_state <- list(
+  fontsize  = 12,
+  text_mode = 0,
+  fill      = '#000000',
+  stroke    = '#000000',
+  linewidth = 1,
+  linetype  = 0,
+  clip_rect = NULL
+)
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Sanitise colour to 4-element RGBA
 #'
@@ -108,6 +123,10 @@ PDFStream <- R6::R6Class(
 
     initialize = function(...) {
       transform <- list()
+
+      self$attrib <- modifyList(default_draw_state, self$attrib)
+      self$attrib <- modifyList(self$attrib       , list(...))
+
       invisible(self)
     },
 
@@ -116,8 +135,9 @@ PDFStream <- R6::R6Class(
     # Update the attributes of an object. e.g. update the x coordinate:
     #  `obj$update(x = 12)`
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    update = function(...) {
-      self$attrib <- modifyList(self$attrib, list(...))
+    update = function(..., fontsize, text_mode, fill, stroke, linewidth, linetype, clip_rect) {
+      args <- find_args(...)
+      self$attrib <- modifyList(self$attrib, args)
       invisible(self)
     },
 
@@ -128,6 +148,10 @@ PDFStream <- R6::R6Class(
       self$clone()
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Convert to full PDF object representation include stream/endstream
+    # and length dict.
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     as_object = function(obj_idx) {
       this_stream <- glue("stream\n{self$stream}\nendstream")
       chars       <- nchar(self$stream)
@@ -136,6 +160,9 @@ PDFStream <- R6::R6Class(
       res
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Cat just the inner stream part of the object when print()ed
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     print = function() {
       cat(self$stream)
     },
@@ -166,7 +193,18 @@ PDFStream <- R6::R6Class(
 
       self$transform <- append(self$transform, transform)
       invisible(self)
-    }
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Update methods for the draw state parameters
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    fontsize  = function(fontsize = 12        ) { self$update(fontsize  = fontsize ) },
+    text_mode = function(text_mode = 0        ) { self$update(text_mode = text_mode) },
+    fill      = function(fill      = '#000000') { self$update(fill      = fill     ) },
+    stroke    = function(stroke    = '#000000') { self$update(stroke    = stroke   ) },
+    linewidth = function(linewidth = 1        ) { self$update(linewidth = linewidth) },
+    linetype  = function(linetype  = 0        ) { self$update(linetype  = 0        ) },
+    clip_rect = function(clip_rect = NULL     ) { self$update(clip_rect = clip_rect) }
   ),
 
 

@@ -54,20 +54,24 @@ Q
 endstream
 endobj
 7 0 obj
-<< /Length 93 >>
+<< /Length 102 >>
 stream
 q
 5 w
 /GS11 gs
+0 0 0 rg
 0.0705882352941176 0.203921568627451 0.337254901960784 RG
 20 10 m 380 10 l s
 Q
 endstream
 endobj
 8 0 obj
-<< /Length 50 >>
+<< /Length 72 >>
 stream
+1 w
 /GS11 gs
+0 0 0 rg
+0 0 0 RG
 0 0 m
 400 0 l
 400 100 l
@@ -85,8 +89,8 @@ xref
 0000000374 00000 n 
 0000000456 00000 n 
 0000000625 00000 n 
-0000000768 00000 n 
+0000000778 00000 n 
 trailer <</Size 9/Root 1 0 R>>
 startxref
-868
+900
 %%EOF

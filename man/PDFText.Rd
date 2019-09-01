@@ -15,12 +15,7 @@ This is the R6 class representing the text stream object.
 \itemize{
 \item{text text string for PDFText}
 \item{x,y coordinates}
-\item{fontsize font size}
-\item{text_mode Integer. 0 = fill, 1 = stroke, 2 = fill and stroke. Default: 0}
-\item{fill,stroke colour specification}
-\item{linewidth,linetype line specification}
-\item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-\item{... extra arguments ignored}
+\item{... extra arguments specifying initial state e.g. 'fill'}
 }
 }
 \keyword{datasets}

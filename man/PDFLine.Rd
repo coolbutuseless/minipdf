@@ -14,10 +14,7 @@ This is the R6 class representing the line stream object.
 \details{
 \itemize{
 \item{x1,y1,x2,y2 pair of coordinates}
-\item{fill,stroke colour specification}
-\item{linewidth,linetype line specification}
-\item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-\item{... extra arguments ignored}
+\item{... extra arguments specifying initial state e.g. 'fill'}
 }
 }
 \keyword{datasets}

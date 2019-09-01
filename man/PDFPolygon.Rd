@@ -14,10 +14,7 @@ This is the R6 class representing the polygon stream object.
 \details{
 \itemize{
 \item{xs,ys vectors of x and y coordinates}
-\item{fill,stroke colour specification}
-\item{linewidth,linetype line specification}
-\item{clip_rect clipping rectangle for this object.  Must be a vector of 4 numbers giving x, y, width and height. default: NULL (no clipping).}
-\item{... extra arguments ignored}
+\item{... extra arguments specifying initial state e.g. 'fill'}
 }
 }
 \keyword{datasets}
