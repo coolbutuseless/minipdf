@@ -1,5 +1,13 @@
 
+# minipdf 0.2.1
 
+* transformations are now methods directly on the PDFStream object rather than attributes
+    * e.g. `obj <- PDFRect$new(x=0, y=0, width=100, height=100)$translate(0, 100)`
+* renaming of some methods in `PDFDocument` 
+    * e.g. `add_rect()` has become just `rect`
+    * `add()` is now `append()`
+    
+    
 # minipdf 0.2.0 
     
 * Building a document is now much more structured - the main objects 

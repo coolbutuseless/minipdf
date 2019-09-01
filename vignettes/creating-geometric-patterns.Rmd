@@ -32,23 +32,23 @@ library(minipdf)
 doc <- PDFDocument$new(width = 400, height = 400)
 
 for (i in seq(0, 400, 20)) {
-  doc$add_line(i    ,     0,   400,     i, stroke = '#00000020')
-  doc$add_line(400  ,     i, 400-i,   400, stroke = '#00000020')
-  doc$add_line(400-i,   400,     0, 400-i, stroke = '#00000020')
-  doc$add_line(0    , 400-i,     i,     0, stroke = '#00000020')
+  doc$line(i    ,     0,   400,     i, stroke = '#00000020')
+  doc$line(400  ,     i, 400-i,   400, stroke = '#00000020')
+  doc$line(400-i,   400,     0, 400-i, stroke = '#00000020')
+  doc$line(0    , 400-i,     i,     0, stroke = '#00000020')
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Draw a circle in the centre with some text around
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doc$add_circle(200, 200, 50, fill = "#12345680", stroke = NULL)
+doc$circle(200, 200, 50, fill = "#12345680", stroke = NULL)
 
 ncolours <- 40
 pal <- rainbow(ncolours)
 for (i in seq(ncolours)) {
-  transform <- c(tf$rotate((1 - i)/ncolours * 360, 200, 200))
-  doc$add_text("                        #Rstats", 
-               x = 200, y = 200, transform = transform, fill = pal[i])
+  doc$text("                        #Rstats", 
+               x = 200, y = 200, fill = pal[i])$
+    rotate((1 - i)/ncolours * 360, 200, 200)
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -79,12 +79,12 @@ i   <- 0
 for (x in seq(20, 400, 40)) {
   for (y in seq(100, 400, 40)) {
     i <- i + 1
-    doc$add_circle(x = x, y = y, r = 20, fill = pal[i], stroke = NULL)
+    doc$circle(x = x, y = y, r = 20, fill = pal[i], stroke = NULL)
   }
 }
 
-doc$add_text("minpdf", x = 95, y = 20, fontsize = 65, stroke = 'grey50', fill = 'lightblue', text_mode = 2)
-doc$add_rect(0, 0, 400, 400, fill = NULL, stroke = 'grey70')
+doc$text("minpdf", x = 95, y = 20, fontsize = 65, stroke = 'grey50', fill = 'lightblue', text_mode = 2)
+doc$rect(0, 0, 400, 400, fill = NULL, stroke = 'grey70')
 
 doc$save("figures/example2.pdf")
 ```

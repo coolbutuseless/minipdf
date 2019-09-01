@@ -5,7 +5,9 @@
 
 <!-- badges: start -->
 
-![](http://img.shields.io/badge/cool-useless-green.svg) [![Travis build
+![](http://img.shields.io/badge/cool-useless-green.svg)
+![](http://img.shields.io/badge/very-experimental-orange.svg) [![Travis
+build
 status](https://travis-ci.org/coolbutuseless/minipdf.svg?branch=master)](https://travis-ci.org/coolbutuseless/minipdf)
 <!-- badges: end -->
 
@@ -30,9 +32,9 @@ See the online documentation
 
 ``` r
 doc <- PDFDocument$new(width = 200, height = 60, fontname = 'Helvetica-Bold')
-doc$add_rect(0, 0, 200, 60, fill = '#123456', stroke = NULL)
-doc$add_text("Hello World!", x = 10, y = 15, fontsize = 20, fill = 'white')
-doc$add_line(0, 10, 200, 10, stroke = 'grey80')
+doc$rect(0, 0, 200, 60, fill = '#123456', stroke = NULL)
+doc$text("Hello World!", x = 10, y = 15, fontsize = 20, fill = 'white')
+doc$line(0, 10, 200, 10, stroke = 'grey80')
 doc$save("man/figures/helloworld.pdf")
 ```
 
@@ -47,14 +49,14 @@ complex patterns can be built.
 xs <- c(0, 75, 150, 75, 0)
 ys <- c(0, -50, 0, 50, 0)
 diamond <- PDFPolygon$new(xs = xs, ys = ys, stroke = NULL)
-d1a <- diamond$copy()$update(fill = 'darkred', transform = c(tf$translate(  0,  50)))
-d1b <- diamond$copy()$update(fill = '#123456', transform = c(tf$translate(150,  50)))
-d1c <- diamond$copy()$update(fill = 'darkred', transform = c(tf$translate(300,  50)))
-d2a <- diamond$copy()$update(fill = '#123456', transform = c(tf$translate(  0, 150)))
-d2b <- diamond$copy()$update(fill = 'darkred', transform = c(tf$translate(150, 150)))
-d2c <- diamond$copy()$update(fill = '#123456', transform = c(tf$translate(300, 150)))
-d3  <- diamond$copy()$update(fill = '#12345630', stroke = 'white', linewidth = 2,
-                             transform = c(tf$translate(75, 100), tf$scale(2)))
+d1a <- diamond$copy()$update(fill = 'darkred')$translate(  0,  50)
+d1b <- diamond$copy()$update(fill = '#123456')$translate(150,  50)
+d1c <- diamond$copy()$update(fill = 'darkred')$translate(300,  50)
+d2a <- diamond$copy()$update(fill = '#123456')$translate(  0, 150)
+d2b <- diamond$copy()$update(fill = 'darkred')$translate(150, 150)
+d2c <- diamond$copy()$update(fill = '#123456')$translate(300, 150)
+d3  <- diamond$copy()$update(fill = '#12345630', stroke = 'white', linewidth = 2)$
+                             translate(75, 100)$scale(2)
 doc <- pdfdoc(width = 450, height = 200, d1a, d1b, d1c, d2a, d2b, d2c, d3)
 doc$save("man/figures/diamonds.pdf")
 ```
@@ -76,13 +78,10 @@ layout.
 
 ## News
 
-  - `minipdf v0.2.0`
-      - huge internal refactor.
-      - much more structured document building process
-      - removed the ‘tidy-friendly’ helper functions (too finnicky and
-        too much namespace pollution)
-      - R6 reference semantics allow user to manipulate objects in a
-        document after it’s been created
+  - `minipdf v0.2.1`
+      - transforms are now methods on the PDF stream objects
+      - renamed methods on the PDFDcoument e.g. `add_rect()` is now just
+        `rect()`
 
 ## Gallery
 

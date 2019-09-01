@@ -36,36 +36,36 @@ doc <- PDFDocument$new(width = w, height = h, fontname = 'Courier-Bold')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Solid Background colour
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doc$add_rect(0, 0, w, h, fill = "#A84128", stroke = NULL)
+doc$rect(0, 0, w, h, fill = "#A84128", stroke = NULL)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Circles. Lots of circles
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doc$add_circle(x = hw + o1, y = 2*qh + o1, r = o1    , fill = '#f8b918', stroke = NULL)
-doc$add_circle(x = hw + o1, y = 2*qh - o1, r = o1    , fill = '#f8b918', stroke = NULL)
-doc$add_circle(x = hw - o1, y = 2*qh + o1, r = o1    , fill = '#f8b918', stroke = NULL)
-doc$add_circle(x = hw - o1, y = 2*qh - o1, r = o1    , fill = '#f8b918', stroke = NULL)
+doc$circle(x = hw + o1, y = 2*qh + o1, r = o1    , fill = '#f8b918', stroke = NULL)
+doc$circle(x = hw + o1, y = 2*qh - o1, r = o1    , fill = '#f8b918', stroke = NULL)
+doc$circle(x = hw - o1, y = 2*qh + o1, r = o1    , fill = '#f8b918', stroke = NULL)
+doc$circle(x = hw - o1, y = 2*qh - o1, r = o1    , fill = '#f8b918', stroke = NULL)
 
-doc$add_circle(x = hw + o2, y = 2*qh + o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
-doc$add_circle(x = hw + o2, y = 2*qh - o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
-doc$add_circle(x = hw - o2, y = 2*qh + o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
-doc$add_circle(x = hw - o2, y = 2*qh - o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
+doc$circle(x = hw + o2, y = 2*qh + o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
+doc$circle(x = hw + o2, y = 2*qh - o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
+doc$circle(x = hw - o2, y = 2*qh + o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
+doc$circle(x = hw - o2, y = 2*qh - o2, r = o2-8.5, fill = '#ee9421', stroke = NULL)
 
-doc$add_circle(x = hw + o3, y = 2*qh + o3, r = o3-17 , fill = '#e75920', stroke = NULL)
-doc$add_circle(x = hw + o3, y = 2*qh - o3, r = o3-17 , fill = '#e75920', stroke = NULL)
-doc$add_circle(x = hw - o3, y = 2*qh + o3, r = o3-17 , fill = '#e75920', stroke = NULL)
-doc$add_circle(x = hw - o3, y = 2*qh - o3, r = o3-17 , fill = '#e75920', stroke = NULL)
+doc$circle(x = hw + o3, y = 2*qh + o3, r = o3-17 , fill = '#e75920', stroke = NULL)
+doc$circle(x = hw + o3, y = 2*qh - o3, r = o3-17 , fill = '#e75920', stroke = NULL)
+doc$circle(x = hw - o3, y = 2*qh + o3, r = o3-17 , fill = '#e75920', stroke = NULL)
+doc$circle(x = hw - o3, y = 2*qh - o3, r = o3-17 , fill = '#e75920', stroke = NULL)
 
-doc$add_circle(x = hw + o4, y = 2*qh + o4, r = 10    , fill = '#Af2a33', stroke = NULL)
-doc$add_circle(x = hw + o4, y = 2*qh - o4, r = 10    , fill = '#Af2a33', stroke = NULL)
-doc$add_circle(x = hw - o4, y = 2*qh + o4, r = 10    , fill = '#Af2a33', stroke = NULL)
-doc$add_circle(x = hw - o4, y = 2*qh - o4, r = 10    , fill = '#Af2a33', stroke = NULL)
+doc$circle(x = hw + o4, y = 2*qh + o4, r = 10    , fill = '#Af2a33', stroke = NULL)
+doc$circle(x = hw + o4, y = 2*qh - o4, r = 10    , fill = '#Af2a33', stroke = NULL)
+doc$circle(x = hw - o4, y = 2*qh + o4, r = 10    , fill = '#Af2a33', stroke = NULL)
+doc$circle(x = hw - o4, y = 2*qh - o4, r = 10    , fill = '#Af2a33', stroke = NULL)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Label
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doc$add_text("minipdf", x = hw+5, y = 15, fill = '#ffffff', fontsize = 44,
-             transform = tf$rotate(30, hw+5, 15))
+doc$text("minipdf", x = hw+5, y = 15, fill = '#ffffff', fontsize = 44)$
+  rotate(30, hw+5, 15)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Write the PDF to file

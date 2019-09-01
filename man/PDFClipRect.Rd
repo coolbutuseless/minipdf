@@ -16,7 +16,6 @@ This is the R6 class representing the ClipRect stream object.
 \item{x,y coordinates}
 \item{width,height rectangle width and height}
 \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-\item{transform transform specification. Default: NULL. Otherwise a character vector of transformation operations. See \code{tf} helper.}
 \item{... extra arguments ignored}
 }
 }

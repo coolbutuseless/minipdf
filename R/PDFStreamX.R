@@ -18,7 +18,6 @@ valid_pdf_fonts <- c('Times-Roman', 'Times-Bold', 'Times-Italic', 'Times-BoldIta
 #' \item{fill,stroke colour specification}
 #' \item{linewidth,linetype line specification}
 #' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{transform transform specification. Default: NULL. Otherwise a character vector of transformation operations. See \code{tf} helper.}
 #' \item{... extra arguments ignored}
 #'}
 #'
@@ -33,7 +32,7 @@ PDFText <- R6::R6Class(
     initialize = function(text, x, y, fontsize = 12, text_mode = 0,
                           fill = '#000000', stroke = '#000000',
                           linewidth = 1, linetype = 0,
-                          clip_rect = NULL, transform = NULL, ...) {
+                          clip_rect = NULL, ...) {
 
 
       self$attrib <- list(
@@ -46,8 +45,7 @@ PDFText <- R6::R6Class(
         stroke    = stroke,
         linetype  = linetype,
         linewidth = linewidth,
-        clip_rect = clip_rect,
-        transform = transform
+        clip_rect = clip_rect
       )
 
       invisible(self)
@@ -84,7 +82,6 @@ ET"
 #' \item{fill,stroke colour specification}
 #' \item{linewidth,linetype line specification}
 #' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{transform transform specification. Default: NULL. Otherwise a character vector of transformation operations. See \code{tf} helper.}
 #' \item{... extra arguments ignored}
 #'}
 #'
@@ -99,7 +96,7 @@ PDFLine <- R6::R6Class(
     initialize = function(x1, y1, x2, y2,
                           stroke = '#000000',
                           linewidth = 1, linetype = 0,
-                          clip_rect = NULL, transform = NULL, ...) {
+                          clip_rect = NULL, ...) {
 
       self$attrib <- list(
         x1        = x1,
@@ -110,8 +107,7 @@ PDFLine <- R6::R6Class(
         stroke    = stroke,
         linetype  = linetype,
         linewidth = linewidth,
-        clip_rect = clip_rect,
-        transform = transform
+        clip_rect = clip_rect
       )
 
       invisible(self)
@@ -143,7 +139,6 @@ PDFLine <- R6::R6Class(
 #' \item{fill,stroke colour specification}
 #' \item{linewidth,linetype line specification}
 #' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{transform transform specification. Default: NULL. Otherwise a character vector of transformation operations. See \code{tf} helper.}
 #' \item{... extra arguments ignored}
 #'}
 #'
@@ -158,7 +153,7 @@ PDFRect <- R6::R6Class(
     initialize = function(x, y, width, height,
                           fill = '#000000', stroke = '#000000',
                           linewidth = 1, linetype = 0,
-                          clip_rect = NULL, transform = NULL, ...) {
+                          clip_rect = NULL, ...) {
 
       self$attrib <- list(
         x         = x,
@@ -169,8 +164,7 @@ PDFRect <- R6::R6Class(
         stroke    = stroke,
         linetype  = linetype,
         linewidth = linewidth,
-        clip_rect = clip_rect,
-        transform = transform
+        clip_rect = clip_rect
       )
 
       invisible(self)
@@ -200,7 +194,6 @@ PDFRect <- R6::R6Class(
 #' \item{fill,stroke colour specification}
 #' \item{linewidth,linetype line specification}
 #' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{transform transform specification. Default: NULL. Otherwise a character vector of transformation operations. See \code{tf} helper.}
 #' \item{... extra arguments ignored}
 #'}
 #'
@@ -215,7 +208,7 @@ PDFPolyline <- R6::R6Class(
     initialize = function(xs, ys,
                           stroke = '#000000',
                           linewidth = 1, linetype = 0,
-                          clip_rect = NULL, transform = NULL, ...) {
+                          clip_rect = NULL, ...) {
 
       self$attrib <- list(
         xs        = xs,
@@ -224,8 +217,7 @@ PDFPolyline <- R6::R6Class(
         stroke    = stroke,
         linetype  = linetype,
         linewidth = linewidth,
-        clip_rect = clip_rect,
-        transform = transform
+        clip_rect = clip_rect
       )
 
       invisible(self)
@@ -258,7 +250,6 @@ PDFPolyline <- R6::R6Class(
 #' \item{fill,stroke colour specification}
 #' \item{linewidth,linetype line specification}
 #' \item{clip_rect clipping rectangle for this object.  Must be a vector of 4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{transform transform specification. Default: NULL. Otherwise a character vector of transformation operations. See \code{tf} helper.}
 #' \item{... extra arguments ignored}
 #'}
 #'
@@ -273,7 +264,7 @@ PDFPolygon <- R6::R6Class(
     initialize = function(xs, ys,
                           fill = '#000000', stroke = '#000000',
                           linewidth = 1, linetype = 0,
-                          clip_rect = NULL, transform = NULL, ...) {
+                          clip_rect = NULL, ...) {
 
       self$attrib <- list(
         xs        = xs,
@@ -282,8 +273,7 @@ PDFPolygon <- R6::R6Class(
         stroke    = stroke,
         linetype  = linetype,
         linewidth = linewidth,
-        clip_rect = clip_rect,
-        transform = transform
+        clip_rect = clip_rect
       )
 
       invisible(self)
@@ -321,7 +311,6 @@ PDFPolygon <- R6::R6Class(
 #' \item{fill,stroke colour specification}
 #' \item{linewidth,linetype line specification}
 #' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{transform transform specification. Default: NULL. Otherwise a character vector of transformation operations. See \code{tf} helper.}
 #' \item{... extra arguments ignored}
 #'}
 #'
@@ -336,7 +325,7 @@ PDFCircle <- R6::R6Class(
     initialize = function(x, y, r,
                           fill = '#000000', stroke = NULL,
                           linewidth = 1, linetype = 0,
-                          clip_rect = NULL, transform = NULL, ...) {
+                          clip_rect = NULL, ...) {
 
       self$attrib <- list(
         x         = x,
@@ -346,8 +335,7 @@ PDFCircle <- R6::R6Class(
         stroke    = stroke,
         linetype  = linetype,
         linewidth = linewidth,
-        clip_rect = clip_rect,
-        transform = transform
+        clip_rect = clip_rect
       )
 
       invisible(self)
@@ -393,7 +381,6 @@ PDFCircle <- R6::R6Class(
 #' \item{x,y coordinates}
 #' \item{width,height rectangle width and height}
 #' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{transform transform specification. Default: NULL. Otherwise a character vector of transformation operations. See \code{tf} helper.}
 #' \item{... extra arguments ignored}
 #'}
 #'
@@ -406,7 +393,7 @@ PDFClipRect <- R6::R6Class(
   public = list(
 
     initialize = function(x, y, width, height,
-                          clip_rect = NULL, transform = NULL, ...) {
+                          clip_rect = NULL, ...) {
 
       self$attrib <- list(
         x         = x,
@@ -414,7 +401,6 @@ PDFClipRect <- R6::R6Class(
         width     = width,
         height    = height,
         clip_rect = clip_rect,
-        transform = transform,
         new_graphics_state = FALSE
       )
 
@@ -451,7 +437,6 @@ PDFClipRect <- R6::R6Class(
 #'\itemize{
 #' \item{xs,ys vectors of x and y coordinates}
 #' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{transform transform specification. Default: NULL. Otherwise a character vector of transformation operations. See \code{tf} helper.}
 #' \item{... extra arguments ignored}
 #'}
 #'
@@ -464,14 +449,13 @@ PDFClipPolygon <- R6::R6Class(
   public = list(
 
     initialize = function(xs, ys,
-                          clip_rect = NULL, transform = NULL, ...) {
+                          clip_rect = NULL, ...) {
 
       self$attrib <- list(
         xs        = xs,
         ys        = ys,
         new_graphics_state = FALSE,
-        clip_rect = clip_rect,
-        transform = transform
+        clip_rect = clip_rect
       )
 
       invisible(self)
@@ -505,7 +489,6 @@ PDFClipPolygon <- R6::R6Class(
 #' \item{fill,stroke colour specification}
 #' \item{linewidth,linetype line specification}
 #' \item{clip_rect clipping rectangle for this object.  Must be a vector of4 numbers giving x, y, width and height. default: NULL (no clipping).}
-#' \item{transform transform specification. Default: NULL. Otherwise a character vector of transformation operations. See \code{tf} helper.}
 #' \item{new_graphics_state Should the object be drawn in its own local graphics state? default: TRUE}
 #' \item{... extra arguments ignored}
 #'}
@@ -521,7 +504,7 @@ PDFCustom <- R6::R6Class(
     initialize = function(text,
                           fill = 'black', stroke = 'black',
                           linewidth = 1, linetype = 0, new_graphics_state = TRUE,
-                          clip_rect = NULL, transform = NULL, ...) {
+                          clip_rect = NULL, ...) {
 
       self$attrib <- list(
         text      = text,
@@ -530,7 +513,6 @@ PDFCustom <- R6::R6Class(
         linetype  = linetype,
         linewidth = linewidth,
         clip_rect = clip_rect,
-        transform = transform,
         new_graphics_state = new_graphics_state
       )
 
@@ -572,36 +554,36 @@ PDFCustom <- R6::R6Class(
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 stream <- list(
-  rect         = function(x, y, width, height            , fill='#000000',stroke='#000000', linewidth=1, linetype=0, transform=NULL, ...) {do.call(PDFRect$new       , find_args(...))},
-  line         = function(x1, y1, x2, y2                                 ,stroke='#000000', linewidth=1, linetype=0, transform=NULL, ...) {do.call(PDFLine$new       , find_args(...))},
-  text         = function(text, x, y, fontsize, text_mode, fill='#000000',stroke='#000000', linewidth=1, linetype=0, transform=NULL, ...) {do.call(PDFText$new       , find_args(...))},
-  circle       = function(x, y, r                        , fill='#000000',stroke='#000000', linewidth=1, linetype=0, transform=NULL, ...) {do.call(PDFCircle$new     , find_args(...))},
-  polygon      = function(xs, ys                         , fill='#000000',stroke='#000000', linewidth=1, linetype=0, transform=NULL, ...) {do.call(PDFPolygon$new    , find_args(...))},
-  polyline     = function(xs, ys                         , fill='#000000',stroke='#000000', linewidth=1, linetype=0, transform=NULL, ...) {do.call(PDFPolyline$new   , find_args(...))},
-  clip_rect    = function(x, y, width, height            , fill='#000000',stroke='#000000', linewidth=1, linetype=0, transform=NULL, ...) {do.call(PDFClipRect$new   , find_args(...))},
-  clip_polygon = function(x, y, width, height            , fill='#000000',stroke='#000000', linewidth=1, linetype=0, transform=NULL, ...) {do.call(PDFClipPolygon$new, find_args(...))},
-  custom       = function(text                           , fill='#000000',stroke='#000000', linewidth=1, linetype=0, transform=NULL, ...) {do.call(PDFCustom$new     , find_args(...))}
+  rect         = function(x, y, width, height            , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFRect$new       , find_args(...))},
+  line         = function(x1, y1, x2, y2                                 ,stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFLine$new       , find_args(...))},
+  text         = function(text, x, y, fontsize, text_mode, fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFText$new       , find_args(...))},
+  circle       = function(x, y, r                        , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFCircle$new     , find_args(...))},
+  polygon      = function(xs, ys                         , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFPolygon$new    , find_args(...))},
+  polyline     = function(xs, ys                         , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFPolyline$new   , find_args(...))},
+  clip_rect    = function(x, y, width, height            , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFClipRect$new   , find_args(...))},
+  clip_polygon = function(x, y, width, height            , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFClipPolygon$new, find_args(...))},
+  custom       = function(text                           , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFCustom$new     , find_args(...))}
 )
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Add public methods to PDFDocument to create and add Stream objects in an R6ish way
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-PDFDocument$set("public", "add_text"        , function(text, x, y, fontsize, text_mode, fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, transform=NULL, ...) {obj <- do.call(PDFText$new       , find_args(...)); self$add(obj); invisible(obj)})
-PDFDocument$set("public", "add_rect"        , function(x, y, width, height            , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, transform=NULL, ...) {obj <- do.call(PDFRect$new       , find_args(...)); self$add(obj); invisible(obj)})
-PDFDocument$set("public", "add_line"        , function(x1, y1, x2, y2                                 , stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, transform=NULL, ...) {obj <- do.call(PDFLine$new       , find_args(...)); self$add(obj); invisible(obj)})
-PDFDocument$set("public", "add_circle"      , function(x, y, r                        , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, transform=NULL, ...) {obj <- do.call(PDFCircle$new     , find_args(...)); self$add(obj); invisible(obj)})
-PDFDocument$set("public", "add_polygon"     , function(xs, ys                         , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, transform=NULL, ...) {obj <- do.call(PDFPolygon$new    , find_args(...)); self$add(obj); invisible(obj)})
-PDFDocument$set("public", "add_polyline"    , function(xs, ys                         , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, transform=NULL, ...) {obj <- do.call(PDFPolyline$new   , find_args(...)); self$add(obj); invisible(obj)})
-PDFDocument$set("public", "add_clip_rect"   , function(x, y, width, height            , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, transform=NULL, ...) {obj <- do.call(PDFClipRect$new   , find_args(...)); self$add(obj); invisible(obj)})
-PDFDocument$set("public", "add_clip_polygon", function(xs, ys                         , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, transform=NULL, ...) {obj <- do.call(PDFClipPolygon$new, find_args(...)); self$add(obj); invisible(obj)})
-PDFDocument$set("public", "add_custom"      , function(text                           , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, transform=NULL, new_graphics_state = TRUE, ...) {obj <- do.call(PDFCustom$new  , find_args(...)); self$add(obj); invisible(obj)})
+PDFDocument$set("public", "text"        , function(text, x, y, fontsize, text_mode, fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFText$new       , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "rect"        , function(x, y, width, height            , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFRect$new       , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "line"        , function(x1, y1, x2, y2                                 , stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFLine$new       , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "circle"      , function(x, y, r                        , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFCircle$new     , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "polygon"     , function(xs, ys                         , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFPolygon$new    , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "polyline"    , function(xs, ys                         , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFPolyline$new   , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "clip_rect"   , function(x, y, width, height            , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFClipRect$new   , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "clip_polygon", function(xs, ys                         , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFClipPolygon$new, find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "custom"      , function(text                           , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, new_graphics_state = TRUE, ...) {obj <- do.call(PDFCustom$new  , find_args(...)); self$append(obj); invisible(obj)})
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Add public method to PDFDocument to create and add Dict objects in an R6ish way
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-PDFDocument$set("public", "add_dict"  , function(...) {obj <- PDFDict$new(...); self$add(obj); invisible(obj)})
+PDFDocument$set("public", "dict"  , function(...) {obj <- PDFDict$new(...); self$append(obj); invisible(obj)})
 
 
 

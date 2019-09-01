@@ -32,6 +32,17 @@ PDFDocument <- R6::R6Class(
     user_objects  = NULL,
     setup_objects = NULL,
 
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Configure the setup objects and initialise the user_objects
+    # The setup objects are those PDF objects needed to initialise the page
+    # at the most basic level i.e.
+    #   - set up a catalog
+    #   - set up a list of pages
+    #   - set up font information.
+    #   - set up the list of page contents (which will get updated with each new object)
+    #   - keep track of GraphicStates used by various objects
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(..., width = 400, height = 400, fontname = 'Helvetica', version = 1.2) {
 
       self$width   <- width
@@ -66,14 +77,22 @@ PDFDocument <- R6::R6Class(
       invisible(self)
     },
 
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Set the clipping rect to be the entire document
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     reset_clip_rect = function() {
       clip = PDFClipRect$new(x = 0, y = 0, width = self$width, height = self$height)
-      self$add(clip)
+      self$append(clip)
 
       invisible(self)
     },
 
-    add = function(..., position = NULL) {
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Append objects into the list of all objects in this document
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    append = function(..., position = NULL) {
       pdf_objects <- list(...)
       if (is.null(position)) {
         self$user_objects <- append(self$user_objects, pdf_objects)
@@ -84,32 +103,52 @@ PDFDocument <- R6::R6Class(
       invisible(self)
     },
 
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Replace an object at the given position
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     replace = function(pdf_object, position) {
       self$user_objects[[position]] <- pdf_object
 
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Delete the object at the given position
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     delete = function(position) {
-      self$user_objects[[position]] <- NULL
+      self$user_objects[position] <- NULL
       invisible(self)
     },
 
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Character reprsetntatino of PDF document as a single string
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     as_character = function(...) {
       private$update_page_contents()
       private$update_graphics_state_dict()
       paste(self$version, self$body, self$xref, self$trailer, sep = "\n")
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Print
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     print = function(...) {
       cat(self$as_character(...))
     },
 
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Save to PDF file
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     save = function(filename, ...) {
       writeLines(self$as_character(), filename)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Deep copy
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     copy = function() {
       self$clone(deep = TRUE)
     }
@@ -132,6 +171,11 @@ PDFDocument <- R6::R6Class(
     },
 
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # The 3rd setup object should contain a reference to every single object
+    # on this page.  Add a reference to every user object to this dict
+    #. i.e. /Contents [6 0 R 7 0 R    etc   ]
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     update_page_contents = function() {
       pages        <- seq_along(self$user_objects) + length(self$setup_objects)
       pages_string <- paste(pages, "0 R", sep = " ", collapse = " ")
@@ -139,6 +183,11 @@ PDFDocument <- R6::R6Class(
       self$setup_objects[[3]]$update(Contents = pages_string)
     },
 
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Find out all the graphics states required for all the child objects.
+    # add these objects to the 'setup_objects'
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     update_graphics_state_dict = function() {
       gs <- lapply(self$user_objects, function(x) {x$alphas})
       gs <- unique(gs)
@@ -161,10 +210,17 @@ PDFDocument <- R6::R6Class(
 
   active = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # List containing all objects
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     all_objects = function() {
       c(self$setup_objects, self$user_objects)
     },
 
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # All strings for all objects
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     objs = function() {
       n <- length(self$all_objects)
       obj_string <- character(n)
@@ -174,10 +230,17 @@ PDFDocument <- R6::R6Class(
       obj_string
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # The header for this document
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     header = function() {
       self$version
     },
 
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # The body is just the collection of all objects
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     body = function() {
       trimws(paste(self$objs, collapse = ""))
     },
@@ -201,11 +264,17 @@ PDFDocument <- R6::R6Class(
       paste(xref, collapse = "\n")
     },
 
-    # Offset to each object from start of document
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # For the XREF table, need to know the offset to each object from start of document
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     offsets = function() {
       cumsum(nchar(c(self$header, self$objs)))
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # The trailer indicates the start of the XREF table and total length
+    # of all objects it represents (including the dummy/root object)
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     trailer = function() {
       start_xref <- tail(self$offsets, 1) # byte index of start of xref table
 
@@ -261,17 +330,19 @@ as.character.PDFDocument <- function(x, ...) {
 
 if (FALSE) {
   doc <- PDFDocument$new()
-  # doc$add(PDFCircle$new(x = 150, y= 150, r = 200, fill = 'red', stroke = 'blue', linewidth = 6))
-  # doc$add(PDFPolyline$new(xs = c(0, 0, 150), ys = c(0, 150, 150)))
-  # doc$add(PDFPolygon$new(xs = c(0, 0, 150), ys = c(0, 150, 150)))
-  # doc$add(PDFRect$new(150, 50, 300, 200))
-  # doc$add(PDFLine$new(50, 50, 400, 350))
+  # doc$append(PDFCircle$new(x = 150, y= 150, r = 200, fill = 'red', stroke = 'blue', linewidth = 6))
+  # doc$append(PDFPolyline$new(xs = c(0, 0, 150), ys = c(0, 150, 150)))
+  # doc$append(PDFPolygon$new(xs = c(0, 0, 150), ys = c(0, 150, 150)))
+  # doc$append(PDFRect$new(150, 50, 300, 200))
+  # doc$append(PDFLine$new(50, 50, 400, 350))
 
-  pdftext <- PDFText$new("Hello", 200, 200, fill = '#00000080', clip_rect = c(205, 205, 50, 15))
+  pdftext <- PDFText$new("Hello", 200, 200, fill = '#00000080')$
+    rotate(10)$
+    translate(0, 0)
 
-  doc$add(pdftext)
+  doc$append(pdftext)
 
-  doc$add_text("goodbye", 300, 300, fill = 'blue')
+  doc$text("goodbye222", 300, 300, fill = 'blue')
 
 
 #   custom <- PDFCustom$new(text = "BT
@@ -280,7 +351,7 @@ if (FALSE) {
 #   0 Tr
 #   (More Text) Tj
 # ET", stroke = 'green')
-#   doc$add(custom)
+#   doc$append(custom)
 
 
   doc$save("crap.pdf")

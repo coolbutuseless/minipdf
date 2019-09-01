@@ -16,7 +16,7 @@ PDFRect$new(x = 20, y = 30, width = 100, height = 200)
 
 ## ------------------------------------------------------------------------
 doc <- PDFDocument$new()
-new_rect  <- doc$add_rect(x = 20, y = 30, width = 100, height = 200)
+new_rect  <- doc$rect(x = 20, y = 30, width = 100, height = 200)
 new_rect
 
 ## ------------------------------------------------------------------------
@@ -27,7 +27,7 @@ PDFDict$new(Type = "/Font")
 
 ## ------------------------------------------------------------------------
 doc <- PDFDocument$new()
-new_dict  <- doc$add_dict(Greg = "/StopSign")
+new_dict  <- doc$dict(Greg = "/StopSign")
 new_dict
 
 ## ------------------------------------------------------------------------
@@ -36,8 +36,8 @@ dict(Page = "[1 0 R]", This = dict(Nested = "cool"))
 ## ------------------------------------------------------------------------
 doc <- PDFDocument$new(width = 400, height = 100)
 
-doc$add_text("#Rstats", x = 30, y = 20, fontsize = 100, fill = 'lightblue3')
-doc$add_line(x1=20, y1=10, x2=380, y2=10, linewidth = 5, stroke = '#123456')
+doc$text("#Rstats", x = 30, y = 20, fontsize = 100, fill = 'lightblue3')
+doc$line(x1=20, y1=10, x2=380, y2=10, linewidth = 5, stroke = '#123456')
 
 doc$save("figures/example0a.pdf")
 
@@ -55,7 +55,7 @@ the_line <- PDFLine$new(x1=20, y1=10, x2=380, y2=10, linewidth = 5, stroke = '#1
 
 the_text$update(fill = 'darkgreen') # Adjust colour after creation
 
-doc$add(the_text, the_line)
+doc$append(the_text, the_line)
 
 doc$save("figures/example0b.pdf")
 

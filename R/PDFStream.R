@@ -53,6 +53,46 @@ sanitise_colour_to_rgba_vec <- function(colour) {
 }
 
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Convert a single transform to a string
+# e.g. list(rotate = degrees) -> 'ctx.rotate(angleInRadians);'
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+transform_to_string <- function(type, value, depth = 0) {
+  indent <- create_indent(depth)
+
+  if (type == 'translate') {
+    glue("{indent}1 0 0 1 {value[1]} {value[2]} cm")
+  } else if (type == 'rotate') {
+    cosQ <- round(cos(value * pi/180), 3)
+    sinQ <- round(sin(value * pi/180), 3)
+    glue("{indent}{cosQ} {sinQ} {-sinQ} {cosQ} 0 0 cm")
+  } else if (type == 'scale') {
+    glue("{indent}{value[1]} 0 0 {value[2]} 0 0 cm")
+  } else if (type == 'custom') {
+    glue("{indent}{value[1]} {value[2]} {value[3]} {value[4]} {value[5]} {value[6]} cm")
+  } else {
+    stop("Unknown transform type: ", type)
+  }
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Convert a list of transforms into a string
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+transforms_to_string <- function(transforms, depth = 0) {
+  types <- names(transforms)
+  res   <- mapply(transform_to_string, types, transforms, USE.NAMES = FALSE, MoreArgs = list(depth = depth))
+
+  if (length(res) == 0) {
+    NULL
+  } else {
+    paste(res, collapse = "\n")
+  }
+}
+
+
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' PDF Stream Object Base Class
 #'
@@ -63,18 +103,27 @@ PDFStream <- R6::R6Class(
   "PDFStream",
 
   public = list(
+    attrib    = NULL,
+    transform = NULL,
 
-    attrib = NULL,
     initialize = function(...) {
+      transform <- list()
       invisible(self)
     },
 
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Update the attributes of an object. e.g. update the x coordinate:
+    #  `obj$update(x = 12)`
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     update = function(...) {
       self$attrib <- modifyList(self$attrib, list(...))
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Clone the object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     copy = function() {
       self$clone()
     },
@@ -89,33 +138,64 @@ PDFStream <- R6::R6Class(
 
     print = function() {
       cat(self$stream)
-    }
+    },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Transformations: translate, scale, rotate
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    rotate = function(degrees, x = 0, y = 0) {
+      if (x==0 && y==0) {
+        transform <- list(rotate = degrees)
+      } else {
+        transform <- list(translate = c(x, y), rotate = degrees, translate = c(-x, -y))
+      }
+
+      self$transform <- append(self$transform, transform)
+      invisible(self)
+    },
+
+    translate = function(x, y) {
+      transform <- list(translate = c(x, y))
+
+      self$transform <- append(self$transform, transform)
+      invisible(self)
+    },
+
+    scale = function(x, y=x) {
+      transform <- list(scale = c(x, y))
+
+      self$transform <- append(self$transform, transform)
+      invisible(self)
+    }
   ),
+
+
   active = list(
 
 
     stream = function() {
-      #By default, assume every stream has its own graphic state.
-      # i.e. stream is wrapped in q/Q
+
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      #By default, assume every stream has its own graphic state unless
+      # told otherwise using 'new_graphics_state'
+      # i.e. stream is wrapped in q/Q.
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       new_graphics_state <- self$attrib$new_graphics_state %||% TRUE
 
-      push_stack <- if (new_graphics_state) "q" else ""
-      pop_stack  <- if (new_graphics_state) "Q" else ""
+      push_stack <- if (new_graphics_state) "q" else NULL
+      pop_stack  <- if (new_graphics_state) "Q" else NULL
 
-      string <- glue::glue(
-        "{push_stack}
-{self$transform_spec}
-{self$linetype_spec}
-{self$linewidth_spec}
-/{self$gs_name} gs
-{self$clipping_spec}
-{self$fill_spec}
-{self$stroke_spec}
-{self$geom}
-{pop_stack}")
-      string <- gsub("\n+", "\n", string) # remove blank lines
-      trimws(string)
+      paste0(c(
+        push_stack,
+        self$transform_spec,
+        self$linetype_spec,
+        self$linewidth_spec,
+        self$gs_spec,
+        self$clipping_spec,
+        self$fill_spec,
+        self$stroke_spec,
+        self$geom,
+        pop_stack), collapse = "\n")
     },
 
     alphas = function() {
@@ -136,52 +216,62 @@ PDFStream <- R6::R6Class(
       paste0("GS", alphas[1], alphas[2])
     },
 
+    gs_spec = function() {
+      paste0("/", self$gs_name, " gs")
+    },
+
     linetype_spec = function() {
       linetype <- self$attrib$linetype %||% 0
       switch(
         linetype + 1,
-        "",                # 0 = blank
-        ""       ,         # 1 = solid
+        NULL,              # 0 = blank
+        NULL       ,       # 1 = solid
         "[3] 0 d",         # 2 = dashed
         "[1 3] 0 d",       # 3 = dotted
         "[1 1 3 1] 0 d",   # 4 = dotdash
         "[5] 0 d",         # 5 = longdash
         "[1 1 3 1] 0 d",   # 6 = twodash
-        "",
       )
     },
 
     linewidth_spec = function() {
       if (is.null(self$attrib$linewidth)) {
-        ""
+        NULL
       } else {
         paste(self$attrib$linewidth, 'w')
       }
     },
 
     fill_spec = function() {
-      fill   <- sanitise_colour_to_rgba_vec(self$attrib$fill)
-      ifelse(is.null(fill)  , "", glue("{fill[1]} {fill[2]} {fill[3]} rg"))
+      fill <- sanitise_colour_to_rgba_vec(self$attrib$fill)
+      if (is.null(fill)) {
+        NULL
+      } else {
+        glue("{fill[1]} {fill[2]} {fill[3]} rg")
+      }
     },
 
     stroke_spec = function() {
       stroke <- sanitise_colour_to_rgba_vec(self$attrib$stroke)
-      ifelse(is.null(stroke), "", glue("{stroke[1]} {stroke[2]} {stroke[3]} RG"))
+      if (is.null(stroke)) {
+        NULL
+      } else {
+        glue("{stroke[1]} {stroke[2]} {stroke[3]} RG")
+      }
     },
 
     transform_spec = function() {
-      if (is.null(self$attrib$transform)) {
-        return("")
+      if (length(self$transform) == 0) {
+        NULL
+      } else {
+        transforms_to_string(self$transform)
       }
-
-      paste(self$attrib$transform, "cm", sep = " ", collapse = "\n")
-
     },
 
     clipping_spec = function() {
       rect <- self$attrib$clip_rect
       if (is.null(rect) || length(rect) != 4) {
-        return("")
+        return(NULL)
       }
 
       x      <- rect[1]
@@ -189,14 +279,14 @@ PDFStream <- R6::R6Class(
       width  <- rect[3]
       height <- rect[4]
 
-      glue("
+      trimws(glue("
 {x        } {y         } m
 {x + width} {y         } l
 {x + width} {y + height} l
 {x        } {y + height} l
 {x        } {y         } l W n
 "
-      )
+      ))
     },
 
 
