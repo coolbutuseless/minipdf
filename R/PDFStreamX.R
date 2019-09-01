@@ -34,23 +34,20 @@ PDFText <- R6::R6Class(
 
       super$initialize(...)
       invisible(self)
-    }
-  ),
+    },
 
-
-
-  active = list(
-    geom = function() {
-      glue::glue_data(
-        self$attrib,
+    get_geom_spec = function() {
+      attrib <- self$get_attrib()
+      trimws(glue::glue_data(
+        attrib,
         "
 BT
-  /F1 {fontsize} Tf
-  {x} {y} Td
-  {text_mode} Tr
-  ({text}) Tj
+    /F1 {fontsize} Tf
+    {x} {y} Td
+    {text_mode} Tr
+    ({text}) Tj
 ET"
-      )
+      ))
     }
   )
 )
@@ -86,15 +83,12 @@ PDFLine <- R6::R6Class(
 
       super$initialize(...)
       invisible(self)
-    }
-  ),
+    },
 
-
-
-  active = list(
-    geom = function() {
+    get_geom_spec = function() {
+      attrib <- self$get_attrib()
       glue::glue_data(
-        self$attrib,
+        attrib,
         "{x1} {y1} m {x2} {y2} l s"
       )
     }
@@ -133,14 +127,13 @@ PDFRect <- R6::R6Class(
 
       super$initialize(...)
       invisible(self)
-    }
-  ),
+    },
 
-  active = list(
-    geom = function() {
-      self$attrib$paint <- self$paint_spec
+    get_geom_spec = function() {
+      attrib <- self$get_attrib()
+      attrib$paint <- self$paint_spec
       glue::glue_data(
-        self$attrib,
+        attrib,
         "{x} {y} {width} {height} re {paint}"
       )
     }
@@ -176,17 +169,16 @@ PDFPolyline <- R6::R6Class(
 
       super$initialize(...)
       invisible(self)
-    }
-  ),
+    },
 
-  active = list(
-    geom = function() {
-      lines <- paste(self$attrib$xs[-1], self$attrib$ys[-1], 'l', collapse = ' ')
-      self$attrib$lines <- lines
-      self$attrib$paint <- self$paint_spec
+    get_geom_spec = function() {
+      attrib <- self$get_attrib()
+      lines <- paste(attrib$xs[-1], attrib$ys[-1], 'l', collapse = ' ')
+      attrib$lines <- lines
+      attrib$paint <- self$paint_spec
 
       glue::glue_data(
-        self$attrib,
+        attrib,
         "{xs[1]} {ys[1]} m {lines} S"
       )
     }
@@ -222,17 +214,17 @@ PDFPolygon <- R6::R6Class(
 
       super$initialize(...)
       invisible(self)
-    }
-  ),
+    },
 
-  active = list(
-    geom = function() {
-      lines <- paste(self$attrib$xs[-1], self$attrib$ys[-1], 'l', collapse = ' ')
-      self$attrib$lines <- lines
-      self$attrib$paint <- self$paint_spec
+    get_geom_spec = function() {
+      attrib <- self$get_attrib()
+
+      lines <- paste(attrib$xs[-1], attrib$ys[-1], 'l', collapse = ' ')
+      attrib$lines <- lines
+      attrib$paint <- self$paint_spec
 
       glue::glue_data(
-        self$attrib,
+        attrib,
         "{xs[1]} {ys[1]} m {lines} {paint}"
       )
     }
@@ -274,21 +266,20 @@ PDFCircle <- R6::R6Class(
 
       super$initialize(...)
       invisible(self)
-    }
-  ),
+    },
 
-  active = list(
-    geom = function() {
+    get_geom_spec = function() {
+      attrib <- self$get_attrib()
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # Bezier offset. See:
       # stackoverflow.com/questions/1734745/how-to-create-circle-with-b%C3%A9zier-curves
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      self$attrib$b     <- 0.552284749831 * self$attrib$r
+      attrib$b     <- 0.552284749831 * attrib$r
 
-      self$attrib$paint <- self$paint_spec
+      attrib$paint <- self$paint_spec
 
-      glue::glue_data(
-        self$attrib,
+      trimws(glue::glue_data(
+        attrib,
         "
 {x+r} {y} m
 {x+r} {y+b}  {x+b} {y+r}  {x}   {y+r} c
@@ -296,7 +287,7 @@ PDFCircle <- R6::R6Class(
 {x-r} {y-b}  {x-b} {y-r}  {x}   {y-r} c
 {x+b} {y-r}  {x+r} {y-b}  {x+r} {y}   c
 {paint}"
-      )
+      ))
     }
   )
 )
@@ -338,16 +329,12 @@ PDFClipRect <- R6::R6Class(
 
       super$initialize(...)
       invisible(self)
-    }
-  ),
+    },
 
-
-  # 'W' to set this as a clipping path.
-  # 'n' for "don't actually draw the path"
-  active = list(
-    geom = function() {
-      glue::glue_data(
-        self$attrib,
+    get_geom_spec = function() {
+      attrib <- self$get_attrib()
+      trimws(glue::glue_data(
+        attrib,
         "
 {x        } {y         } m
 {x + width} {y         } l
@@ -355,7 +342,7 @@ PDFClipRect <- R6::R6Class(
 {x        } {y + height} l
 {x        } {y         } l W n
 "
-      )
+      ))
     }
   )
 )
@@ -390,16 +377,15 @@ PDFClipPolygon <- R6::R6Class(
 
       super$initialize(...)
       invisible(self)
-    }
-  ),
+    },
 
-  active = list(
-    geom = function() {
-      lines <- paste(self$attrib$xs[-1], self$attrib$ys[-1], 'l', collapse = ' ')
-      self$attrib$lines <- lines
+    get_geom_spec = function() {
+      attrib <- self$get_attrib()
+      lines <- paste(attrib$xs[-1], attrib$ys[-1], 'l', collapse = ' ')
+      attrib$lines <- lines
 
       glue::glue_data(
-        self$attrib,
+        attrib,
         "{xs[1]} {ys[1]} m {lines} W n"
       )
     }
@@ -443,15 +429,11 @@ PDFCustom <- R6::R6Class(
     update = function(text, ...) {
       self$attrib$text <- text
       invisible(self)
-    }
-  ),
+    },
 
-
-  # 'W' to set this as a clipping path.
-  # 'n' for "don't actually draw the path"
-  active = list(
-    geom = function() {
-      as.character(self$attrib$text)
+    get_geom_spec = function() {
+      attrib <- self$get_attrib()
+      as.character(attrib$text)
     }
   )
 )
@@ -475,30 +457,30 @@ PDFCustom <- R6::R6Class(
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 stream <- list(
-  rect         = function(x, y, width, height            , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFRect$new       , find_args(...))},
-  line         = function(x1, y1, x2, y2                                 ,stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFLine$new       , find_args(...))},
-  text         = function(text, x, y, fontsize, text_mode, fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFText$new       , find_args(...))},
-  circle       = function(x, y, r                        , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFCircle$new     , find_args(...))},
-  polygon      = function(xs, ys                         , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFPolygon$new    , find_args(...))},
-  polyline     = function(xs, ys                         , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFPolyline$new   , find_args(...))},
-  clip_rect    = function(x, y, width, height            , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFClipRect$new   , find_args(...))},
-  clip_polygon = function(x, y, width, height            , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFClipPolygon$new, find_args(...))},
-  custom       = function(text                           , fill='#000000',stroke='#000000', linewidth=1, linetype=0, ...) {do.call(PDFCustom$new     , find_args(...))}
+  rect         = function(x, y, width, height            , ...) {do.call(PDFRect$new       , find_args(...))},
+  line         = function(x1, y1, x2, y2                 , ...) {do.call(PDFLine$new       , find_args(...))},
+  text         = function(text, x, y, fontsize, text_mode, ...) {do.call(PDFText$new       , find_args(...))},
+  circle       = function(x, y, r                        , ...) {do.call(PDFCircle$new     , find_args(...))},
+  polygon      = function(xs, ys                         , ...) {do.call(PDFPolygon$new    , find_args(...))},
+  polyline     = function(xs, ys                         , ...) {do.call(PDFPolyline$new   , find_args(...))},
+  clip_rect    = function(x, y, width, height            , ...) {do.call(PDFClipRect$new   , find_args(...))},
+  clip_polygon = function(x, y, width, height            , ...) {do.call(PDFClipPolygon$new, find_args(...))},
+  custom       = function(text                           , ...) {do.call(PDFCustom$new     , find_args(...))}
 )
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Add public methods to PDFDocument to create and add Stream objects in an R6ish way
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-PDFDocument$set("public", "text"        , function(text, x, y, fontsize, text_mode, fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFText$new       , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "rect"        , function(x, y, width, height            , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFRect$new       , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "line"        , function(x1, y1, x2, y2                                 , stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFLine$new       , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "circle"      , function(x, y, r                        , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFCircle$new     , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "polygon"     , function(xs, ys                         , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFPolygon$new    , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "polyline"    , function(xs, ys                         , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFPolyline$new   , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "clip_rect"   , function(x, y, width, height            , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFClipRect$new   , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "clip_polygon", function(xs, ys                         , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, ...) {obj <- do.call(PDFClipPolygon$new, find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "custom"      , function(text                           , fill='#000000', stroke='#000000', linewidth=1, linetype=0, clip_rect=NULL, new_graphics_state = TRUE, ...) {obj <- do.call(PDFCustom$new  , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "text"        , function(text, x, y, fontsize, text_mode, ...) {obj <- do.call(PDFText$new       , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "rect"        , function(x, y, width, height            , ...) {obj <- do.call(PDFRect$new       , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "line"        , function(x1, y1, x2, y2                 , ...) {obj <- do.call(PDFLine$new       , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "circle"      , function(x, y, r                        , ...) {obj <- do.call(PDFCircle$new     , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "polygon"     , function(xs, ys                         , ...) {obj <- do.call(PDFPolygon$new    , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "polyline"    , function(xs, ys                         , ...) {obj <- do.call(PDFPolyline$new   , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "clip_rect"   , function(x, y, width, height            , ...) {obj <- do.call(PDFClipRect$new   , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "clip_polygon", function(xs, ys                         , ...) {obj <- do.call(PDFClipPolygon$new, find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "custom"      , function(text                           , new_graphics_state = TRUE, ...) {obj <- do.call(PDFCustom$new  , find_args(...)); self$append(obj); invisible(obj)})
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

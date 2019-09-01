@@ -113,20 +113,23 @@ transforms_to_string <- function(transforms, depth = 0) {
 #'
 #' @import R6
 #' @import glue
+#' @importFrom utils modifyList
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFStream <- R6::R6Class(
   "PDFStream",
 
   public = list(
-    attrib    = NULL,
-    transform = NULL,
+    attrib           = NULL,
+    transform        = NULL,
+    parent_attrib    = NULL,
+    parent_transform = NULL,
 
     initialize = function(...) {
-      transform <- list()
+      self$transform        <- list()
+      self$parent_attrib    <- list()
+      self$parent_transform <- list()
 
-      self$attrib <- modifyList(default_draw_state, self$attrib)
-      self$attrib <- modifyList(self$attrib       , list(...))
-
+      self$update(...)
       invisible(self)
     },
 
@@ -137,7 +140,7 @@ PDFStream <- R6::R6Class(
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     update = function(..., fontsize, text_mode, fill, stroke, linewidth, linetype, clip_rect) {
       args <- find_args(...)
-      self$attrib <- modifyList(self$attrib, args)
+      self$attrib <- modifyList(self$attrib, args, keep.null = TRUE)
       invisible(self)
     },
 
@@ -153,8 +156,8 @@ PDFStream <- R6::R6Class(
     # and length dict.
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     as_object = function(obj_idx) {
-      this_stream <- glue("stream\n{self$stream}\nendstream")
-      chars       <- nchar(self$stream)
+      this_stream <- glue("stream\n{self$as_character()}\nendstream")
+      chars       <- nchar(self$as_character())
       this_length <- glue("<< /Length {chars} >>")
       res <- glue("{obj_idx} 0 obj\n{this_length}\n{this_stream}\nendobj")
       res
@@ -163,8 +166,8 @@ PDFStream <- R6::R6Class(
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Cat just the inner stream part of the object when print()ed
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    print = function() {
-      cat(self$stream)
+    print = function(...) {
+      cat(self$as_character(...))
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -204,14 +207,13 @@ PDFStream <- R6::R6Class(
     stroke    = function(stroke    = '#000000') { self$update(stroke    = stroke   ) },
     linewidth = function(linewidth = 1        ) { self$update(linewidth = linewidth) },
     linetype  = function(linetype  = 0        ) { self$update(linetype  = 0        ) },
-    clip_rect = function(clip_rect = NULL     ) { self$update(clip_rect = clip_rect) }
-  ),
+    clip_rect = function(clip_rect = NULL     ) { self$update(clip_rect = clip_rect) },
 
 
-  active = list(
-
-
-    stream = function() {
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # convert stream object to character string
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    as_character = function(...) {
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       #By default, assume every stream has its own graphic state unless
@@ -223,22 +225,48 @@ PDFStream <- R6::R6Class(
       push_stack <- if (new_graphics_state) "q" else NULL
       pop_stack  <- if (new_graphics_state) "Q" else NULL
 
+      attrib <- self$get_attrib()
+
+      transform_spec <- self$get_transform_spec()
+
       paste0(c(
         push_stack,
-        self$transform_spec,
-        self$linetype_spec,
-        self$linewidth_spec,
+        transform_spec,
         self$gs_spec,
         self$clipping_spec,
-        self$fill_spec,
-        self$stroke_spec,
-        self$geom,
+        create_linetype_spec(attrib),
+        create_linewidth_spec(attrib),
+        create_fill_spec(attrib),
+        create_stroke_spec(attrib),
+        self$get_geom_spec(),
         pop_stack), collapse = "\n")
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Full transform of all parent objects and this object's transform
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    get_transform_spec = function() {
+      transforms_to_string(c(self$parent_transform, self$transform))
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Normalised full set of attributes including parent attributes if available
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    get_attrib = function() {
+      attrib <- modifyList(default_draw_state, self$parent_attrib, keep.null = TRUE)
+      attrib <- modifyList(attrib            , self$attrib       , keep.null = TRUE)
+      attrib
+    }
+  ),
+
+
+
+  active = list(
+
     alphas = function() {
-      fill   = sanitise_colour_to_rgba_vec(self$attrib$fill)
-      stroke = sanitise_colour_to_rgba_vec(self$attrib$stroke)
+      attrib <- self$get_attrib()
+      fill   <- sanitise_colour_to_rgba_vec(attrib$fill)
+      stroke <- sanitise_colour_to_rgba_vec(attrib$stroke)
 
       fill_alpha   <-   fill[4] %||% 1
       stroke_alpha <- stroke[4] %||% 1
@@ -258,56 +286,9 @@ PDFStream <- R6::R6Class(
       paste0("/", self$gs_name, " gs")
     },
 
-    linetype_spec = function() {
-      linetype <- self$attrib$linetype %||% 0
-      switch(
-        linetype + 1,
-        NULL,              # 0 = blank
-        NULL       ,       # 1 = solid
-        "[3] 0 d",         # 2 = dashed
-        "[1 3] 0 d",       # 3 = dotted
-        "[1 1 3 1] 0 d",   # 4 = dotdash
-        "[5] 0 d",         # 5 = longdash
-        "[1 1 3 1] 0 d",   # 6 = twodash
-      )
-    },
-
-    linewidth_spec = function() {
-      if (is.null(self$attrib$linewidth)) {
-        NULL
-      } else {
-        paste(self$attrib$linewidth, 'w')
-      }
-    },
-
-    fill_spec = function() {
-      fill <- sanitise_colour_to_rgba_vec(self$attrib$fill)
-      if (is.null(fill)) {
-        NULL
-      } else {
-        glue("{fill[1]} {fill[2]} {fill[3]} rg")
-      }
-    },
-
-    stroke_spec = function() {
-      stroke <- sanitise_colour_to_rgba_vec(self$attrib$stroke)
-      if (is.null(stroke)) {
-        NULL
-      } else {
-        glue("{stroke[1]} {stroke[2]} {stroke[3]} RG")
-      }
-    },
-
-    transform_spec = function() {
-      if (length(self$transform) == 0) {
-        NULL
-      } else {
-        transforms_to_string(self$transform)
-      }
-    },
-
     clipping_spec = function() {
-      rect <- self$attrib$clip_rect
+      attrib <- self$get_attrib()
+      rect <- attrib$clip_rect
       if (is.null(rect) || length(rect) != 4) {
         return(NULL)
       }
@@ -345,8 +326,9 @@ PDFStream <- R6::R6Class(
       # b* - close, fill & stroek (even odd)
       # n  - do nothing. no-op
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      fill   <- self$attrib$fill
-      stroke <- self$attrib$stroke
+      attrib <- self$get_attrib()
+      fill   <- attrib$fill
+      stroke <- attrib$stroke
 
       if (is.null(fill) && is.null(stroke)) {
         'n'

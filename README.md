@@ -80,10 +80,11 @@ layout.
 
 ## News
 
-  - `minipdf v0.2.1`
+  - `minipdf v0.2.1` and `minidf v0.2.2`
       - transforms are now methods on the PDF stream objects
       - renamed methods on the PDFDcoument e.g. `add_rect()` is now just
         `rect()`
+      - internal refactoring of attribute handling.
 
 ## Gallery
 

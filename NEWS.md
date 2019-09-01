@@ -3,6 +3,7 @@
 
 * draw state parameters are now set via their own methods e.g. `obj$fill('black')`, 
   however using `update()` still works e.g. `obj$update(fill = 'black')`
+* refactored internal `attrib` handling.
 
 # minipdf 0.2.1
 

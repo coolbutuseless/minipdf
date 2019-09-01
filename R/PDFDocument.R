@@ -355,7 +355,7 @@ if (FALSE) {
 
 
   doc$save("crap.pdf")
-
+  doc
 }
 
 

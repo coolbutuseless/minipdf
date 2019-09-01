@@ -4,3 +4,5 @@
 ^README\.Rmd$
 ^crap.pdf$
 ^\.travis\.yml$
+^doc$
+^Meta$

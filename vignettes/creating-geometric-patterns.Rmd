@@ -83,7 +83,7 @@ for (x in seq(20, 400, 40)) {
   }
 }
 
-doc$text("minpdf", x = 95, y = 20, fontsize = 65, stroke = 'grey50', fill = 'lightblue', text_mode = 2)
+doc$text("minipdf", x = 95, y = 20, fontsize = 65, stroke = 'grey50', fill = 'lightblue', text_mode = 2)
 doc$rect(0, 0, 400, 400, fill = NULL, stroke = 'grey70')
 
 doc$save("figures/example2.pdf")
