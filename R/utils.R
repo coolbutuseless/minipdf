@@ -20,3 +20,8 @@ all_named <- function(x) {
   named <- nzchar(names(x))
   length(x) == 0L || (!is.null(named) && length(named) > 0 && all(named))
 }
+
+
+create_indent <- function(depth) {
+  paste0(rep("    ", depth), collapse = "")
+}

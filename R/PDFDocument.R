@@ -308,7 +308,7 @@ PDFDocument <- R6::R6Class(
 #' @return PDFDocument R6 object
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdfdoc <- function(..., width = 400, height = 400, fontname = 'Helvetica', version = 1.2) {
+pdf_doc <- function(..., width = 400, height = 400, fontname = 'Helvetica', version = 1.2) {
   PDFDocument$new(..., width = width, height = height, fontname = fontname, version = version)
 }
 

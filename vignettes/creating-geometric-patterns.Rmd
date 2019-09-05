@@ -72,7 +72,7 @@ knitr::include_graphics("figures/example1.png")
 ## Creating another pattern
 
 ```{r}
-doc <- pdfdoc(width = 400, height = 400, fontname = 'Helvetica-Bold')
+doc <- pdf_doc(width = 400, height = 400, fontname = 'Helvetica-Bold')
 
 pal <- viridisLite::viridis(80)
 i   <- 0

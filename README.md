@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 ![](http://img.shields.io/badge/cool-useless-green.svg)
+![](http://img.shields.io/badge/mini-verse-blue.svg)
 ![](http://img.shields.io/badge/very-experimental-orange.svg) [![Travis
 build
 status](https://travis-ci.org/coolbutuseless/minipdf.svg?branch=master)](https://travis-ci.org/coolbutuseless/minipdf)
@@ -59,7 +60,7 @@ d3  <- diamond$copy()$fill('#12345630')$
   stroke('white')$
   linewidth(2)$
   translate(75, 100)$scale(2)
-doc <- pdfdoc(width = 450, height = 200, d1a, d1b, d1c, d2a, d2b, d2c, d3)
+doc <- pdf_doc(width = 450, height = 200, d1a, d1b, d1c, d2a, d2b, d2c, d3)
 doc$save("man/figures/diamonds.pdf")
 ```
 

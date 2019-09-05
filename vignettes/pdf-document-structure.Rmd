@@ -168,7 +168,7 @@ knitr::include_graphics("figures/example0b.png")
 
 * Create stream objects using the `stream` list of helper functions
 * Add objects to the document
-* Initialise the document using `pdfdoc` with these elements
+* Initialise the document using `pdf_doc` with these elements
 
 ```{r}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -185,7 +185,7 @@ the_text$fill('hotpink')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Initialise a document
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doc <- pdfdoc(width = 400, height = 100, the_text, the_line)
+doc <- pdf_doc(width = 400, height = 100, the_text, the_line)
 
 doc$save("figures/example0c.pdf")
 ```
