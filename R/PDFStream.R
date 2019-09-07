@@ -121,6 +121,7 @@ PDFStream <- R6::R6Class(
   public = list(
     attrib           = NULL,
     transform        = NULL,
+
     parent_attrib    = NULL,
     parent_transform = NULL,
 
@@ -171,7 +172,7 @@ PDFStream <- R6::R6Class(
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Transformations: translate, scale, rotate
+    # Transformations: rotate
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     rotate = function(degrees, x = 0, y = 0) {
       if (x==0 && y==0) {
@@ -184,6 +185,9 @@ PDFStream <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Transformations: translate
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     translate = function(x, y) {
       transform <- list(translate = c(x, y))
 
@@ -191,6 +195,9 @@ PDFStream <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Transformations: scale
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     scale = function(x, y=x) {
       transform <- list(scale = c(x, y))
 
@@ -201,13 +208,14 @@ PDFStream <- R6::R6Class(
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Update methods for the draw state parameters
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    fontsize  = function(fontsize = 12        ) { self$update(fontsize  = fontsize ) },
-    text_mode = function(text_mode = 0        ) { self$update(text_mode = text_mode) },
-    fill      = function(fill      = '#000000') { self$update(fill      = fill     ) },
-    stroke    = function(stroke    = '#000000') { self$update(stroke    = stroke   ) },
-    linewidth = function(linewidth = 1        ) { self$update(linewidth = linewidth) },
-    linetype  = function(linetype  = 0        ) { self$update(linetype  = 0        ) },
-    clip_rect = function(clip_rect = NULL     ) { self$update(clip_rect = clip_rect) },
+    fontsize     = function(fontsize = 12        ) { self$update(fontsize     = fontsize ) },
+    text_mode    = function(text_mode = 0        ) { self$update(text_mode    = text_mode) },
+    fill         = function(fill      = '#000000') { self$update(fill         = fill     ) },
+    stroke       = function(stroke    = '#000000') { self$update(stroke       = stroke   ) },
+    linewidth    = function(linewidth = 1        ) { self$update(linewidth    = linewidth) },
+    linetype     = function(linetype  = 0        ) { self$update(linetype     = 0        ) },
+    clip_rect    = function(x, y, width, height  ) { self$update(clip_rect    = c(x, y, width, height)) },
+    clip_polygon = function(xs, ys               ) { self$update(clip_polygon = list(xs = xs, ys = ys)) },
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -256,7 +264,12 @@ PDFStream <- R6::R6Class(
       attrib <- modifyList(default_draw_state, self$parent_attrib, keep.null = TRUE)
       attrib <- modifyList(attrib            , self$attrib       , keep.null = TRUE)
       attrib
+    },
+
+
+    propagate_state_to_children = function() {
     }
+
   ),
 
 
@@ -286,8 +299,27 @@ PDFStream <- R6::R6Class(
       paste0("/", self$gs_name, " gs")
     },
 
+    # Use clip_polygon if specified.
+    # Use clip_rect if specified
+    # else NULL
     clipping_spec = function() {
       attrib <- self$get_attrib()
+
+      # See if user has specified a clipping polygon
+      poly <- attrib$clip_polygon
+      if (!is.null(poly)) {
+        # user has specified a clip polygon using 'xs' and 'ys'
+        lines <- paste(poly$xs[-1], poly$ys[-1], 'l', collapse = ' ')
+        poly$lines <- lines
+
+        res <- glue::glue_data(
+          poly,
+          "{xs[1]} {ys[1]} m {lines} W n"
+        )
+        return(trimws(res))
+      }
+
+      # See if user has specified a clipping rect
       rect <- attrib$clip_rect
       if (is.null(rect) || length(rect) != 4) {
         return(NULL)

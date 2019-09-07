@@ -1,4 +1,12 @@
 
+# minipdf 0.2.3
+
+* Curtailed the accessability to global clipping path as it is cumulative and not
+resettable within a document making it a bit of a sledghammer.
+* Instead use `clip_path()` or `clip_rect()` on specific objects
+* Renamed the `stream` helper to `ptag` to be more reminiscent of the `tag` helper
+  from `shiny`
+
 # minipdf 0.2.2
 
 * draw state parameters are now set via their own methods e.g. `obj$fill('black')`, 
@@ -22,8 +30,8 @@ within a PDF now classifed as either `Dictionary` or `Stream` objects
 * Since R6 objects are used throughout to represent PDF stream/dict objects, we
   can make use of R6's reference semantics to update individual nodes within a document *in-situ* i.e.
   without having to recreate the document from scratch.
-* The `stream` data structure can be used to build R6 `PDFStream` objects of the
-  required sub-class e.g. `stream$rect()` will help create a `PDFRect` object.
+* The `ptag` data structure can be used to build R6 `PDFStream` objects of the
+  required sub-class e.g. `ptag()` will help create a `PDFRect` object.
 * The `dict` function can be used to build R6 `PDFDict` objects.
 * Alternately, the `PDFDocument` class includes helper methods (e.g. `add_rect()`) which
   will create a stream of dict object of the correct type and add it to the document.

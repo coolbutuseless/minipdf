@@ -45,10 +45,10 @@ instructions, images or definitions.
 
 Stream objects can be created in 3 ways:
 
-Using the `stream` collection of functions:
+Using the `ptag` collection of functions:
 
 ```{r}
-stream$rect(x = 20, y = 30, width = 100, height = 200)
+ptag$rect(x = 20, y = 30, width = 100, height = 200)
 ```
 
 
@@ -164,9 +164,9 @@ knitr::include_graphics("figures/example0b.png")
 
 
 
-## Creating a simple PDF (Using the `stream` list of helper function)
+## Creating a simple PDF (Using the `ptag` list of helper function)
 
-* Create stream objects using the `stream` list of helper functions
+* Create stream objects using the `ptag` list of helper functions
 * Add objects to the document
 * Initialise the document using `pdf_doc` with these elements
 
@@ -174,8 +174,8 @@ knitr::include_graphics("figures/example0b.png")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Create individiaul R6 objects
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-the_text <- stream$text("#Rstats", x = 30, y = 20, fontsize = 100, fill = 'lightblue3')
-the_line <- stream$line(x1=20, y1=10, x2=380, y2=10, linewidth = 5, stroke = '#123456')
+the_text <- ptag$text("#Rstats", x = 30, y = 20, fontsize = 100, fill = 'lightblue3')
+the_line <- ptag$line(x1=20, y1=10, x2=380, y2=10, linewidth = 5, stroke = '#123456')
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Adjust the colour of the text

@@ -72,16 +72,6 @@ PDFDocument <- R6::R6Class(
       # this is just a clipping path that encompasses the entire canvas and
       # has no real effect other than to make the document have *something*
       # in it.
-      self$reset_clip_rect()
-
-      invisible(self)
-    },
-
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Set the clipping rect to be the entire document
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    reset_clip_rect = function() {
       clip = PDFClipRect$new(x = 0, y = 0, width = self$width, height = self$height)
       self$append(clip)
 

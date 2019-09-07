@@ -447,8 +447,8 @@ PDFCustom <- R6::R6Class(
 #'
 #' @examples
 #' \dontrun{
-#' stream$rect(x = 0, y = 0, width = 100, height = 100)
-#' stream$circle(x = 100, y = 100, r = 10, fill = 'black')
+#' ptag$rect(x = 0, y = 0, width = 100, height = 100)
+#' ptag$circle(x = 100, y = 100, r = 10, fill = 'black')
 #' }
 #'
 #' @seealso PDFText PDFRect PDFLine PDFPolyline PDFPolygon PDFCircle PDFCustom
@@ -456,16 +456,16 @@ PDFCustom <- R6::R6Class(
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-stream <- list(
+ptag <- list(
   rect         = function(x, y, width, height            , ...) {do.call(PDFRect$new       , find_args(...))},
   line         = function(x1, y1, x2, y2                 , ...) {do.call(PDFLine$new       , find_args(...))},
   text         = function(text, x, y, fontsize, text_mode, ...) {do.call(PDFText$new       , find_args(...))},
   circle       = function(x, y, r                        , ...) {do.call(PDFCircle$new     , find_args(...))},
   polygon      = function(xs, ys                         , ...) {do.call(PDFPolygon$new    , find_args(...))},
   polyline     = function(xs, ys                         , ...) {do.call(PDFPolyline$new   , find_args(...))},
-  clip_rect    = function(x, y, width, height            , ...) {do.call(PDFClipRect$new   , find_args(...))},
-  clip_polygon = function(x, y, width, height            , ...) {do.call(PDFClipPolygon$new, find_args(...))},
   custom       = function(text                           , ...) {do.call(PDFCustom$new     , find_args(...))}
+  # clip_rect    = function(x, y, width, height            , ...) {do.call(PDFClipRect$new   , find_args(...))},
+  # clip_polygon = function(x, y, width, height            , ...) {do.call(PDFClipPolygon$new, find_args(...))},
 )
 
 
@@ -478,9 +478,9 @@ PDFDocument$set("public", "line"        , function(x1, y1, x2, y2               
 PDFDocument$set("public", "circle"      , function(x, y, r                        , ...) {obj <- do.call(PDFCircle$new     , find_args(...)); self$append(obj); invisible(obj)})
 PDFDocument$set("public", "polygon"     , function(xs, ys                         , ...) {obj <- do.call(PDFPolygon$new    , find_args(...)); self$append(obj); invisible(obj)})
 PDFDocument$set("public", "polyline"    , function(xs, ys                         , ...) {obj <- do.call(PDFPolyline$new   , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "clip_rect"   , function(x, y, width, height            , ...) {obj <- do.call(PDFClipRect$new   , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "clip_polygon", function(xs, ys                         , ...) {obj <- do.call(PDFClipPolygon$new, find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "custom"      , function(text                           , new_graphics_state = TRUE, ...) {obj <- do.call(PDFCustom$new  , find_args(...)); self$append(obj); invisible(obj)})
+PDFDocument$set("public", "custom"      , function(text, new_graphics_state = TRUE, ...) {obj <- do.call(PDFCustom$new     , find_args(...)); self$append(obj); invisible(obj)})
+# PDFDocument$set("public", "clip_rect"   , function(x, y, width, height            , ...) {obj <- do.call(PDFClipRect$new   , find_args(...)); self$append(obj); invisible(obj)})
+# PDFDocument$set("public", "clip_polygon", function(xs, ys                         , ...) {obj <- do.call(PDFClipPolygon$new, find_args(...)); self$append(obj); invisible(obj)})
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
