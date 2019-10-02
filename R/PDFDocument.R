@@ -141,6 +141,23 @@ PDFDocument <- R6::R6Class(
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     copy = function() {
       self$clone(deep = TRUE)
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Use the viewer to show the PDF in its current state
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    show = function(viewer = getOption("viewer", utils::browseURL)) {
+      temp_dir <- tempfile("viewpdf")
+      dir.create(temp_dir)
+      temp_pdf <- file.path(temp_dir, "temp.pdf")
+      self$save(temp_pdf)
+
+      if (!is.null(viewer)) {
+        viewer(temp_pdf)
+      } else {
+        warning("No viewer available.")
+      }
+      invisible(temp_pdf)
     }
   ),
 
@@ -347,17 +364,4 @@ if (FALSE) {
   doc$save("crap.pdf")
   doc
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 

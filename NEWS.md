@@ -1,4 +1,9 @@
 
+# minipdf 0.2.4
+
+* Add a `$show()` method to `PDFDocument`.  In Rstudio, this will launch a PDF
+  app to view the current document.
+
 # minipdf 0.2.3
 
 * Curtailed the accessability to global clipping path as it is cumulative and not
