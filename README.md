@@ -6,9 +6,7 @@
 <!-- badges: start -->
 
 ![](http://img.shields.io/badge/cool-useless-green.svg)
-![](http://img.shields.io/badge/mini-verse-blue.svg)
-![](http://img.shields.io/badge/very-experimental-orange.svg) [![Travis
-build
+![](http://img.shields.io/badge/mini-verse-blue.svg) [![Travis build
 status](https://travis-ci.org/coolbutuseless/minipdf.svg?branch=master)](https://travis-ci.org/coolbutuseless/minipdf)
 <!-- badges: end -->
 
