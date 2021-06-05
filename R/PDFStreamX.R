@@ -1,22 +1,26 @@
 
-valid_pdf_fonts <- c('Times-Roman', 'Times-Bold', 'Times-Italic', 'Times-BoldItalic',
-               'Helvetica', 'Helvetica-Bold', 'Helvetica-Oblique', 'Helvetica-BoldOblique',
-               'Courier'  , 'Courier-Bold'  , 'Courier-Oblique'  , 'Courier-BoldOblique'  ,
-               'Symbol', 'ZapfDingbats')
+valid_pdf_fonts <- c(
+  'Times-Roman',
+  'Times-Bold',
+  'Times-Italic',
+  'Times-BoldItalic',
+  'Helvetica',
+  'Helvetica-Bold',
+  'Helvetica-Oblique',
+  'Helvetica-BoldOblique',
+  'Courier',
+  'Courier-Bold',
+  'Courier-Oblique',
+  'Courier-BoldOblique',
+  'Symbol',
+  'ZapfDingbats'
+)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' PDF Text stream object creator
 #'
 #' This is the R6 class representing the text stream object.
-#'
-#'
-#'\itemize{
-#' \item{text text string for PDFText}
-#' \item{x,y coordinates}
-#' \item{... extra arguments specifying initial state e.g. 'fill'}
-#'}
-#'
 #'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -25,6 +29,13 @@ PDFText <- R6::R6Class(
 
   public = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a text
+    #'
+    #' @param text text
+    #' @param x,y location
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(text, x, y, ...) {
       self$attrib <- list(
         text      = text,
@@ -36,10 +47,12 @@ PDFText <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Fetch the character representation of this geometry
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_geom_spec = function() {
       attrib <- self$get_attrib()
-      trimws(glue::glue_data(
-        attrib,
+      trimws(glew(
         "
 BT
     /F1 {fontsize} Tf
@@ -47,7 +60,8 @@ BT
     {text_mode} Tr
     ({text}) Tj
 ET"
-      ))
+      ,
+attrib))
     }
   )
 )
@@ -58,13 +72,6 @@ ET"
 #'
 #' This is the R6 class representing the line stream object.
 #'
-#'
-#'\itemize{
-#' \item{x1,y1,x2,y2 pair of coordinates}
-#' \item{... extra arguments specifying initial state e.g. 'fill'}
-#'}
-#'
-#'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFLine <- R6::R6Class(
@@ -72,6 +79,12 @@ PDFLine <- R6::R6Class(
 
   public = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a line
+    #'
+    #'@param x1,y1,x2,y2 line start/end coordinates
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(x1, y1, x2, y2, ...) {
 
       self$attrib <- list(
@@ -85,11 +98,14 @@ PDFLine <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Fetch the character representation of this geometry
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_geom_spec = function() {
       attrib <- self$get_attrib()
-      glue::glue_data(
-        attrib,
-        "{x1} {y1} m {x2} {y2} l s"
+      glew(
+        "{x1} {y1} m {x2} {y2} l s",
+        attrib
       )
     }
   )
@@ -101,14 +117,6 @@ PDFLine <- R6::R6Class(
 #'
 #' This is the R6 class representing the rect stream object.
 #'
-#'
-#'\itemize{
-#' \item{x,y coordinates}
-#' \item{width,height rectangle width and height}
-#' \item{... extra arguments specifying initial state e.g. 'fill'}
-#'}
-#'
-#'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFRect <- R6::R6Class(
@@ -116,6 +124,12 @@ PDFRect <- R6::R6Class(
 
   public = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a rectangle
+    #'
+    #' @param x,y,width,height specificaiton of rectangle extents
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(x, y, width, height, ...) {
 
       self$attrib <- list(
@@ -129,12 +143,15 @@ PDFRect <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Fetch the character representation of this geometry
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_geom_spec = function() {
       attrib <- self$get_attrib()
       attrib$paint <- self$paint_spec
-      glue::glue_data(
-        attrib,
-        "{x} {y} {width} {height} re {paint}"
+      glew(
+        "{x} {y} {width} {height} re {paint}",
+        attrib
       )
     }
   )
@@ -146,13 +163,6 @@ PDFRect <- R6::R6Class(
 #'
 #' This is the R6 class representing the polyline stream object.
 #'
-#'
-#'\itemize{
-#' \item{x,y coordinates}
-#' \item{... extra arguments specifying initial state e.g. 'fill'}
-#'}
-#'
-#'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFPolyline <- R6::R6Class(
@@ -160,7 +170,15 @@ PDFPolyline <- R6::R6Class(
 
   public = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a polyline
+    #'
+    #' @param xs,ys numeric vectors of x, ycoordinates along polyline
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(xs, ys, ...) {
+
+      stopifnot(length(xs) > 0, length(xs) == length(ys), is.numeric(xs), is.numeric(ys))
 
       self$attrib <- list(
         xs        = xs,
@@ -171,15 +189,18 @@ PDFPolyline <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Fetch the character representation of this geometry
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_geom_spec = function() {
       attrib <- self$get_attrib()
       lines <- paste(attrib$xs[-1], attrib$ys[-1], 'l', collapse = ' ')
       attrib$lines <- lines
       attrib$paint <- self$paint_spec
 
-      glue::glue_data(
-        attrib,
-        "{xs[1]} {ys[1]} m {lines} S"
+      glew(
+        "{xs[1]} {ys[1]} m {lines} S",
+        attrib
       )
     }
   )
@@ -191,13 +212,6 @@ PDFPolyline <- R6::R6Class(
 #'
 #' This is the R6 class representing the polygon stream object.
 #'
-#'
-#'\itemize{
-#' \item{xs,ys vectors of x and y coordinates}
-#' \item{... extra arguments specifying initial state e.g. 'fill'}
-#'}
-#'
-#'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFPolygon <- R6::R6Class(
@@ -205,6 +219,12 @@ PDFPolygon <- R6::R6Class(
 
   public = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a polygon
+    #'
+    #' @param xs,ys coordinates of polygon vertices
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(xs, ys, ...) {
 
       self$attrib <- list(
@@ -216,6 +236,9 @@ PDFPolygon <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Fetch the character representation of this geometry
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_geom_spec = function() {
       attrib <- self$get_attrib()
 
@@ -223,9 +246,9 @@ PDFPolygon <- R6::R6Class(
       attrib$lines <- lines
       attrib$paint <- self$paint_spec
 
-      glue::glue_data(
-        attrib,
-        "{xs[1]} {ys[1]} m {lines} {paint}"
+      glew(
+        "{xs[1]} {ys[1]} m {lines} {paint}",
+        attrib
       )
     }
   )
@@ -241,14 +264,6 @@ PDFPolygon <- R6::R6Class(
 #'
 #' This is the R6 class representing the circle stream object.
 #'
-#'
-#'\itemize{
-#' \item{x,y coordinates}
-#' \item{r radius of circle}
-#' \item{... extra arguments specifying initial state e.g. 'fill'}
-#'}
-#'
-#'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFCircle <- R6::R6Class(
@@ -256,6 +271,13 @@ PDFCircle <- R6::R6Class(
 
   public = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a circle
+    #'
+    #' @param x,y centre of circle
+    #' @param r radius
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(x, y, r, ...) {
 
       self$attrib <- list(
@@ -268,6 +290,9 @@ PDFCircle <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Fetch the character representation of this geometry
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_geom_spec = function() {
       attrib <- self$get_attrib()
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -278,16 +303,15 @@ PDFCircle <- R6::R6Class(
 
       attrib$paint <- self$paint_spec
 
-      trimws(glue::glue_data(
-        attrib,
+      trimws(glew(
         "
 {x+r} {y} m
 {x+r} {y+b}  {x+b} {y+r}  {x}   {y+r} c
 {x-b} {y+r}  {x-r} {y+b}  {x-r} {y}   c
 {x-r} {y-b}  {x-b} {y-r}  {x}   {y-r} c
 {x+b} {y-r}  {x+r} {y-b}  {x+r} {y}   c
-{paint}"
-      ))
+{paint}",
+  attrib))
     }
   )
 )
@@ -302,14 +326,6 @@ PDFCircle <- R6::R6Class(
 #'
 #' This is the R6 class representing the ClipRect stream object.
 #'
-#'
-#'\itemize{
-#' \item{x,y coordinates}
-#' \item{width,height rectangle width and height}
-#' \item{... extra arguments specifying initial state e.g. 'fill'}
-#'}
-#'
-#'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFClipRect <- R6::R6Class(
@@ -317,6 +333,12 @@ PDFClipRect <- R6::R6Class(
 
   public = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a clipping rectangle
+    #'
+    #' @param x,y,width,height rectangle definition
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(x, y, width, height, ...) {
 
       self$attrib <- list(
@@ -331,17 +353,19 @@ PDFClipRect <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Fetch the character representation of this geometry
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_geom_spec = function() {
       attrib <- self$get_attrib()
-      trimws(glue::glue_data(
-        attrib,
+      trimws(glew(
         "
 {x        } {y         } m
 {x + width} {y         } l
 {x + width} {y + height} l
 {x        } {y + height} l
 {x        } {y         } l W n
-"
+", attrib
       ))
     }
   )
@@ -353,13 +377,6 @@ PDFClipRect <- R6::R6Class(
 #'
 #' This is the R6 class representing the ClipPolygon stream object.
 #'
-#'
-#'\itemize{
-#' \item{xs,ys vectors of x and y coordinates}
-#' \item{... extra arguments specifying initial state e.g. 'fill'}
-#'}
-#'
-#'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFClipPolygon <- R6::R6Class(
@@ -367,6 +384,12 @@ PDFClipPolygon <- R6::R6Class(
 
   public = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a cliping polygon
+    #'
+    #' @param xs,ys coordinates of polygon vertices
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(xs, ys, ...) {
 
       self$attrib <- list(
@@ -379,14 +402,17 @@ PDFClipPolygon <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Fetch the character representation of this geometry
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_geom_spec = function() {
       attrib <- self$get_attrib()
       lines <- paste(attrib$xs[-1], attrib$ys[-1], 'l', collapse = ' ')
       attrib$lines <- lines
 
-      glue::glue_data(
-        attrib,
-        "{xs[1]} {ys[1]} m {lines} W n"
+      glew(
+        "{xs[1]} {ys[1]} m {lines} W n",
+        attrib
       )
     }
   )
@@ -400,14 +426,6 @@ PDFClipPolygon <- R6::R6Class(
 #'
 #' This is the R6 class representing the custom stream object.
 #'
-#'
-#'\itemize{
-#' \item{text text string for PDFText}
-#' \item{new_graphics_state Should the object be drawn in its own local graphics state? default: TRUE}
-#' \item{... extra arguments specifying initial state e.g. 'fill'}
-#'}
-#'
-#'
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFCustom <- R6::R6Class(
@@ -415,6 +433,14 @@ PDFCustom <- R6::R6Class(
 
   public = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a custom object with text
+    #'
+    #' @param text text string
+    #' @param new_graphics_state Should the object be drawn in its own local
+    #'        graphics state? default: TRUE
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(text, new_graphics_state = TRUE, ...) {
 
       self$attrib <- list(
@@ -426,11 +452,20 @@ PDFCustom <- R6::R6Class(
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Update the attributes of this object
+    #'
+    #' @param text text
+    #' @param ... other atttributes
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     update = function(text, ...) {
       self$attrib$text <- text
       invisible(self)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Fetch the character representation of this geometry
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_geom_spec = function() {
       attrib <- self$get_attrib()
       as.character(attrib$text)
@@ -467,27 +502,6 @@ ptag <- list(
   # clip_rect    = function(x, y, width, height            , ...) {do.call(PDFClipRect$new   , find_args(...))},
   # clip_polygon = function(x, y, width, height            , ...) {do.call(PDFClipPolygon$new, find_args(...))},
 )
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Add public methods to PDFDocument to create and add Stream objects in an R6ish way
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-PDFDocument$set("public", "text"        , function(text, x, y, fontsize, text_mode, ...) {obj <- do.call(PDFText$new       , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "rect"        , function(x, y, width, height            , ...) {obj <- do.call(PDFRect$new       , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "line"        , function(x1, y1, x2, y2                 , ...) {obj <- do.call(PDFLine$new       , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "circle"      , function(x, y, r                        , ...) {obj <- do.call(PDFCircle$new     , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "polygon"     , function(xs, ys                         , ...) {obj <- do.call(PDFPolygon$new    , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "polyline"    , function(xs, ys                         , ...) {obj <- do.call(PDFPolyline$new   , find_args(...)); self$append(obj); invisible(obj)})
-PDFDocument$set("public", "custom"      , function(text, new_graphics_state = TRUE, ...) {obj <- do.call(PDFCustom$new     , find_args(...)); self$append(obj); invisible(obj)})
-# PDFDocument$set("public", "clip_rect"   , function(x, y, width, height            , ...) {obj <- do.call(PDFClipRect$new   , find_args(...)); self$append(obj); invisible(obj)})
-# PDFDocument$set("public", "clip_polygon", function(xs, ys                         , ...) {obj <- do.call(PDFClipPolygon$new, find_args(...)); self$append(obj); invisible(obj)})
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Add public method to PDFDocument to create and add Dict objects in an R6ish way
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-PDFDocument$set("public", "dict"  , function(...) {obj <- PDFDict$new(...); self$append(obj); invisible(obj)})
-
 
 
 

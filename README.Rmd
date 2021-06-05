@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
 
 suppressPackageStartupMessages({
   library(dplyr)
-  library(glue)
   library(minipdf)
 })
 ```

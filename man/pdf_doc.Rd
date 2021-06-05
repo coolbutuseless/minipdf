@@ -4,8 +4,7 @@
 \alias{pdf_doc}
 \title{Wrapper to help create a PDFDocument object}
 \usage{
-pdf_doc(..., width = 400, height = 400, fontname = "Helvetica",
-  version = 1.2)
+pdf_doc(..., width = 400, height = 400, fontname = "Helvetica", version = 1.2)
 }
 \arguments{
 \item{...}{PDF objects}

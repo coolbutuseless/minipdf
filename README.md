@@ -24,8 +24,7 @@ devtools::install_github("coolbutuseless/minipdf")
 
 See the online documentation
 [here](https://coolbutuseless.github.io/package/minipdf/index.html)
-(thanks to
-[pkgdown](https://cran.r-project.org/package=pkgdown))
+(thanks to [pkgdown](https://cran.r-project.org/package=pkgdown))
 
 ## `Hello-world.pdf`
 
@@ -66,12 +65,12 @@ doc$save("man/figures/diamonds.pdf")
 
 ## Supported features
 
-  - Documents with a single page only
-  - Only one font per document (set during initialization)
-  - Objects: Text, lines, polylines, polygons, rectangles and circles
-  - Attributes: Fill colour (including alpha), stroke colour (including
+-   Documents with a single page only
+-   Only one font per document (set during initialization)
+-   Objects: Text, lines, polylines, polygons, rectangles and circles
+-   Attributes: Fill colour (including alpha), stroke colour (including
     alpha), linewidth, linetype
-  - Clipping regions - per object clipping region as well as the global
+-   Clipping regions - per object clipping region as well as the global
     document clipping region.
 
 Currently there is no support for annotations or any sort of text
@@ -79,11 +78,11 @@ layout.
 
 ## News
 
-  - `minipdf v0.2.1` and `minidf v0.2.2`
-      - transforms are now methods on the PDF stream objects
-      - renamed methods on the PDFDcoument e.g. `add_rect()` is now just
+-   `minipdf v0.2.1` and `minidf v0.2.2`
+    -   transforms are now methods on the PDF stream objects
+    -   renamed methods on the PDFDcoument e.g. `add_rect()` is now just
         `rect()`
-      - internal refactoring of attribute handling.
+    -   internal refactoring of attribute handling.
 
 ## Gallery
 
@@ -98,9 +97,9 @@ layout.
 
 ## References
 
-  - [PDF specification
+-   [PDF specification
     document](https://www.adobe.com/devnet/pdf/pdf_reference.html)
-  - [PDF: An Introduction for
+-   [PDF: An Introduction for
     Programmers](http://preserve.mactech.com/articles/mactech/Vol.15/15.09/PDFIntro/index.html)
-  - [Make your own PDF
+-   [Make your own PDF
     file](https://blog.idrsolutions.com/2010/09/grow-your-own-pdf-file-part-1-pdf-objects-and-data-types/)

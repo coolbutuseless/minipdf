@@ -17,13 +17,19 @@
 #'
 #'
 #' @import R6
-#' @import glue
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFDocument <- R6::R6Class(
   "PDFDocument",
 
 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #' @field version PDF spec version
+  #' @field width,height document width and height
+  #' @field user_objects User elements added to the document
+  #' @field setup_objects standard PDF header objects not directly defined
+  #'        by the user
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   public = list(
 
     version       = NULL,
@@ -34,20 +40,29 @@ PDFDocument <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Configure the setup objects and initialise the user_objects
-    # The setup objects are those PDF objects needed to initialise the page
-    # at the most basic level i.e.
-    #   - set up a catalog
-    #   - set up a list of pages
-    #   - set up font information.
-    #   - set up the list of page contents (which will get updated with each new object)
-    #   - keep track of GraphicStates used by various objects
+    #' Initialize a new PDF document
+    #'
+    #' Configure the setup objects and initialise the user_objects
+    #' The setup objects are those PDF objects needed to initialise the page
+    #' at the most basic level i.e.
+    #' \itemize{
+    #' \item{set up a catalog}
+    #' \item{set up a list of pages}
+    #' \item{set up font information.}
+    #' \item{set up the list of page contents (which will get updated with each new object)}
+    #' \item{keep track of GraphicStates used by various objects}
+    #' }
+    #'
+    #' @param ... user objects to add during initialisation
+    #' @param width,height dimensions of PDF document
+    #' @param fontname default font for document (Default: 'Helvetica')
+    #' @param version PDF specifcation version. Default: 1.2
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(..., width = 400, height = 400, fontname = 'Helvetica', version = 1.2) {
 
       self$width   <- width
       self$height  <- height
-      self$version <- glue("%PDF-{version}")
+      self$version <- glew("%PDF-{version}")
 
       self$setup_objects = list(
         dict(Type = '/Catalog', Pages = "2 0 R"),
@@ -56,7 +71,7 @@ PDFDocument <- R6::R6Class(
           Type      = '/Page',
           Parent    = "2 0 R",
           Resources = "4 0 R",
-          MediaBox  = glue("[0 0 {width} {height}]"),
+          MediaBox  = glew("[0 0 {width} {height}]"),
           Contents  = "[6 0 R]"
         ),
         dict(
@@ -80,7 +95,11 @@ PDFDocument <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Append objects into the list of all objects in this document
+    #' Append user-defined objects to document
+    #' @param ... objects
+    #' @param position where should the objects be inserted in the user object
+    #'        list?  Default: NULL means to append at end of object list.
+    #'        A value of "1" means to insert at start of object list.
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     append = function(..., position = NULL) {
       pdf_objects <- list(...)
@@ -95,25 +114,40 @@ PDFDocument <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Replace an object at the given position
+    #' Replace an object at the given position
+    #'
+    #' @param pdf_object User defined PDF object e.g. TODO
+    #' @param position numeric index in object list
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     replace = function(pdf_object, position) {
+      if (!is.numeric(position) || length(position) != 1 ||
+        position < 1 || position > length(self$user_objects)) {
+        stop("Position not valid")
+      }
       self$user_objects[[position]] <- pdf_object
 
       invisible(self)
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Delete the object at the given position
+    #' Delete the object at the given position
+    #'
+    #' @param position numeric index in object list
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     delete = function(position) {
+      if (!is.numeric(position) || length(position) != 1 ||
+          position < 1 || position > length(self$user_objects)) {
+        stop("Position not valid")
+      }
       self$user_objects[position] <- NULL
       invisible(self)
     },
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Character reprsetntatino of PDF document as a single string
+    #' Character reprsetntatino of PDF document as a single string
+    #'
+    #' @param ... ignored
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     as_character = function(...) {
       private$update_page_contents()
@@ -122,7 +156,9 @@ PDFDocument <- R6::R6Class(
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Print
+    #' Print
+    #'
+    #' @param ... ignored
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     print = function(...) {
       cat(self$as_character(...))
@@ -130,21 +166,26 @@ PDFDocument <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Save to PDF file
+    #' Save to PDF file
+    #'
+    #' @param filename output filename
+    #' @param ... ignored
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     save = function(filename, ...) {
       writeLines(self$as_character(), filename)
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Deep copy
+    #' @description Deep copy of this document
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     copy = function() {
       self$clone(deep = TRUE)
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Use the viewer to show the PDF in its current state
+    #' Show the PDF in the defined R viewer
+    #'
+    #' @param viewer which viewer to use
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     show = function(viewer = getOption("viewer", utils::browseURL)) {
       temp_dir <- tempfile("viewpdf")
@@ -158,6 +199,106 @@ PDFDocument <- R6::R6Class(
         warning("No viewer available.")
       }
       invisible(temp_pdf)
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a text
+    #'
+    #' @param text text
+    #' @param x,y location
+    #' @param fontsize,text_mode text settings [optional]
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    text = function(text, x, y, fontsize, text_mode, ...) {
+      obj <- do.call(PDFText$new, find_args(...))
+      self$append(obj)
+      invisible(obj)
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a rectangle
+    #'
+    #' @param x,y,width,height specificaiton of rectangle extents
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    rect = function(x, y, width, height, ...) {
+      obj <- do.call(PDFRect$new, find_args(...))
+      self$append(obj)
+      invisible(obj)
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a line
+    #'
+    #'@param x1,y1,x2,y2 line start/end coordinates
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    line = function(x1, y1, x2, y2, ...) {
+      obj <- do.call(PDFLine$new, find_args(...))
+      self$append(obj)
+      invisible(obj)
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a circle
+    #'
+    #' @param x,y centre of circle
+    #' @param r radius
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    circle = function(x, y, r, ...) {
+      obj <- do.call(PDFCircle$new, find_args(...))
+      self$append(obj)
+      invisible(obj)
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a polygon
+    #'
+    #' @param xs,ys coordinates of polygon vertices
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    polygon = function(xs, ys, ...) {
+      obj <- do.call(PDFPolygon$new, find_args(...))
+      self$append(obj)
+      invisible(obj)
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a polyline
+    #'
+    #' @param xs,ys numeric vectors of x, ycoordinates along polyline
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    polyline = function(xs, ys, ...) {
+      obj <- do.call(PDFPolyline$new, find_args(...))
+      self$append(obj)
+      invisible(obj)
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @description Initialize a stream object representing a custom object with text
+    #'
+    #' @param text text string
+    #' @param new_graphics_state Should the object be drawn in its own local
+    #'        graphics state? default: TRUE
+    #' @param ... initial named attributes of this object
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    custom = function(text, new_graphics_state = TRUE, ...) {
+      obj <- do.call(PDFCustom$new, find_args(...))
+      self$append(obj)
+      invisible(obj)
+    },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Initialize a new PDF Dict
+    #'
+    #' @param ... named objects to add to dictionary
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    dict = function(...) {
+      obj <- PDFDict$new(...)
+      self$append(obj)
+      invisible(obj)
     }
   ),
 
@@ -205,7 +346,7 @@ PDFDocument <- R6::R6Class(
       # on PDFDict object, however it might be necessary to go this way if
       # there are more vars in the graphics-state than just the alphas
       # ca = fill alpha,  CA = stroke alpha  e.g. /GS1.13 <</ca 1 /CA 0.13>>
-      gs_dicts <- vapply(gs, function(x) {glue("/GS{x[1]}{x[2]} <</ca {x[1]} /CA {x[2]}>>")}, character(1))
+      gs_dicts <- vapply(gs, function(x) {glew("/GS{x[1]}{x[2]} <</ca {x[1]} /CA {x[2]}>>")}, character(1))
       gs_dict  <- paste(gs_dicts, collapse = " ")
       gs_dict  <- paste("<<", gs_dict, ">>")
       # Overwrite the ExtGSState to encompass all the graphics states we
@@ -218,7 +359,7 @@ PDFDocument <- R6::R6Class(
   active = list(
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # List containing all objects
+    #' @field all_objects List containing all objects
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     all_objects = function() {
       c(self$setup_objects, self$user_objects)
@@ -226,7 +367,7 @@ PDFDocument <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # All strings for all objects
+    #' @field objs All strings for all objects
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     objs = function() {
       n <- length(self$all_objects)
@@ -238,7 +379,7 @@ PDFDocument <- R6::R6Class(
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # The header for this document
+    #' @field header The header for this document
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     header = function() {
       self$version
@@ -246,24 +387,25 @@ PDFDocument <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # The body is just the collection of all objects
+    #' @field body The body is just the collection of all objects
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     body = function() {
       trimws(paste(self$objs, collapse = ""))
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Update a xref table based upon the current objects
-    # and the offsets to the start of each object
-    # Each xref entry must be exactly 20bytes (include CRLF).  Since I'm only
-    # using CR, I need to add an extra space at the end of each xref entry
+    #' @field xref Update a xref table based upon the current objects
+    #'
+    #' and the offsets to the start of each object
+    #' Each xref entry must be exactly 20bytes (include CRLF).  Since I'm only
+    #' using CR, I need to add an extra space at the end of each xref entry
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     xref = function() {
       all_offsets    <- self$offsets
       object_offsets <- head(all_offsets, -1L)
       xref <- c(
         "xref",
-        glue("0 {length(self$all_objects) + 1L}"),
+        glew("0 {length(self$all_objects) + 1L}"),
         "0000000000 65535 f ",
         sprintf("%010i 00000 n ", object_offsets)
       )
@@ -272,21 +414,21 @@ PDFDocument <- R6::R6Class(
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # For the XREF table, need to know the offset to each object from start of document
+    #' @field offsets For the XREF table, need to know the offset to each object from start of document
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     offsets = function() {
       cumsum(nchar(c(self$header, self$objs)))
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # The trailer indicates the start of the XREF table and total length
-    # of all objects it represents (including the dummy/root object)
+    #' @field trailer The trailer indicates the start of the XREF table and total length
+    #' of all objects it represents (including the dummy/root object)
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     trailer = function() {
       start_xref <- tail(self$offsets, 1) # byte index of start of xref table
 
       trailer <- c(
-        glue::glue("trailer <</Size {length(self$all_objects) + 1}/Root 1 0 R>>"),
+        glew("trailer <</Size {length(self$all_objects) + 1}/Root 1 0 R>>"),
         "startxref",
         start_xref,
         "%%EOF"

@@ -76,15 +76,15 @@ transform_to_string <- function(type, value, depth = 0) {
   indent <- create_indent(depth)
 
   if (type == 'translate') {
-    glue("{indent}1 0 0 1 {value[1]} {value[2]} cm")
+    glew("{indent}1 0 0 1 {value[1]} {value[2]} cm")
   } else if (type == 'rotate') {
     cosQ <- round(cos(value * pi/180), 3)
     sinQ <- round(sin(value * pi/180), 3)
-    glue("{indent}{cosQ} {sinQ} {-sinQ} {cosQ} 0 0 cm")
+    glew("{indent}{cosQ} {sinQ} {-sinQ} {cosQ} 0 0 cm")
   } else if (type == 'scale') {
-    glue("{indent}{value[1]} 0 0 {value[2]} 0 0 cm")
+    glew("{indent}{value[1]} 0 0 {value[2]} 0 0 cm")
   } else if (type == 'custom') {
-    glue("{indent}{value[1]} {value[2]} {value[3]} {value[4]} {value[5]} {value[6]} cm")
+    glew("{indent}{value[1]} {value[2]} {value[3]} {value[4]} {value[5]} {value[6]} cm")
   } else {
     stop("Unknown transform type: ", type)
   }
@@ -112,19 +112,30 @@ transforms_to_string <- function(transforms, depth = 0) {
 #' PDF Stream Object Base Class
 #'
 #' @import R6
-#' @import glue
 #' @importFrom utils modifyList
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFStream <- R6::R6Class(
   "PDFStream",
 
   public = list(
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @field attrib TODO
+    #' @field transform TODO
+    #' @field parent_attrib TODO
+    #' @field parent_transform TODO
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     attrib           = NULL,
     transform        = NULL,
 
     parent_attrib    = NULL,
     parent_transform = NULL,
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Initialize a stream object
+    #'
+    #' @param ... stream attributes
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(...) {
       self$transform        <- list()
       self$parent_attrib    <- list()
@@ -136,8 +147,14 @@ PDFStream <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Update the attributes of an object. e.g. update the x coordinate:
-    #  `obj$update(x = 12)`
+    #' Update the attributes of an object.
+    #'
+    #' e.g. update the x coordinate:
+    #' \code{obj$update(x = 12)}
+    #'
+    #' @param ... named attributes
+    #' @param fontsize,text_mode,fill,stroke,linewidth,linetype,clip_rect common
+    #'        drawing attributes
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     update = function(..., fontsize, text_mode, fill, stroke, linewidth, linetype, clip_rect) {
       args <- find_args(...)
@@ -146,33 +163,40 @@ PDFStream <- R6::R6Class(
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Clone the object
+    #' @description Clone the object
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     copy = function() {
       self$clone()
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Convert to full PDF object representation include stream/endstream
-    # and length dict.
+    #' Convert to full PDF object representation include stream/endstream
+    #' and length dict.
+    #'
+    #' @param obj_idx the index to use for this object in the PDF document
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     as_object = function(obj_idx) {
-      this_stream <- glue("stream\n{self$as_character()}\nendstream")
+      this_stream <- glew("stream\n{self$as_character()}\nendstream")
       chars       <- nchar(self$as_character())
-      this_length <- glue("<< /Length {chars} >>")
-      res <- glue("{obj_idx} 0 obj\n{this_length}\n{this_stream}\nendobj")
+      this_length <- glew("<< /Length {chars} >>")
+      res <- glew("{obj_idx} 0 obj\n{this_length}\n{this_stream}\nendobj")
       res
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Cat just the inner stream part of the object when print()ed
+    #' @description Cat just the inner stream part of the object when print()ed
+    #'
+    #' @param ... arguments passed to \code{PDFStream$as_character(...)}
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     print = function(...) {
       cat(self$as_character(...))
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Transformations: rotate
+    #' Transformations: rotate
+    #'
+    #' @param degrees angle of rotation
+    #' @param x,y rotate around this point. default (0,1)
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     rotate = function(degrees, x = 0, y = 0) {
       if (x==0 && y==0) {
@@ -186,7 +210,9 @@ PDFStream <- R6::R6Class(
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Transformations: translate
+    #' Transformations: translate
+    #'
+    #' @param x,y translation distance
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     translate = function(x, y) {
       transform <- list(translate = c(x, y))
@@ -196,7 +222,10 @@ PDFStream <- R6::R6Class(
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Transformations: scale
+    #' Transformations: scale
+    #'
+    #' @param x,y scale factors in x and y directions. If only \code{x} scale
+    #'        is given, then this value will also be used for the \code{y} scale factor
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     scale = function(x, y=x) {
       transform <- list(scale = c(x, y))
@@ -206,20 +235,58 @@ PDFStream <- R6::R6Class(
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Update methods for the draw state parameters
+    #' Convenience method for changing core attribute: fontsize
+    #' @param fontsize fontsize default: 12
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    fontsize     = function(fontsize = 12        ) { self$update(fontsize     = fontsize ) },
-    text_mode    = function(text_mode = 0        ) { self$update(text_mode    = text_mode) },
-    fill         = function(fill      = '#000000') { self$update(fill         = fill     ) },
-    stroke       = function(stroke    = '#000000') { self$update(stroke       = stroke   ) },
-    linewidth    = function(linewidth = 1        ) { self$update(linewidth    = linewidth) },
-    linetype     = function(linetype  = 0        ) { self$update(linetype     = 0        ) },
-    clip_rect    = function(x, y, width, height  ) { self$update(clip_rect    = c(x, y, width, height)) },
-    clip_polygon = function(xs, ys               ) { self$update(clip_polygon = list(xs = xs, ys = ys)) },
+    fontsize = function(fontsize = 12) { self$update(fontsize = fontsize ) },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Convenience method for changing core attribute: text_mode
+    #' @param text_mode text mode. default 0.  TODO: insert reference to PDF spec
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    text_mode = function(text_mode = 0) { self$update(text_mode = text_mode) },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Convenience method for changing core attribute: fill colour
+    #' @param fill fill colour. default '#000000'
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    fill = function(fill = '#000000') { self$update(fill = fill) },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Convenience method for changing core attribute: stroke colour
+    #' @param stroke stroke colour. default: '#000000'
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    stroke = function(stroke = '#000000') { self$update(stroke = stroke) },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Convenience method for changing core attribute: linewidth
+    #' @param linewidth linewidth. default: 1
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    linewidth = function(linewidth = 1) { self$update(linewidth = linewidth) },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Convenience method for changing core attribute: fontsize
+    #' @param linetype linetype. default: 0. TODO: Insert reference to PDF spec
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    linetype = function(linetype  = 0) { self$update(linetype = 0) },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Convenience method for changing core attribute: clipping rect
+    #' @param x,y,width,height dimensions of current clipping rect
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    clip_rect = function(x, y, width, height) { self$update(clip_rect = c(x, y, width, height)) },
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Convenience method for changing core attribute: clip polygon
+    #' @param xs,ys coords of clipping polygon
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    clip_polygon = function(xs, ys) { self$update(clip_polygon = list(xs = xs, ys = ys)) },
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # convert stream object to character string
+    #' convert stream object to character string
+    #'
+    #' @param ... ignored
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     as_character = function(...) {
 
@@ -251,24 +318,24 @@ PDFStream <- R6::R6Class(
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Full transform of all parent objects and this object's transform
+    #' @description Full transform of all parent objects and this object's transform
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_transform_spec = function() {
       transforms_to_string(c(self$parent_transform, self$transform))
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Normalised full set of attributes including parent attributes if available
+    #' @description Normalised full set of attributes including parent attributes if available
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     get_attrib = function() {
       attrib <- modifyList(default_draw_state, self$parent_attrib, keep.null = TRUE)
       attrib <- modifyList(attrib            , self$attrib       , keep.null = TRUE)
       attrib
-    },
-
-
-    propagate_state_to_children = function() {
     }
+
+
+    # propagate_state_to_children = function() {
+    # }
 
   ),
 
@@ -276,6 +343,9 @@ PDFStream <- R6::R6Class(
 
   active = list(
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @field alphas all alpha channels
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     alphas = function() {
       attrib <- self$get_attrib()
       fill   <- sanitise_colour_to_rgba_vec(attrib$fill)
@@ -290,18 +360,28 @@ PDFStream <- R6::R6Class(
       c(fill_alpha, stroke_alpha)
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @field gs_name current GS name TODO: insert PDF spec reference
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     gs_name = function() {
       alphas <- self$alphas
       paste0("GS", alphas[1], alphas[2])
     },
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @field gs_spec current gs_spec
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     gs_spec = function() {
       paste0("/", self$gs_name, " gs")
     },
 
-    # Use clip_polygon if specified.
-    # Use clip_rect if specified
-    # else NULL
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @field clipping_spec current clipping spec
+    #' Use clip_polygon if specified.
+    #' Use clip_rect if specified
+    #' else NULL
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     clipping_spec = function() {
       attrib <- self$get_attrib()
 
@@ -312,9 +392,9 @@ PDFStream <- R6::R6Class(
         lines <- paste(poly$xs[-1], poly$ys[-1], 'l', collapse = ' ')
         poly$lines <- lines
 
-        res <- glue::glue_data(
-          poly,
-          "{xs[1]} {ys[1]} m {lines} W n"
+        res <- glew(
+          "{xs[1]} {ys[1]} m {lines} W n",
+          poly
         )
         return(trimws(res))
       }
@@ -330,7 +410,7 @@ PDFStream <- R6::R6Class(
       width  <- rect[3]
       height <- rect[4]
 
-      trimws(glue("
+      trimws(glew("
 {x        } {y         } m
 {x + width} {y         } l
 {x + width} {y + height} l
@@ -342,8 +422,8 @@ PDFStream <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Get the path painting style based upon which of fill/stroke are NULL
-    # Return one of 'n', 's', 'f', 'b'
+    #' @field paint_spec path painting style based upon which of fill/stroke are NULL
+    #' One of 'n', 's', 'f', 'b'
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     paint_spec = function() {
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

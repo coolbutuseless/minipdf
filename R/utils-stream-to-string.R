@@ -27,7 +27,7 @@ create_fill_spec <- function(attrib) {
   if (is.null(fill)) {
     NULL
   } else {
-    glue("{fill[1]} {fill[2]} {fill[3]} rg")
+    glew("{fill[1]} {fill[2]} {fill[3]} rg")
   }
 }
 
@@ -36,7 +36,7 @@ create_stroke_spec <- function(attrib) {
   if (is.null(stroke)) {
     NULL
   } else {
-    glue("{stroke[1]} {stroke[2]} {stroke[3]} RG")
+    glew("{stroke[1]} {stroke[2]} {stroke[3]} RG")
   }
 }
 

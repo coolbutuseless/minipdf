@@ -1,4 +1,11 @@
 
+# minipdf 0.2.5 (The Updatening)
+
+* Update roxygen to latest
+* Use roxygen for R6 documentation 
+* Remove dependency on 'glue'
+* Remove Travis CI and replace with Github Actions
+
 # minipdf 0.2.4
 
 * Add a `$show()` method to `PDFDocument`.  In Rstudio, this will launch a PDF

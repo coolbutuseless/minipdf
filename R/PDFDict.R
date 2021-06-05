@@ -4,15 +4,23 @@
 #' PDF Dictionary object creator
 #'
 #' @import R6
-#' @import glue
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PDFDict <- R6::R6Class(
   "PDFDict",
 
   public = list(
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' @field dict TODO
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     dict = NULL,
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #' Initialize a new PDF Dict
+    #'
+    #' @param ... named objects to add to dictionary
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     initialize = function(...) {
       varargs <- list(...)
       if (!all_named(varargs)) {
@@ -24,9 +32,13 @@ PDFDict <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Update values in the dictionary. Each named named argument to this
-    # function is considered a name/value pair to include in the dictionary.
-    # Unnamed arguments are silently dropped
+    #' Update values in the dictionary.
+    #'
+    #' Each named named argument to this
+    #' function is considered a name/value pair to include in the dictionary.
+    #' Unnamed arguments are silently dropped
+    #'
+    #' @param ... named objects to updated in dictionary
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     update = function(...) {
       self$dict <- modifyList(self$dict, list(...))
@@ -35,8 +47,10 @@ PDFDict <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Character representation of this dict and all sub dictionaries.
-    # @return single character string
+    #' Character representation of this dict and all sub dictionaries it contains
+    #'
+    #' @param depth depth of dictionary currently being printed. default = 0
+    #' @return single character string
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     as_character = function(depth = 0) {
       indent1 <- create_indent(depth)
@@ -48,7 +62,7 @@ PDFDict <- R6::R6Class(
         name <- names(self$dict[i])
         item <- self$dict[[i]]
         item_content <- as.character(item, depth = depth + 1L)
-        item_content <- glue("{indent2}/{name} {item_content}")
+        item_content <- glew("{indent2}/{name} {item_content}")
         contents <- c(contents, item_content)
       }
 
@@ -59,23 +73,31 @@ PDFDict <- R6::R6Class(
 
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Print
+    #' Print
+    #'
+    #' @param ... other arguments ignored
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    print = function() {
+    print = function(...) {
       cat(self$as_character(), "\n")
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Convert this dict into a full object representation for inclusion in
-    # a PDFDocument
+    #' Convert this dict into a full PDF object representation
+    #'
+    #' This object representation isfor inclusion in
+    #' a PDFDocument
+    #'
+    #' @param obj_idx the object index to use within the document
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     as_object = function(obj_idx) {
-      glue("{obj_idx} 0 obj\n{self$as_character()}\nendobj")
+      glew("{obj_idx} 0 obj\n{self$as_character()}\nendobj")
     },
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Since PDFDict objects can contain other PDFDict objects in a list
-    # need to do a deep copy to properly clone see private/deep_clone()
+    #' @description Perform a proper deep copy of this object
+    #'
+    #' Since PDFDict objects can contain other PDFDict objects in a list
+    #' need to do a deep copy to properly clone see private/deep_clone()
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     copy = function() {
       self$clone(deep = TRUE)

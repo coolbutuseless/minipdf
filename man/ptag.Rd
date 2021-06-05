@@ -4,7 +4,9 @@
 \name{ptag}
 \alias{ptag}
 \title{Helper for building PDF Stream Objects e.g. Rect, Lines}
-\format{An object of class \code{list} of length 7.}
+\format{
+An object of class \code{list} of length 7.
+}
 \usage{
 ptag
 }
