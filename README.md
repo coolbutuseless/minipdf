@@ -6,8 +6,7 @@
 <!-- badges: start -->
 
 ![](http://img.shields.io/badge/cool-useless-green.svg)
-![](http://img.shields.io/badge/mini-verse-blue.svg) [![Travis build
-status](https://travis-ci.org/coolbutuseless/minipdf.svg?branch=master)](https://travis-ci.org/coolbutuseless/minipdf)
+![](http://img.shields.io/badge/mini-verse-blue.svg)
 [![R-CMD-check](https://github.com/coolbutuseless/minipdf/workflows/R-CMD-check/badge.svg)](https://github.com/coolbutuseless/minipdf/actions)
 <!-- badges: end -->
 
