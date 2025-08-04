@@ -17,38 +17,38 @@ This is the R6 class representing the custom stream object.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{PDFCustom$new()}}
-\item \href{#method-update}{\code{PDFCustom$update()}}
-\item \href{#method-get_geom_spec}{\code{PDFCustom$get_geom_spec()}}
-\item \href{#method-clone}{\code{PDFCustom$clone()}}
+\item \href{#method-PDFCustom-new}{\code{PDFCustom$new()}}
+\item \href{#method-PDFCustom-update}{\code{PDFCustom$update()}}
+\item \href{#method-PDFCustom-get_geom_spec}{\code{PDFCustom$get_geom_spec()}}
+\item \href{#method-PDFCustom-clone}{\code{PDFCustom$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="as_character">}\href{../../minipdf/html/PDFStream.html#method-as_character}{\code{minipdf::PDFStream$as_character()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="as_object">}\href{../../minipdf/html/PDFStream.html#method-as_object}{\code{minipdf::PDFStream$as_object()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="clip_polygon">}\href{../../minipdf/html/PDFStream.html#method-clip_polygon}{\code{minipdf::PDFStream$clip_polygon()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="clip_rect">}\href{../../minipdf/html/PDFStream.html#method-clip_rect}{\code{minipdf::PDFStream$clip_rect()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="copy">}\href{../../minipdf/html/PDFStream.html#method-copy}{\code{minipdf::PDFStream$copy()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="fill">}\href{../../minipdf/html/PDFStream.html#method-fill}{\code{minipdf::PDFStream$fill()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="fontsize">}\href{../../minipdf/html/PDFStream.html#method-fontsize}{\code{minipdf::PDFStream$fontsize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="get_attrib">}\href{../../minipdf/html/PDFStream.html#method-get_attrib}{\code{minipdf::PDFStream$get_attrib()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="get_transform_spec">}\href{../../minipdf/html/PDFStream.html#method-get_transform_spec}{\code{minipdf::PDFStream$get_transform_spec()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="linetype">}\href{../../minipdf/html/PDFStream.html#method-linetype}{\code{minipdf::PDFStream$linetype()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="linewidth">}\href{../../minipdf/html/PDFStream.html#method-linewidth}{\code{minipdf::PDFStream$linewidth()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="print">}\href{../../minipdf/html/PDFStream.html#method-print}{\code{minipdf::PDFStream$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="rotate">}\href{../../minipdf/html/PDFStream.html#method-rotate}{\code{minipdf::PDFStream$rotate()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="scale">}\href{../../minipdf/html/PDFStream.html#method-scale}{\code{minipdf::PDFStream$scale()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="stroke">}\href{../../minipdf/html/PDFStream.html#method-stroke}{\code{minipdf::PDFStream$stroke()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="text_mode">}\href{../../minipdf/html/PDFStream.html#method-text_mode}{\code{minipdf::PDFStream$text_mode()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="translate">}\href{../../minipdf/html/PDFStream.html#method-translate}{\code{minipdf::PDFStream$translate()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="as_character"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-as_character'><code>minipdf::PDFStream$as_character()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="as_object"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-as_object'><code>minipdf::PDFStream$as_object()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="clip_polygon"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-clip_polygon'><code>minipdf::PDFStream$clip_polygon()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="clip_rect"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-clip_rect'><code>minipdf::PDFStream$clip_rect()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="copy"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-copy'><code>minipdf::PDFStream$copy()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="fill"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-fill'><code>minipdf::PDFStream$fill()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="fontsize"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-fontsize'><code>minipdf::PDFStream$fontsize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="get_attrib"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-get_attrib'><code>minipdf::PDFStream$get_attrib()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="get_transform_spec"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-get_transform_spec'><code>minipdf::PDFStream$get_transform_spec()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="linetype"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-linetype'><code>minipdf::PDFStream$linetype()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="linewidth"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-linewidth'><code>minipdf::PDFStream$linewidth()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="print"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-print'><code>minipdf::PDFStream$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="rotate"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-rotate'><code>minipdf::PDFStream$rotate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="scale"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-scale'><code>minipdf::PDFStream$scale()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="stroke"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-stroke'><code>minipdf::PDFStream$stroke()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="text_mode"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-text_mode'><code>minipdf::PDFStream$text_mode()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="minipdf" data-topic="PDFStream" data-id="translate"><a href='../../minipdf/html/PDFStream.html#method-PDFStream-translate'><code>minipdf::PDFStream$translate()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-PDFCustom-new"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFCustom-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize a stream object representing a custom object with text
 \subsection{Usage}{
@@ -70,8 +70,8 @@ Update the attributes of this object}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update"></a>}}
-\if{latex}{\out{\hypertarget{method-update}{}}}
+\if{html}{\out{<a id="method-PDFCustom-update"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFCustom-update}{}}}
 \subsection{Method \code{update()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFCustom$update(text, ...)}\if{html}{\out{</div>}}
@@ -88,8 +88,8 @@ Update the attributes of this object}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_geom_spec"></a>}}
-\if{latex}{\out{\hypertarget{method-get_geom_spec}{}}}
+\if{html}{\out{<a id="method-PDFCustom-get_geom_spec"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFCustom-get_geom_spec}{}}}
 \subsection{Method \code{get_geom_spec()}}{
 Fetch the character representation of this geometry
 \subsection{Usage}{
@@ -98,8 +98,8 @@ Fetch the character representation of this geometry
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-PDFCustom-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFCustom-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

@@ -30,6 +30,7 @@ default_draw_state <- list(
 #' @return 4 element vector representing RGBA with each element in range [0, 1]
 #'
 #' @importFrom grDevices col2rgb
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 sanitise_colour_to_rgba_vec <- function(colour) {
 

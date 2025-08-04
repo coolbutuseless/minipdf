@@ -19,18 +19,18 @@ Initialize a new PDF Dict}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{PDFDict$new()}}
-\item \href{#method-update}{\code{PDFDict$update()}}
-\item \href{#method-as_character}{\code{PDFDict$as_character()}}
-\item \href{#method-print}{\code{PDFDict$print()}}
-\item \href{#method-as_object}{\code{PDFDict$as_object()}}
-\item \href{#method-copy}{\code{PDFDict$copy()}}
-\item \href{#method-clone}{\code{PDFDict$clone()}}
+\item \href{#method-PDFDict-new}{\code{PDFDict$new()}}
+\item \href{#method-PDFDict-update}{\code{PDFDict$update()}}
+\item \href{#method-PDFDict-as_character}{\code{PDFDict$as_character()}}
+\item \href{#method-PDFDict-print}{\code{PDFDict$print()}}
+\item \href{#method-PDFDict-as_object}{\code{PDFDict$as_object()}}
+\item \href{#method-PDFDict-copy}{\code{PDFDict$copy()}}
+\item \href{#method-PDFDict-clone}{\code{PDFDict$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-PDFDict-new"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDict-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDict$new(...)}\if{html}{\out{</div>}}
@@ -50,8 +50,8 @@ Unnamed arguments are silently dropped}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update"></a>}}
-\if{latex}{\out{\hypertarget{method-update}{}}}
+\if{html}{\out{<a id="method-PDFDict-update"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDict-update}{}}}
 \subsection{Method \code{update()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDict$update(...)}\if{html}{\out{</div>}}
@@ -67,8 +67,8 @@ Character representation of this dict and all sub dictionaries it contains}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_character"></a>}}
-\if{latex}{\out{\hypertarget{method-as_character}{}}}
+\if{html}{\out{<a id="method-PDFDict-as_character"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDict-as_character}{}}}
 \subsection{Method \code{as_character()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDict$as_character(depth = 0)}\if{html}{\out{</div>}}
@@ -87,8 +87,8 @@ Print
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-PDFDict-print"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDict-print}{}}}
 \subsection{Method \code{print()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDict$print(...)}\if{html}{\out{</div>}}
@@ -107,8 +107,8 @@ a PDFDocument}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_object"></a>}}
-\if{latex}{\out{\hypertarget{method-as_object}{}}}
+\if{html}{\out{<a id="method-PDFDict-as_object"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDict-as_object}{}}}
 \subsection{Method \code{as_object()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDict$as_object(obj_idx)}\if{html}{\out{</div>}}
@@ -123,8 +123,8 @@ a PDFDocument}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-copy"></a>}}
-\if{latex}{\out{\hypertarget{method-copy}{}}}
+\if{html}{\out{<a id="method-PDFDict-copy"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDict-copy}{}}}
 \subsection{Method \code{copy()}}{
 Perform a proper deep copy of this object
 
@@ -136,8 +136,8 @@ need to do a deep copy to properly clone see private/deep_clone()
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-PDFDict-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDict-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

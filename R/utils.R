@@ -15,6 +15,7 @@
 #'
 #' @param x object e.g. list, vector
 #' @return TRUE if all elements are named, otherwise FALSE
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 all_named <- function(x) {
   named <- nzchar(names(x))

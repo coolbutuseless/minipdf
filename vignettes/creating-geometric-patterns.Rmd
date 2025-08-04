@@ -60,7 +60,7 @@ doc$save("figures/example1.pdf")
 
 
 ```{r include = FALSE}
-system("convert -density 300 figures/example1.pdf -resize 100% -define png:exclude-chunks=date,time figures/example1.png")
+system("magick -density 300 figures/example1.pdf -resize 100% -define png:exclude-chunks=date,time figures/example1.png")
 ```
 
 ```{r echo = FALSE}
@@ -91,7 +91,7 @@ doc$save("figures/example2.pdf")
 
 
 ```{r include = FALSE}
-system("convert -density 300 figures/example2.pdf -resize 100% -define png:exclude-chunks=date,time figures/example2.png")
+system("magick -density 300 figures/example2.pdf -resize 100% -define png:exclude-chunks=date,time figures/example2.png")
 ```
 
 ```{r echo = FALSE}

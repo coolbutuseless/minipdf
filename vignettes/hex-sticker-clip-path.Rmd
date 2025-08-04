@@ -94,7 +94,7 @@ doc$save("figures/logo-alternate.pdf")
 
 
 ```{r include = FALSE}
-system("convert -density 300 figures/logo-alternate.pdf -resize 100% -define png:exclude-chunks=date,time figures/logo-alternate.png")
+system("magick -density 300 figures/logo-alternate.pdf -resize 100% -define png:exclude-chunks=date,time figures/logo-alternate.png")
 ```
 
 ```{r echo = FALSE, out.width = "45%"}
@@ -138,7 +138,7 @@ doc$save("figures/logo-alternate-clipped.pdf")
 
 
 ```{r include = FALSE}
-system("convert -density 300 figures/logo-alternate-clipped.pdf -resize 100% -define png:exclude-chunks=date,time figures/logo-alternate-clipped.png")
+system("magick -density 300 figures/logo-alternate-clipped.pdf -resize 100% -define png:exclude-chunks=date,time figures/logo-alternate-clipped.png")
 ```
 
 ```{r echo = FALSE, out.width = "45%"}

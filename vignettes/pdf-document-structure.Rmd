@@ -123,7 +123,7 @@ doc$save("figures/example0a.pdf")
 
 
 ```{r include = FALSE}
-system("convert -density 300 figures/example0a.pdf -resize 100% -define png:exclude-chunks=date,time figures/example0a.png")
+system("magick -density 300 figures/example0a.pdf -resize 100% -define png:exclude-chunks=date,time figures/example0a.png")
 ```
 
 ```{r echo = FALSE}
@@ -155,7 +155,7 @@ doc$save("figures/example0b.pdf")
 
 
 ```{r include = FALSE}
-system("convert -density 300 figures/example0b.pdf -resize 100% -define png:exclude-chunks=date,time figures/example0b.png")
+system("magick -density 300 figures/example0b.pdf -resize 100% -define png:exclude-chunks=date,time figures/example0b.png")
 ```
 
 ```{r echo = FALSE}
@@ -193,7 +193,7 @@ doc$save("figures/example0c.pdf")
 
 
 ```{r include = FALSE}
-system("convert -density 300 figures/example0c.pdf -resize 100% -define png:exclude-chunks=date,time figures/example0c.png")
+system("magick -density 300 figures/example0c.pdf -resize 100% -define png:exclude-chunks=date,time figures/example0c.png")
 ```
 
 ```{r echo = FALSE}

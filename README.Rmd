@@ -99,7 +99,7 @@ doc$save("man/figures/helloworld.pdf")
 
 
 ```{r echo = FALSE}
-system("convert -density 300 man/figures/helloworld.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/helloworld.png")
+system("magick -density 300 man/figures/helloworld.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/helloworld.png")
 knitr::include_graphics("man/figures/helloworld.png")
 ```
 
@@ -128,7 +128,7 @@ doc$save("man/figures/diamonds.pdf")
 ```
 
 ```{r echo = FALSE}
-system("convert -density 300 man/figures/diamonds.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/diamonds.png")
+system("magick -density 300 man/figures/diamonds.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/diamonds.png")
 knitr::include_graphics("man/figures/diamonds.png")
 ```
 

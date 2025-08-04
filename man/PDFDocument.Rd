@@ -76,29 +76,29 @@ of all objects it represents (including the dummy/root object)}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{PDFDocument$new()}}
-\item \href{#method-append}{\code{PDFDocument$append()}}
-\item \href{#method-replace}{\code{PDFDocument$replace()}}
-\item \href{#method-delete}{\code{PDFDocument$delete()}}
-\item \href{#method-as_character}{\code{PDFDocument$as_character()}}
-\item \href{#method-print}{\code{PDFDocument$print()}}
-\item \href{#method-save}{\code{PDFDocument$save()}}
-\item \href{#method-copy}{\code{PDFDocument$copy()}}
-\item \href{#method-show}{\code{PDFDocument$show()}}
-\item \href{#method-text}{\code{PDFDocument$text()}}
-\item \href{#method-rect}{\code{PDFDocument$rect()}}
-\item \href{#method-line}{\code{PDFDocument$line()}}
-\item \href{#method-circle}{\code{PDFDocument$circle()}}
-\item \href{#method-polygon}{\code{PDFDocument$polygon()}}
-\item \href{#method-polyline}{\code{PDFDocument$polyline()}}
-\item \href{#method-custom}{\code{PDFDocument$custom()}}
-\item \href{#method-dict}{\code{PDFDocument$dict()}}
-\item \href{#method-clone}{\code{PDFDocument$clone()}}
+\item \href{#method-PDFDocument-new}{\code{PDFDocument$new()}}
+\item \href{#method-PDFDocument-append}{\code{PDFDocument$append()}}
+\item \href{#method-PDFDocument-replace}{\code{PDFDocument$replace()}}
+\item \href{#method-PDFDocument-delete}{\code{PDFDocument$delete()}}
+\item \href{#method-PDFDocument-as_character}{\code{PDFDocument$as_character()}}
+\item \href{#method-PDFDocument-print}{\code{PDFDocument$print()}}
+\item \href{#method-PDFDocument-save}{\code{PDFDocument$save()}}
+\item \href{#method-PDFDocument-copy}{\code{PDFDocument$copy()}}
+\item \href{#method-PDFDocument-show}{\code{PDFDocument$show()}}
+\item \href{#method-PDFDocument-text}{\code{PDFDocument$text()}}
+\item \href{#method-PDFDocument-rect}{\code{PDFDocument$rect()}}
+\item \href{#method-PDFDocument-line}{\code{PDFDocument$line()}}
+\item \href{#method-PDFDocument-circle}{\code{PDFDocument$circle()}}
+\item \href{#method-PDFDocument-polygon}{\code{PDFDocument$polygon()}}
+\item \href{#method-PDFDocument-polyline}{\code{PDFDocument$polyline()}}
+\item \href{#method-PDFDocument-custom}{\code{PDFDocument$custom()}}
+\item \href{#method-PDFDocument-dict}{\code{PDFDocument$dict()}}
+\item \href{#method-PDFDocument-clone}{\code{PDFDocument$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-PDFDocument-new"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDocument$new(
@@ -126,8 +126,8 @@ Append user-defined objects to document}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-append"></a>}}
-\if{latex}{\out{\hypertarget{method-append}{}}}
+\if{html}{\out{<a id="method-PDFDocument-append"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-append}{}}}
 \subsection{Method \code{append()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDocument$append(..., position = NULL)}\if{html}{\out{</div>}}
@@ -147,8 +147,8 @@ Replace an object at the given position}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-replace"></a>}}
-\if{latex}{\out{\hypertarget{method-replace}{}}}
+\if{html}{\out{<a id="method-PDFDocument-replace"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-replace}{}}}
 \subsection{Method \code{replace()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDocument$replace(pdf_object, position)}\if{html}{\out{</div>}}
@@ -166,8 +166,8 @@ Delete the object at the given position}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-delete"></a>}}
-\if{latex}{\out{\hypertarget{method-delete}{}}}
+\if{html}{\out{<a id="method-PDFDocument-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-delete}{}}}
 \subsection{Method \code{delete()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDocument$delete(position)}\if{html}{\out{</div>}}
@@ -183,8 +183,8 @@ Character reprsetntatino of PDF document as a single string}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_character"></a>}}
-\if{latex}{\out{\hypertarget{method-as_character}{}}}
+\if{html}{\out{<a id="method-PDFDocument-as_character"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-as_character}{}}}
 \subsection{Method \code{as_character()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDocument$as_character(...)}\if{html}{\out{</div>}}
@@ -200,8 +200,8 @@ Print}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-PDFDocument-print"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-print}{}}}
 \subsection{Method \code{print()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDocument$print(...)}\if{html}{\out{</div>}}
@@ -217,8 +217,8 @@ Save to PDF file}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-save"></a>}}
-\if{latex}{\out{\hypertarget{method-save}{}}}
+\if{html}{\out{<a id="method-PDFDocument-save"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-save}{}}}
 \subsection{Method \code{save()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDocument$save(filename, ...)}\if{html}{\out{</div>}}
@@ -235,8 +235,8 @@ Save to PDF file}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-copy"></a>}}
-\if{latex}{\out{\hypertarget{method-copy}{}}}
+\if{html}{\out{<a id="method-PDFDocument-copy"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-copy}{}}}
 \subsection{Method \code{copy()}}{
 Deep copy of this document
 Show the PDF in the defined R viewer
@@ -246,8 +246,8 @@ Show the PDF in the defined R viewer
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-show"></a>}}
-\if{latex}{\out{\hypertarget{method-show}{}}}
+\if{html}{\out{<a id="method-PDFDocument-show"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-show}{}}}
 \subsection{Method \code{show()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDocument$show(viewer = getOption("viewer", utils::browseURL))}\if{html}{\out{</div>}}
@@ -262,8 +262,8 @@ Show the PDF in the defined R viewer
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-text"></a>}}
-\if{latex}{\out{\hypertarget{method-text}{}}}
+\if{html}{\out{<a id="method-PDFDocument-text"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-text}{}}}
 \subsection{Method \code{text()}}{
 Initialize a stream object representing a text
 \subsection{Usage}{
@@ -285,8 +285,8 @@ Initialize a stream object representing a text
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-rect"></a>}}
-\if{latex}{\out{\hypertarget{method-rect}{}}}
+\if{html}{\out{<a id="method-PDFDocument-rect"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-rect}{}}}
 \subsection{Method \code{rect()}}{
 Initialize a stream object representing a rectangle
 \subsection{Usage}{
@@ -304,8 +304,8 @@ Initialize a stream object representing a rectangle
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-line"></a>}}
-\if{latex}{\out{\hypertarget{method-line}{}}}
+\if{html}{\out{<a id="method-PDFDocument-line"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-line}{}}}
 \subsection{Method \code{line()}}{
 Initialize a stream object representing a line
 \subsection{Usage}{
@@ -323,8 +323,8 @@ Initialize a stream object representing a line
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-circle"></a>}}
-\if{latex}{\out{\hypertarget{method-circle}{}}}
+\if{html}{\out{<a id="method-PDFDocument-circle"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-circle}{}}}
 \subsection{Method \code{circle()}}{
 Initialize a stream object representing a circle
 \subsection{Usage}{
@@ -344,8 +344,8 @@ Initialize a stream object representing a circle
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-polygon"></a>}}
-\if{latex}{\out{\hypertarget{method-polygon}{}}}
+\if{html}{\out{<a id="method-PDFDocument-polygon"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-polygon}{}}}
 \subsection{Method \code{polygon()}}{
 Initialize a stream object representing a polygon
 \subsection{Usage}{
@@ -363,8 +363,8 @@ Initialize a stream object representing a polygon
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-polyline"></a>}}
-\if{latex}{\out{\hypertarget{method-polyline}{}}}
+\if{html}{\out{<a id="method-PDFDocument-polyline"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-polyline}{}}}
 \subsection{Method \code{polyline()}}{
 Initialize a stream object representing a polyline
 \subsection{Usage}{
@@ -382,8 +382,8 @@ Initialize a stream object representing a polyline
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-custom"></a>}}
-\if{latex}{\out{\hypertarget{method-custom}{}}}
+\if{html}{\out{<a id="method-PDFDocument-custom"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-custom}{}}}
 \subsection{Method \code{custom()}}{
 Initialize a stream object representing a custom object with text
 \subsection{Usage}{
@@ -405,8 +405,8 @@ Initialize a new PDF Dict}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-dict"></a>}}
-\if{latex}{\out{\hypertarget{method-dict}{}}}
+\if{html}{\out{<a id="method-PDFDocument-dict"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-dict}{}}}
 \subsection{Method \code{dict()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFDocument$dict(...)}\if{html}{\out{</div>}}
@@ -421,8 +421,8 @@ Initialize a new PDF Dict}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-PDFDocument-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFDocument-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

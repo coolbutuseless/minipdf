@@ -44,31 +44,31 @@ One of 'n', 's', 'f', 'b'}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{PDFStream$new()}}
-\item \href{#method-update}{\code{PDFStream$update()}}
-\item \href{#method-copy}{\code{PDFStream$copy()}}
-\item \href{#method-as_object}{\code{PDFStream$as_object()}}
-\item \href{#method-print}{\code{PDFStream$print()}}
-\item \href{#method-rotate}{\code{PDFStream$rotate()}}
-\item \href{#method-translate}{\code{PDFStream$translate()}}
-\item \href{#method-scale}{\code{PDFStream$scale()}}
-\item \href{#method-fontsize}{\code{PDFStream$fontsize()}}
-\item \href{#method-text_mode}{\code{PDFStream$text_mode()}}
-\item \href{#method-fill}{\code{PDFStream$fill()}}
-\item \href{#method-stroke}{\code{PDFStream$stroke()}}
-\item \href{#method-linewidth}{\code{PDFStream$linewidth()}}
-\item \href{#method-linetype}{\code{PDFStream$linetype()}}
-\item \href{#method-clip_rect}{\code{PDFStream$clip_rect()}}
-\item \href{#method-clip_polygon}{\code{PDFStream$clip_polygon()}}
-\item \href{#method-as_character}{\code{PDFStream$as_character()}}
-\item \href{#method-get_transform_spec}{\code{PDFStream$get_transform_spec()}}
-\item \href{#method-get_attrib}{\code{PDFStream$get_attrib()}}
-\item \href{#method-clone}{\code{PDFStream$clone()}}
+\item \href{#method-PDFStream-new}{\code{PDFStream$new()}}
+\item \href{#method-PDFStream-update}{\code{PDFStream$update()}}
+\item \href{#method-PDFStream-copy}{\code{PDFStream$copy()}}
+\item \href{#method-PDFStream-as_object}{\code{PDFStream$as_object()}}
+\item \href{#method-PDFStream-print}{\code{PDFStream$print()}}
+\item \href{#method-PDFStream-rotate}{\code{PDFStream$rotate()}}
+\item \href{#method-PDFStream-translate}{\code{PDFStream$translate()}}
+\item \href{#method-PDFStream-scale}{\code{PDFStream$scale()}}
+\item \href{#method-PDFStream-fontsize}{\code{PDFStream$fontsize()}}
+\item \href{#method-PDFStream-text_mode}{\code{PDFStream$text_mode()}}
+\item \href{#method-PDFStream-fill}{\code{PDFStream$fill()}}
+\item \href{#method-PDFStream-stroke}{\code{PDFStream$stroke()}}
+\item \href{#method-PDFStream-linewidth}{\code{PDFStream$linewidth()}}
+\item \href{#method-PDFStream-linetype}{\code{PDFStream$linetype()}}
+\item \href{#method-PDFStream-clip_rect}{\code{PDFStream$clip_rect()}}
+\item \href{#method-PDFStream-clip_polygon}{\code{PDFStream$clip_polygon()}}
+\item \href{#method-PDFStream-as_character}{\code{PDFStream$as_character()}}
+\item \href{#method-PDFStream-get_transform_spec}{\code{PDFStream$get_transform_spec()}}
+\item \href{#method-PDFStream-get_attrib}{\code{PDFStream$get_attrib()}}
+\item \href{#method-PDFStream-clone}{\code{PDFStream$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-PDFStream-new"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$new(...)}\if{html}{\out{</div>}}
@@ -87,8 +87,8 @@ e.g. update the x coordinate:
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update"></a>}}
-\if{latex}{\out{\hypertarget{method-update}{}}}
+\if{html}{\out{<a id="method-PDFStream-update"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-update}{}}}
 \subsection{Method \code{update()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$update(
@@ -115,8 +115,8 @@ drawing attributes}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-copy"></a>}}
-\if{latex}{\out{\hypertarget{method-copy}{}}}
+\if{html}{\out{<a id="method-PDFStream-copy"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-copy}{}}}
 \subsection{Method \code{copy()}}{
 Clone the object
 Convert to full PDF object representation include stream/endstream
@@ -127,8 +127,8 @@ and length dict.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_object"></a>}}
-\if{latex}{\out{\hypertarget{method-as_object}{}}}
+\if{html}{\out{<a id="method-PDFStream-as_object"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-as_object}{}}}
 \subsection{Method \code{as_object()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$as_object(obj_idx)}\if{html}{\out{</div>}}
@@ -143,8 +143,8 @@ and length dict.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-PDFStream-print"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-print}{}}}
 \subsection{Method \code{print()}}{
 Cat just the inner stream part of the object when print()ed
 \subsection{Usage}{
@@ -161,8 +161,8 @@ Transformations: rotate}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-rotate"></a>}}
-\if{latex}{\out{\hypertarget{method-rotate}{}}}
+\if{html}{\out{<a id="method-PDFStream-rotate"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-rotate}{}}}
 \subsection{Method \code{rotate()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$rotate(degrees, x = 0, y = 0)}\if{html}{\out{</div>}}
@@ -180,8 +180,8 @@ Transformations: translate}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-translate"></a>}}
-\if{latex}{\out{\hypertarget{method-translate}{}}}
+\if{html}{\out{<a id="method-PDFStream-translate"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-translate}{}}}
 \subsection{Method \code{translate()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$translate(x, y)}\if{html}{\out{</div>}}
@@ -197,8 +197,8 @@ Transformations: scale}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-scale"></a>}}
-\if{latex}{\out{\hypertarget{method-scale}{}}}
+\if{html}{\out{<a id="method-PDFStream-scale"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-scale}{}}}
 \subsection{Method \code{scale()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$scale(x, y = x)}\if{html}{\out{</div>}}
@@ -215,8 +215,8 @@ Convenience method for changing core attribute: fontsize}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-fontsize"></a>}}
-\if{latex}{\out{\hypertarget{method-fontsize}{}}}
+\if{html}{\out{<a id="method-PDFStream-fontsize"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-fontsize}{}}}
 \subsection{Method \code{fontsize()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$fontsize(fontsize = 12)}\if{html}{\out{</div>}}
@@ -232,8 +232,8 @@ Convenience method for changing core attribute: text_mode}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-text_mode"></a>}}
-\if{latex}{\out{\hypertarget{method-text_mode}{}}}
+\if{html}{\out{<a id="method-PDFStream-text_mode"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-text_mode}{}}}
 \subsection{Method \code{text_mode()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$text_mode(text_mode = 0)}\if{html}{\out{</div>}}
@@ -249,8 +249,8 @@ Convenience method for changing core attribute: fill colour}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-fill"></a>}}
-\if{latex}{\out{\hypertarget{method-fill}{}}}
+\if{html}{\out{<a id="method-PDFStream-fill"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-fill}{}}}
 \subsection{Method \code{fill()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$fill(fill = "#000000")}\if{html}{\out{</div>}}
@@ -266,8 +266,8 @@ Convenience method for changing core attribute: stroke colour}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-stroke"></a>}}
-\if{latex}{\out{\hypertarget{method-stroke}{}}}
+\if{html}{\out{<a id="method-PDFStream-stroke"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-stroke}{}}}
 \subsection{Method \code{stroke()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$stroke(stroke = "#000000")}\if{html}{\out{</div>}}
@@ -283,8 +283,8 @@ Convenience method for changing core attribute: linewidth}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-linewidth"></a>}}
-\if{latex}{\out{\hypertarget{method-linewidth}{}}}
+\if{html}{\out{<a id="method-PDFStream-linewidth"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-linewidth}{}}}
 \subsection{Method \code{linewidth()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$linewidth(linewidth = 1)}\if{html}{\out{</div>}}
@@ -300,8 +300,8 @@ Convenience method for changing core attribute: fontsize}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-linetype"></a>}}
-\if{latex}{\out{\hypertarget{method-linetype}{}}}
+\if{html}{\out{<a id="method-PDFStream-linetype"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-linetype}{}}}
 \subsection{Method \code{linetype()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$linetype(linetype = 0)}\if{html}{\out{</div>}}
@@ -317,8 +317,8 @@ Convenience method for changing core attribute: clipping rect}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clip_rect"></a>}}
-\if{latex}{\out{\hypertarget{method-clip_rect}{}}}
+\if{html}{\out{<a id="method-PDFStream-clip_rect"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-clip_rect}{}}}
 \subsection{Method \code{clip_rect()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$clip_rect(x, y, width, height)}\if{html}{\out{</div>}}
@@ -334,8 +334,8 @@ Convenience method for changing core attribute: clip polygon}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clip_polygon"></a>}}
-\if{latex}{\out{\hypertarget{method-clip_polygon}{}}}
+\if{html}{\out{<a id="method-PDFStream-clip_polygon"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-clip_polygon}{}}}
 \subsection{Method \code{clip_polygon()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$clip_polygon(xs, ys)}\if{html}{\out{</div>}}
@@ -351,8 +351,8 @@ convert stream object to character string}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_character"></a>}}
-\if{latex}{\out{\hypertarget{method-as_character}{}}}
+\if{html}{\out{<a id="method-PDFStream-as_character"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-as_character}{}}}
 \subsection{Method \code{as_character()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PDFStream$as_character(...)}\if{html}{\out{</div>}}
@@ -367,8 +367,8 @@ convert stream object to character string}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_transform_spec"></a>}}
-\if{latex}{\out{\hypertarget{method-get_transform_spec}{}}}
+\if{html}{\out{<a id="method-PDFStream-get_transform_spec"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-get_transform_spec}{}}}
 \subsection{Method \code{get_transform_spec()}}{
 Full transform of all parent objects and this object's transform
 \subsection{Usage}{
@@ -377,8 +377,8 @@ Full transform of all parent objects and this object's transform
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_attrib"></a>}}
-\if{latex}{\out{\hypertarget{method-get_attrib}{}}}
+\if{html}{\out{<a id="method-PDFStream-get_attrib"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-get_attrib}{}}}
 \subsection{Method \code{get_attrib()}}{
 Normalised full set of attributes including parent attributes if available
 \subsection{Usage}{
@@ -387,8 +387,8 @@ Normalised full set of attributes including parent attributes if available
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-PDFStream-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-PDFStream-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
