@@ -1,4 +1,8 @@
 
+# minipdf 0.2.5.9000
+
+* Introduction of pipe-able PDF document creation.
+
 # minipdf 0.2.5 (The Updatening)
 
 * Update roxygen to latest
