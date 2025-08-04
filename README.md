@@ -8,6 +8,7 @@
 ![](http://img.shields.io/badge/cool-useless-green.svg)
 ![](http://img.shields.io/badge/mini-verse-blue.svg)
 [![R-CMD-check](https://github.com/coolbutuseless/minipdf/workflows/R-CMD-check/badge.svg)](https://github.com/coolbutuseless/minipdf/actions)
+[![R-CMD-check](https://github.com/coolbutuseless/minipdf/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/coolbutuseless/minipdf/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `minipdf` is a package for creating simple, single-page PDF documents.
@@ -65,24 +66,24 @@ doc$save("man/figures/diamonds.pdf")
 
 ## Supported features
 
--   Documents with a single page only
--   Only one font per document (set during initialization)
--   Objects: Text, lines, polylines, polygons, rectangles and circles
--   Attributes: Fill colour (including alpha), stroke colour (including
-    alpha), linewidth, linetype
--   Clipping regions - per object clipping region as well as the global
-    document clipping region.
+- Documents with a single page only
+- Only one font per document (set during initialization)
+- Objects: Text, lines, polylines, polygons, rectangles and circles
+- Attributes: Fill colour (including alpha), stroke colour (including
+  alpha), linewidth, linetype
+- Clipping regions - per object clipping region as well as the global
+  document clipping region.
 
 Currently there is no support for annotations or any sort of text
 layout.
 
 ## News
 
--   `minipdf v0.2.1` and `minidf v0.2.2`
-    -   transforms are now methods on the PDF stream objects
-    -   renamed methods on the PDFDcoument e.g. `add_rect()` is now just
-        `rect()`
-    -   internal refactoring of attribute handling.
+- `minipdf v0.2.1` and `minidf v0.2.2`
+  - transforms are now methods on the PDF stream objects
+  - renamed methods on the PDFDcoument e.g. `add_rect()` is now just
+    `rect()`
+  - internal refactoring of attribute handling.
 
 ## Gallery
 
@@ -97,9 +98,9 @@ layout.
 
 ## References
 
--   [PDF specification
-    document](https://www.adobe.com/devnet/pdf/pdf_reference.html)
--   [PDF: An Introduction for
-    Programmers](http://preserve.mactech.com/articles/mactech/Vol.15/15.09/PDFIntro/index.html)
--   [Make your own PDF
-    file](https://blog.idrsolutions.com/2010/09/grow-your-own-pdf-file-part-1-pdf-objects-and-data-types/)
+- [PDF specification
+  document](https://www.adobe.com/devnet/pdf/pdf_reference.html)
+- [PDF: An Introduction for
+  Programmers](http://preserve.mactech.com/articles/mactech/Vol.15/15.09/PDFIntro/index.html)
+- [Make your own PDF
+  file](https://blog.idrsolutions.com/2010/09/grow-your-own-pdf-file-part-1-pdf-objects-and-data-types/)
