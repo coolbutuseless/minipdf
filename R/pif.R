@@ -145,6 +145,89 @@ write_pdf <- function(pif, filename) {
 
 
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create a pif stream object
+#' @param ... named arguments
+#' @return 'stream' object
+#' @noRd
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pif_stream <- function(type, ...) {
+  stream <- list(...)
+  if (!all_named(stream)) {
+    print(stream)
+    stop("Not all named")
+  }
+  class(stream) <- 'stream'
+  attr(stream, 'type') <- type
+  stream
+}
+
+is_stream <- function(x) {
+  isTRUE(inherits(x, 'stream'))
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create a line in pif
+#' @param x1,y1,x2,y2 endpoints
+#' @return stream object
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pif_line <- function(x1, y1, x2, y2) {
+  pif_stream(type = 'line', x1 = x1, y1 = y1, x2 = x2, y2 = y2)
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Convert stream to character
+#' 
+#' @param x pif_stream object
+#' @param ... ignored
+#' @return character string
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+as.character.stream <- function(x, ...) {
+  type <- attr(x, 'type', exact = TRUE)
+  if (type == 'line') {
+    glue::glue_data(x, "{x1} {y1} m {x2} {y2} l s")
+  } else {
+    stop("Unknown stream: ", deparse1(class(x)))
+  }
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' print stream
+#' @param x pif_stream
+#' @param ... ignored
+#' @return None
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+print.stream <- function(x, ...) {
+  type <- attr(x, 'type', exact = TRUE)
+  cat(type, ": ", dQuote(as.character(x, ...), FALSE), "\n", sep = "")
+  invisible(x)
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Convert stream to PDF object representation
+#' This includes wrapping it in stream/endstream, counting characters etc
+#' @param stream stream
+#' @param idx idx
+#' @importFrom glue glue
+#' @noRd
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+stream_to_pdf <- function(stream, idx) {
+  str         <- as.character(stream)
+  nchars      <- nchar(str)
+  this_stream <- glue::glue("stream\n{str}\nendstream")
+  this_length <- glue::glue("<< /Length {nchars} >>")
+  res <- glue::glue("{idx} 0 obj\n{this_length}\n{this_stream}\nendobj")
+  res
+}
+
+
 if (FALSE) {
   fontname <- 'Helvetica'
   width <- 400

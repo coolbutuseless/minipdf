@@ -14,7 +14,8 @@ URL: https://github.com/coolbutuseless/minipdf
 Depends:
     R (>= 4.1.0)
 Imports:
-    R6
+    R6,
+    glue
 Suggests: 
     knitr,
     rmarkdown,
