@@ -7,56 +7,56 @@
 #' @return List with attributes. List items are PDF objects.  Attributes
 #'         are PDF settings
 #' @examples
-#' create_pif()
+#' create_pdf()
 #' 
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_pif <- function(...) {
-  pif <- list()
+create_pdf <- function(...) {
+  doc <- list()
   atts <- list(...) 
   if (length(atts) > 0) {
     stopifnot(all_named(atts))
-    attributes(pif) <- atts
+    attributes(doc) <- atts
   }
-  class(pif) <- 'pif'
+  class(doc) <- 'pdf_doc'
   
-  pif
+  doc
 }
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a PDF Dict object in pif format
+#' Create a PDF Dict object 
 #' @param ... named arguments
-#' @return 'pif_dict' object
+#' @return 'pdf_dict' object
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pif_dict <- function(...) {
+pdf_dict <- function(...) {
   dict <- list(...)
   if (!all_named(dict)) {
     print(dict)
-    stop("Not all named")
+    stop("pdf_dict(): Not all named")
   }
-  class(dict) <- 'dict'
+  class(dict) <- 'pdf_dict'
   dict
 }
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Print a pif_dict. Can be nested
-#' @param x pif_dict
+#' Print a pdf Can be nested
+#' @param x pdf_dict
 #' @param depth print depth. Default: 0.  Used to control indentation
 #' @param ... ignored
 #' @return None.
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print.dict <- function(x, depth = 0, ...) {
+print.pdf_dict <- function(x, depth = 0, ...) {
   
-  indent <- paste0(rep(" ", depth), collapse = "")
+  indent <- paste0(rep("  ", depth), collapse = "")
 
   for (i in seq_along(x)) {
     if (is_dict(x[[i]])) {
       cat(indent, names(x)[i], ": ", "\n", sep = "")
-      print.dict(x[[i]], depth = depth + 1)
+      print.pdf_dict(x[[i]], depth = depth + 1)
     } else {
       cat(indent, names(x)[i], ": ", x[[i]], "\n", sep = "")
     }
@@ -66,7 +66,7 @@ print.dict <- function(x, depth = 0, ...) {
 
 
 if (FALSE) {
-  zz <- pif_dict(type = "Hello", greg = pif_dict(x = "next"))
+  zz <- pdf_dict(type = "Hello", greg = pdf_dict(x = "next"))
   zz
 }
 
@@ -80,7 +80,7 @@ if (FALSE) {
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 is_dict <- function(x) {
-  isTRUE(inherits(x, 'dict'))
+  isTRUE(inherits(x, 'pdf_dict'))
 }
 
 
@@ -93,35 +93,35 @@ is_dict <- function(x) {
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 assert_dict <- function(x) {
-  stopifnot(inherits(x, 'dict'))
+  stopifnot(is_dict(x))
 }
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Append a 'dict' to the 'pif'
+#' Append a 'dict' to the 'pdf'
 #' 
-#' @param pif pif
-#' @param dict dict
-#' @return pif
+#' @param doc pdf_doc
+#' @param dict pdf_dict
+#' @return pdf
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pif_append <- function(pif, dict) {
-  append(pif, list(dict))
+pdf_append <- function(doc, dict) {
+  append(doc, list(dict))
 }
 
 
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Print a 'pif' object
+#' Print a 'pdf' object
 #' 
-#' @param x pif object
+#' @param x pdf object
 #' @param ... ignored
 #' @return None
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print.pif <- function(x, ...) {
-  cat("<pif> with", length(x), "PDF objects\n")
+print.pdf_doc <- function(x, ...) {
+  cat("<pdf doc> with", length(x), "PDF objects\n")
   invisible(x)
 }
 
@@ -129,12 +129,12 @@ print.pif <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a pif stream object
+#' Create a pdf stream object
 #' @param ... named arguments
 #' @return 'stream' object
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pif_stream <- function(type, ...) {
+pdf_stream <- function(type, ...) {
   stream <- list(...)
   if (!all_named(stream)) {
     print(stream)
@@ -146,30 +146,31 @@ pif_stream <- function(type, ...) {
 }
 
 is_stream <- function(x) {
-  isTRUE(inherits(x, 'stream'))
+  isTRUE(inherits(x, 'pdf_stream'))
 }
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a line in pif
+#' Create a line in pdf
 #' @param x1,y1,x2,y2 endpoints
 #' @return stream object
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pif_line <- function(x1, y1, x2, y2) {
-  pif_stream(type = 'line', x1 = x1, y1 = y1, x2 = x2, y2 = y2)
+pdf_line <- function(x1, y1, x2, y2) {
+  pdf_stream(type = 'line', x1 = x1, y1 = y1, x2 = x2, y2 = y2)
 }
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Convert stream to character
 #' 
-#' @param x pif_stream object
+#' @param x pdf_stream object
 #' @param ... ignored
 #' @return character string
+#' @importFrom glue glue glue_data
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-as.character.stream <- function(x, ...) {
+as.character.pdf_stream <- function(x, ...) {
   type <- attr(x, 'type', exact = TRUE)
   if (type == 'line') {
     glue::glue_data(x, "{x1} {y1} m {x2} {y2} l s")
@@ -181,12 +182,12 @@ as.character.stream <- function(x, ...) {
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' print stream
-#' @param x pif_stream
+#' @param x pdf_stream
 #' @param ... ignored
 #' @return None
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print.stream <- function(x, ...) {
+print.pdf_stream <- function(x, ...) {
   type <- attr(x, 'type', exact = TRUE)
   cat(type, ": ", dQuote(as.character(x, ...), FALSE), "\n", sep = "")
   invisible(x)
@@ -212,13 +213,13 @@ stream_to_pdf <- function(stream, idx) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' pif to pdf
+#' export pdf
 #'
-#' @param pif pif
+#' @param doc pdf_doc
 #' @return string
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pif_to_pdf <- function(pif) {
+pdf_export <- function(doc) {
   
 }
 
@@ -228,11 +229,11 @@ if (FALSE) {
   fontname <- 'Helvetica'
   width <- 400
   height <- 300
-  pif <- create_pif()
-  pif <- pif_append(pif, pif_dict(Type = '/Catalog', Pages = "2 0 R"))
-  pif <- pif_append(pif, pif_dict(Type = '/Pages', Kids = "[3 0 R]", Count = 1))
-  pif <- pif_append(
-    pif, 
+  doc <- create_pdf()
+  doc <- pif_append(doc, pif_dict(Type = '/Catalog', Pages = "2 0 R"))
+  doc <- pif_append(doc, pif_dict(Type = '/Pages', Kids = "[3 0 R]", Count = 1))
+  doc <- pif_append(
+    doc, 
     pif_dict(
     Type      = '/Page',
     Parent    = "2 0 R",
@@ -241,18 +242,18 @@ if (FALSE) {
     Contents  = "[6 0 R]"
     )
   )
-  pif <- pif_append(
-    pif, 
+  doc <- pif_append(
+    doc, 
     pif_dict(
     Font      = pif_dict(F1 = "5 0 R"),
     ExtGState = pif_dict(GS11 = pif_dict(ca = 1, CA = 1)))
   )
-  pif <- pif_append(pif, pif_dict(Type = '/Font', Subtype = "/Type1", BaseFont = paste0("/", fontname)))
+  doc <- pif_append(doc, pif_dict(Type = '/Font', Subtype = "/Type1", BaseFont = paste0("/", fontname)))
   
-  pif
+  doc
   
   
-  pif_dict(x = "Hello", y = pif_dict(x = "next")) |> str()
+  pdf_dict(x = "Hello", y = pdf_dict(x = "next"))
   
   
   
