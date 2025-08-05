@@ -41,6 +41,35 @@ pdf_dict <- function(...) {
 }
 
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Convert dict to character
+#' 
+#' @param x pdf_dict
+#' @param depth print depth. Default: 0.  Used to control indentation
+#' @param ... ignored
+#' @return None.
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+as.character.pdf_dict <- function(x, depth = 0, ...) {
+  indent1 <- paste0(rep("  ", depth), collapse = "")
+  indent2 <- paste0(rep("  ", depth + 1), collapse = "")
+  nms   <- names(x)
+  elems <- unname(x)
+  
+  s <- lapply(seq_along(nms), \(i) {
+    if (is_dict(elems[[i]])) {
+      glue::glue("{indent2}/{nms[i]}\n{as.character(elems[[i]], depth = depth + 1)}")
+    } else {
+      glue::glue("{indent2}/{nms[i]} {as.character(elems[[i]])}")
+    }
+  })
+  s <- paste(s, collapse = "\n")
+  glue::glue("{indent1}<<\n{s}\n{indent1}>>")
+}
+
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Print a pdf Can be nested
 #' @param x pdf_dict
@@ -50,18 +79,9 @@ pdf_dict <- function(...) {
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print.pdf_dict <- function(x, depth = 0, ...) {
-  
-  indent <- paste0(rep("  ", depth), collapse = "")
-
-  for (i in seq_along(x)) {
-    if (is_dict(x[[i]])) {
-      cat(indent, names(x)[i], ": ", "\n", sep = "")
-      print.pdf_dict(x[[i]], depth = depth + 1)
-    } else {
-      cat(indent, names(x)[i], ": ", x[[i]], "\n", sep = "")
-    }
-  }
-  invisible()
+  cat("<dict>\n")
+  cat(as.character(x), "\n")
+  invisible(x)
 }
 
 
@@ -98,15 +118,23 @@ assert_dict <- function(x) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Append a 'dict' to the 'pdf'
+#' Add a 'dict' or stream to the 'pdf'
 #' 
 #' @param doc pdf_doc
-#' @param dict pdf_dict
+#' @param x pdf_dict or pdf_stream
 #' @return pdf
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_append <- function(doc, dict) {
-  append(doc, list(dict))
+pdf_add <- function(doc, x, pos = NULL) {
+  stopifnot(is_dict(x) || is_stream(x))
+  
+  if (is.null(pos)) {
+    res <- append(doc, list(x))
+  } else {
+    res <- append(doc, list(x), after = pos - 1L)
+  }
+  
+  structure(res, class = "pdf_doc")
 }
 
 
@@ -140,7 +168,7 @@ pdf_stream <- function(type, ...) {
     print(stream)
     stop("Not all named")
   }
-  class(stream) <- 'stream'
+  class(stream) <- 'pdf_stream'
   attr(stream, 'type') <- type
   stream
 }
@@ -173,10 +201,22 @@ pdf_line <- function(x1, y1, x2, y2) {
 as.character.pdf_stream <- function(x, ...) {
   type <- attr(x, 'type', exact = TRUE)
   if (type == 'line') {
-    glue::glue_data(x, "{x1} {y1} m {x2} {y2} l s")
+    gp <- paste(c(
+      "5 w", 
+      "0 0 0 rg", 
+      "1 0 0 RG", 
+      ""
+    ), collapse = "\n")
+    s <- glue::glue_data(x, "{gp}{x1} {y1} m {x2} {y2} l s")
   } else {
     stop("Unknown stream: ", deparse1(class(x)))
   }
+  
+  s <- paste('q', s, 'Q', sep = "\n")
+  len <- nchar(s)
+  len <- as.character(pdf_dict(Length = len))
+  s <- paste(len, "stream", s, "endstream", sep = "\n")
+  s
 }
 
 
@@ -188,27 +228,11 @@ as.character.pdf_stream <- function(x, ...) {
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print.pdf_stream <- function(x, ...) {
+  cat("<stream: ")
   type <- attr(x, 'type', exact = TRUE)
-  cat(type, ": ", dQuote(as.character(x, ...), FALSE), "\n", sep = "")
+  cat(type, ">\n", sep = "")
+  cat(as.character(x, ...), "\n", sep = "")
   invisible(x)
-}
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Convert stream to PDF object representation
-#' This includes wrapping it in stream/endstream, counting characters etc
-#' @param stream stream
-#' @param idx idx
-#' @importFrom glue glue
-#' @noRd
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-stream_to_pdf <- function(stream, idx) {
-  str         <- as.character(stream)
-  nchars      <- nchar(str)
-  this_stream <- glue::glue("stream\n{str}\nendstream")
-  this_length <- glue::glue("<< /Length {nchars} >>")
-  res <- glue::glue("{idx} 0 obj\n{this_length}\n{this_stream}\nendobj")
-  res
 }
 
 
@@ -216,10 +240,97 @@ stream_to_pdf <- function(stream, idx) {
 #' export pdf
 #'
 #' @param doc pdf_doc
+#' @param filename defualt: NULL -> return string
 #' @return string
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_export <- function(doc) {
+pdf_render <- function(doc, filename = NULL) {
+  
+  # Render "/Resources" object
+  # Render "/Page" objects
+  # Render "/Pages" object to point to "/Page" objects
+  # Render "/Catalog" object to point to "/Pages" object
+  
+  doc <- pdf_add(doc, pdf_dict(Type = '/Catalog', Pages = "2 0 R"), pos = 1)
+  doc <- pdf_add(doc, pdf_dict(Type = '/Pages', Kids = "[3 0 R]", Count = 1), pos = 2)
+  doc <- pdf_add(
+    doc, 
+    pdf_dict(
+      Type      = '/Page',
+      Parent    = "2 0 R",
+      Resources = "4 0 R",
+      MediaBox  = glue::glue("[0 0 {width} {height}]"),
+      Contents  = "[6 0 R]"
+    ),
+    pos = 3
+  )
+  doc <- pdf_add(
+    doc, 
+    pdf_dict(
+      Font      = pdf_dict(F1 = "5 0 R"),
+      ExtGState = pdf_dict(GS11 = pdf_dict(ca = 1, CA = 1))
+    ),
+    pos = 4
+  )
+  doc <- pdf_add(
+    doc, 
+    pdf_dict(
+      Type = '/Font', 
+      Subtype = "/Type1", 
+      BaseFont = paste0("/", fontname)
+    ),
+    pos = 5
+  )
+  
+  s <- vapply(seq_along(doc), function(i) {
+    glue::glue(
+      "{i} 0 obj
+      {as.character(doc[[i]])}
+      endobj"
+    )
+  }, character(1))
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Calculate xref and trailer
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  s <- c("%PDF-2.0", s)
+  lens <- nchar(s) + 1L
+  
+  offsets <- cumsum(lens)
+  startxref <- offsets[length(offsets)]
+  offsets <- offsets[-length(offsets)]
+  
+  offsets <- sprintf("%010i 00000 n", offsets)
+  offsets <- paste(offsets, collapse = "\n")
+  
+  
+  xref <- glue::glue(
+    "xref
+    0 {length(lens)}
+    0000000000 65535 f
+    {offsets}
+    trailer <</Size {length(lens)}/Root 1 0 R>>
+    startxref
+    {startxref}
+    %%EOF
+    "
+  )
+  
+  s <- c(s, xref)
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Assemble full string
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  s <- paste(s, collapse = "\n")
+  
+  
+  if (is.null(filename)) {
+    s
+  } else {
+    writeLines(s, filename)
+    invisible(s)
+  }
+  
   
 }
 
@@ -229,34 +340,13 @@ if (FALSE) {
   fontname <- 'Helvetica'
   width <- 400
   height <- 300
+  
   doc <- create_pdf()
-  doc <- pif_append(doc, pif_dict(Type = '/Catalog', Pages = "2 0 R"))
-  doc <- pif_append(doc, pif_dict(Type = '/Pages', Kids = "[3 0 R]", Count = 1))
-  doc <- pif_append(
-    doc, 
-    pif_dict(
-    Type      = '/Page',
-    Parent    = "2 0 R",
-    Resources = "4 0 R",
-    MediaBox  = glue::glue("[0 0 {width} {height}]"),
-    Contents  = "[6 0 R]"
-    )
-  )
-  doc <- pif_append(
-    doc, 
-    pif_dict(
-    Font      = pif_dict(F1 = "5 0 R"),
-    ExtGState = pif_dict(GS11 = pif_dict(ca = 1, CA = 1)))
-  )
-  doc <- pif_append(doc, pif_dict(Type = '/Font', Subtype = "/Type1", BaseFont = paste0("/", fontname)))
-  
+  ll <- pdf_line(0, 0, 100, 100)
+  doc <- pdf_add(doc, ll)
   doc
-  
-  
-  pdf_dict(x = "Hello", y = pdf_dict(x = "next"))
-  
-  
-  
+  pdf_render(doc) |> cat()
+
 }
 
 
