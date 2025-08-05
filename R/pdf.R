@@ -3,7 +3,6 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create an empty shell for the PDF intermediate format
 #' 
-#' @param ... options
 #' @return List with attributes. List items are PDF objects.  Attributes
 #'         are PDF settings
 #' @examples
@@ -11,13 +10,13 @@
 #' 
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_pdf <- function(...) {
-  doc <- list()
-  atts <- list(...) 
-  if (length(atts) > 0) {
-    stopifnot(all_named(atts))
-    attributes(doc) <- atts
-  }
+create_pdf <- function() {
+  doc <- list(
+    page = list(
+      objs = list(), 
+      resources = list()
+    )
+  )
   class(doc) <- 'pdf_doc'
   
   doc
@@ -34,7 +33,8 @@ create_pdf <- function(...) {
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print.pdf_doc <- function(x, ...) {
-  cat("<pdf doc> with", length(x), "PDF objects\n")
+  cat("<pdf doc> with", length(x), "pages\n")
+  cat(sprintf("  Page 1: %i objects\n", length(x$page$objs)))
   invisible(x)
 }
 
@@ -54,12 +54,12 @@ pdf_add <- function(doc, x, pos = NULL) {
   stopifnot(is_dict(x) || is_stream(x))
   
   if (is.null(pos)) {
-    res <- append(doc, list(x))
+    doc$page$objs <- append(doc$page$objs, list(x))
   } else {
-    res <- append(doc, list(x), after = pos - 1L)
+    doc$page$objs <- append(doc$page$objs, list(x), after = pos - 1L)
   }
   
-  structure(res, class = "pdf_doc")
+  doc
 }
 
 
@@ -114,10 +114,10 @@ pdf_render <- function(doc, filename = NULL) {
     pos = 5
   )
   
-  s <- vapply(seq_along(doc), function(i) {
+  s <- vapply(seq_along(doc$page$objs), function(i) {
     glue::glue(
       "{i} 0 obj
-      {as.character(doc[[i]])}
+      {as.character(doc$page$objs[[i]])}
       endobj"
     )
   }, character(1))
@@ -174,12 +174,12 @@ if (FALSE) {
   ll <- pdf_line(0, 0, 100, 100)
   doc <- pdf_add(doc, ll)
   
-  rr <- pdf_rect(120, 120, 200, 100)
-  doc <- pdf_add(doc, rr)
+  # rr <- pdf_rect(120, 120, 200, 100)
+  # doc <- pdf_add(doc, rr)
   
-  
-  # ll <- pdf_line(20, 0, 120, 0)
-  # doc <- pdf_add(doc, ll)
+
+  ll <- pdf_line(20, 0, 120, 100)
+  doc <- pdf_add(doc, ll)
   
   doc
   pdf_render(doc) |> cat()
