@@ -127,23 +127,6 @@ print.pif <- function(x, ...) {
 
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Write from the intermediate format to an actual PDF file
-#' @param pif pif object as created by \code{\link{create_pif}()}
-#' @param filename output filename
-#' @return None
-#' @export
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-write_pdf <- function(pif, filename) {
-  
-  # write header
-  # write objects
-  # write xref table
-  
-  invisible(pif)
-}
-
-
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a pif stream object
@@ -226,6 +209,19 @@ stream_to_pdf <- function(stream, idx) {
   res <- glue::glue("{idx} 0 obj\n{this_length}\n{this_stream}\nendobj")
   res
 }
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' pif to pdf
+#'
+#' @param pif pif
+#' @return string
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pif_to_pdf <- function(pif) {
+  
+}
+
 
 
 if (FALSE) {
