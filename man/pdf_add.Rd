@@ -10,6 +10,9 @@ pdf_add(doc, x, pos = NULL)
 \item{doc}{pdf_doc}
 
 \item{x}{pdf_dict or pdf_stream}
+
+\item{pos}{position at which to add item. Item currently at this
+position will be moved to next position}
 }
 \value{
 pdf

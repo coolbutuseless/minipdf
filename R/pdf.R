@@ -122,6 +122,8 @@ assert_dict <- function(x) {
 #' 
 #' @param doc pdf_doc
 #' @param x pdf_dict or pdf_stream
+#' @param pos position at which to add item. Item currently at this
+#'        position will be moved to next position
 #' @return pdf
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -251,6 +253,10 @@ pdf_render <- function(doc, filename = NULL) {
   # Render "/Pages" object to point to "/Page" objects
   # Render "/Catalog" object to point to "/Pages" object
   
+  fontname <- 'Helvetica'
+  width <- 400
+  height <- 400
+  
   doc <- pdf_add(doc, pdf_dict(Type = '/Catalog', Pages = "2 0 R"), pos = 1)
   doc <- pdf_add(doc, pdf_dict(Type = '/Pages', Kids = "[3 0 R]", Count = 1), pos = 2)
   doc <- pdf_add(
@@ -337,9 +343,6 @@ pdf_render <- function(doc, filename = NULL) {
 
 
 if (FALSE) {
-  fontname <- 'Helvetica'
-  width <- 400
-  height <- 300
   
   doc <- create_pdf()
   ll <- pdf_line(0, 0, 100, 100)
