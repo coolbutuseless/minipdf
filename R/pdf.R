@@ -92,7 +92,7 @@ pdf_render <- function(doc, filename = NULL) {
       Parent    = "2 0 R",
       Resources = "4 0 R",
       MediaBox  = glue::glue("[0 0 {width} {height}]"),
-      Contents  = "[6 0 R]"
+      Contents  = "[6 0 R 7 0 R]"
     ),
     pos = 3
   )
@@ -173,8 +173,17 @@ if (FALSE) {
   doc <- create_pdf()
   ll <- pdf_line(0, 0, 100, 100)
   doc <- pdf_add(doc, ll)
+  
+  rr <- pdf_rect(120, 120, 200, 100)
+  doc <- pdf_add(doc, rr)
+  
+  
+  # ll <- pdf_line(20, 0, 120, 0)
+  # doc <- pdf_add(doc, ll)
+  
   doc
   pdf_render(doc) |> cat()
+  pdf_render(doc, "working/test.pdf")
 
 }
 
