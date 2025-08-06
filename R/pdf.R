@@ -13,7 +13,7 @@
 create_pdf <- function() {
   doc <- list(
     page = list(
-      objs = list(), 
+      objs      = list(), 
       resources = list()
     )
   )
@@ -34,7 +34,8 @@ create_pdf <- function() {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print.pdf_doc <- function(x, ...) {
   cat("<pdf doc> with", length(x), "pages\n")
-  cat(sprintf("  Page 1: %i objects\n", length(x$page$objs)))
+  page <- x$page
+  cat(sprintf("  Page 1: %i objects\n", length(page$objs)))
   invisible(x)
 }
 
@@ -83,8 +84,28 @@ pdf_render <- function(doc, filename = NULL) {
   width <- 400
   height <- 400
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # /Catalog 
+  #    - one/document
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc <- pdf_add(doc, pdf_dict(Type = '/Catalog', Pages = "2 0 R"), pos = 1)
-  doc <- pdf_add(doc, pdf_dict(Type = '/Pages', Kids = "[3 0 R]", Count = 1), pos = 2)
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # /Pages
+  #   - one/document
+  #   - Linked from /Catalog
+  #   - Each page is an index list of objects
+  #   - /Pages just points to the index lists for each page
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  doc <- pdf_add(doc, pdf_dict(Type = '/Pages'  , Kids  = "[3 0 R]", Count = 1), pos = 2)
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # /Page
+  #   - one/page
+  #   - linked from /Pages
+  #   - links to /Resources
+  #   - contains a list of objects it points to
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc <- pdf_add(
     doc, 
     pdf_dict(
@@ -96,6 +117,13 @@ pdf_render <- function(doc, filename = NULL) {
     ),
     pos = 3
   )
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Resources
+  #    - one/page
+  #    - linked from /Page
+  #    - links to font definitions
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc <- pdf_add(
     doc, 
     pdf_dict(
@@ -104,6 +132,12 @@ pdf_render <- function(doc, filename = NULL) {
     ),
     pos = 4
   )
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Font definition
+  #    - N/page
+  #    - Linked from /Resources
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc <- pdf_add(
     doc, 
     pdf_dict(
@@ -114,6 +148,10 @@ pdf_render <- function(doc, filename = NULL) {
     pos = 5
   )
   
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Get sizes of all elements
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   s <- vapply(seq_along(doc$page$objs), function(i) {
     glue::glue(
       "{i} 0 obj
@@ -123,19 +161,30 @@ pdf_render <- function(doc, filename = NULL) {
   }, character(1))
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Calculate xref and trailer
+  # Header
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   s <- c("%PDF-2.0", s)
-  lens <- nchar(s) + 1L
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # byte offsets (from start) for each obj.  
+  # +1 for "\n" which will be inserted in a following step
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  lens <- nchar(s) + 1L 
   
   offsets <- cumsum(lens)
-  startxref <- offsets[length(offsets)]
-  offsets <- offsets[-length(offsets)]
+  startxref <- offsets[length(offsets)]  # end of last object will be start of xref
+  offsets   <- offsets[-length(offsets)] # but this index not part of xref table
   
+  # Format xref offsets.  
+  #   - byte offsets are 10 characters long. Padded with 0s
+  #   - Every object is Version = 00000
   offsets <- sprintf("%010i 00000 n", offsets)
   offsets <- paste(offsets, collapse = "\n")
   
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # xref and trailer
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   xref <- glue::glue(
     "xref
     0 {length(lens)}
@@ -148,6 +197,7 @@ pdf_render <- function(doc, filename = NULL) {
     "
   )
   
+  # append xref to total 
   s <- c(s, xref)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -156,14 +206,15 @@ pdf_render <- function(doc, filename = NULL) {
   s <- paste(s, collapse = "\n")
   
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Return full string to user if not writing it to file
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (is.null(filename)) {
     s
   } else {
     writeLines(s, filename)
     invisible(s)
   }
-  
-  
 }
 
 
@@ -178,7 +229,7 @@ if (FALSE) {
   # doc <- pdf_add(doc, rr)
   
 
-  ll <- pdf_line(20, 0, 120, 100)
+  ll <- pdf_line(20, 0, 120, 200)
   doc <- pdf_add(doc, ll)
   
   doc

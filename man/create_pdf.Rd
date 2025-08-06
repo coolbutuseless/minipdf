@@ -4,10 +4,7 @@
 \alias{create_pdf}
 \title{Create an empty shell for the PDF intermediate format}
 \usage{
-create_pdf(...)
-}
-\arguments{
-\item{...}{options}
+create_pdf()
 }
 \value{
 List with attributes. List items are PDF objects.  Attributes
