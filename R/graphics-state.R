@@ -94,6 +94,7 @@ gp_to_font_ref <- function(gp) {
   
   switch(
     tolower(gp$fontfamily),
+    sans      =,
     helvetica = {
       res <- switch(
         face,
@@ -105,6 +106,7 @@ gp_to_font_ref <- function(gp) {
         stop("Bad face: ", face)
       )
     },
+    mono    =,
     courier = {
       res <- switch(
         face,
@@ -116,6 +118,7 @@ gp_to_font_ref <- function(gp) {
         stop("Bad face: ", face)
       )
     },
+    seriv = ,
     times = {
       res <- switch(
         face,

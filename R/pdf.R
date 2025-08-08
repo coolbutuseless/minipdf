@@ -354,7 +354,7 @@ tt <- function() {
   doc <- pdf_add(doc, ci)
   
   txt <- pdf_text("Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink', 
-                  fontfamily = "Helvetica", fontface = 'bold.italic', mode = 2)
+                  fontfamily = "mono", fontface = 'bold.italic', mode = 2)
   doc <- pdf_add(doc, txt)
   
   doc
