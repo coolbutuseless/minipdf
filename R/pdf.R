@@ -12,10 +12,20 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 create_pdf <- function() {
   doc <- list(
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initialise with an empty first page
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     page = list(
-      objs  = list()
+      list()  # Page 1
     ), 
-    gs = list(pdf_dict(CA = 1, ca = 1)) # stroke + fill alpha
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Initial graphics state is color and fill both have alpha = 1
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    gs = list(
+      pdf_dict(CA = 1, ca = 1)
+    ) 
   )
   # doc <- as.environment(doc)
   class(doc) <- 'pdf_doc'
@@ -64,7 +74,7 @@ add_gs <- function(doc, gs) {
 print.pdf_doc <- function(x, ...) {
   cat("<pdf doc> with", length(x), "pages\n")
   page <- x$page
-  cat(sprintf("  Page 1: %i objects\n", length(page$objs)))
+  cat(sprintf("  Page 1: %i objects\n", length(page[[1]])))
   invisible(x)
 }
 
@@ -107,9 +117,9 @@ pdf_add <- function(doc, x, pos = NULL) {
   
   
   if (is.null(pos)) {
-    doc$page$objs <- append(doc$page$objs, list(x))
+    doc$page[[1]] <- append(doc$page[[1]], list(x))
   } else {
-    doc$page$objs <- append(doc$page$objs, list(x), after = pos - 1L)
+    doc$page[[1]] <- append(doc$page[[1]], list(x), after = pos - 1L)
   }
   
   doc
@@ -149,7 +159,7 @@ pdf_render <- function(doc, filename = NULL) {
   # idx_objs_start1 <- idx_fonts1 + len_fonts1
   
   idx_objs_start1 <- idx_resources1 + len_resources1
-  n_objs_page1    <- length(doc$page$objs)
+  n_objs_page1    <- length(doc$page[[1]])
   
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -236,10 +246,11 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Get sizes of all elements
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  s <- vapply(seq_along(doc$page$objs), function(i) {
+  page_objs <- doc$page[[1]]
+  s <- vapply(seq_along(page_objs), function(i) {
     glue::glue(
       "{i} 0 obj
-      {as.character(doc$page$objs[[i]])}
+      {as.character(page_objs[[i]])}
       endobj"
     )
   }, character(1))
