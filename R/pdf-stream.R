@@ -78,6 +78,28 @@ as.character.pdf_stream <- function(x, ...) {
          {paint}"
       ) 
     },
+    text = {
+      
+      # Mode
+      # 0 Fill text. Normal. Default
+      # 1 Stroke text
+      # 2 Fill then stroke
+      # 3 NO fill or stroke. Invisible
+      # 4 Fill text and add to path for clipping
+      # 5 Stroke text and add to path for clipping
+      # 6 Fill, then stroke text and add to path for clipping
+      # 7 Add text to path for clipping
+      
+      s <- glue::glue_data(
+        x,
+        "BT
+        /F1 {fontsize} Tf
+        {x} {y} Td
+        {mode} Tr
+        ({text}) Tj
+        ET"
+      )
+    },
     stop("Unknown stream: ", deparse1(class(x)))
   )
 
@@ -223,6 +245,37 @@ pdf_circle <- function(x, y, r, ..., gp = pgpar()) {
     type = 'circle', 
     gp   = gp,
     x = x, y = y, r = r
+  )
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create text
+#' @param x,y position
+#' @param text text
+#' @param fontsize Default: 12
+#' @param mode Default: 0
+#' \itemize{
+#'   \item{0 - Fill text. Normal. Default}
+#'   \item{1 - Stroke text}
+#'   \item{2 - Fill then stroke}
+#'   \item{3 - NO fill or stroke. Invisible}
+#'   \item{4 - Fill text and add to path for clipping}
+#'   \item{5 - Stroke text and add to path for clipping}
+#'   \item{6 - Fill, then stroke text and add to path for clipping}
+#'   \item{7 - Add text to path for clipping}
+#' }
+#' @inheritParams pdf_line
+#' @return stream object
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_text <- function(text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()) {
+  gp <- modifyList(gp, list(...))
+  pdf_stream(
+    type = 'text', 
+    gp   = gp,
+    x = x, y = y, text = text, mode = mode, fontsize = fontsize
   )
 }
 

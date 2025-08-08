@@ -320,23 +320,25 @@ tt <- function() {
 
   ll <- pdf_line(20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
   doc <- pdf_add(doc, ll)
-  
+
   N  <- 100
   xs <- runif(N, 1, 400)
   ys <- runif(N, 1, 400)
   pl <- pdf_polyline(xs, ys, col = 'darkgreen')
   doc <- pdf_add(doc, pl)
-  
-  
-  
+
+
+
   xs <- c(100, 300, 300)
   ys <- c(100, 100, 300)
   pl <- pdf_polygon(xs, ys, col = 'black', fill = "#ff000080")
   doc <- pdf_add(doc, pl)
-  
+
   ci <- pdf_circle(300, 300, 100, col = 'hotpink', fill = '#00ff0080')
   doc <- pdf_add(doc, ci)
   
+  txt <- pdf_text("Hello\n#RStats", 50, 50, fontsize = 40, fill = 'black')
+  doc <- pdf_add(doc, txt)
   
   doc
   pdf_render(doc) |> cat()
