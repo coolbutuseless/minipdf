@@ -152,10 +152,11 @@ pdf_render <- function(doc, filename = NULL) {
   
   len_resources1 <- 1L
   
-  idx_fonts1 <- idx_resources1 + len_resources1
-  len_fonts1 <- 1L
+  # idx_fonts1 <- idx_resources1 + len_resources1
+  # len_fonts1 <- 1L
+  # idx_objs_start1 <- idx_fonts1 + len_fonts1
   
-  idx_objs_start1 <- idx_fonts1 + len_fonts1
+  idx_objs_start1 <- idx_resources1 + len_resources1
   n_objs_page1    <- length(doc$page$objs)
   
   
@@ -211,10 +212,25 @@ pdf_render <- function(doc, filename = NULL) {
   doc <- pdf_add(
     doc, 
     pdf_dict(
-      Font      = pdf_dict(F1 = "5 0 R"),
+      # Font      = pdf_dict(F1 = "5 0 R"),
       # ExtGState = pdf_dict(GS11 = pdf_dict(ca = 1, CA = 1))
-      ExtGState = gs
-      
+      ExtGState = gs,
+      Font = pdf_dict(
+        F1  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Roman'          ),
+        F2  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Bold'           ),
+        F3  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Italic'         ),
+        F4  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-BoldItalic'     ),
+        F5  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica'            ),
+        F6  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Bold'       ),
+        F7  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Oblique'    ),
+        F8  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-BoldOblique'),
+        F9  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier'              ),
+        F10 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Bold'         ),
+        F11 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Oblique'      ),
+        F12 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-BoldOblique'  ),
+        F13 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Symbol'               ),
+        F14 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/ZapfDingbats'         )
+      )
     ),
     pos = 4
   )
@@ -224,15 +240,15 @@ pdf_render <- function(doc, filename = NULL) {
   #    - N/page
   #    - Linked from /Resources
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  doc <- pdf_add(
-    doc, 
-    pdf_dict(
-      Type     = '/Font', 
-      Subtype  = "/Type1", 
-      BaseFont = paste0("/", fontname)
-    ),
-    pos = 5
-  )
+  # doc <- pdf_add(
+  #   doc, 
+  #   pdf_dict(
+  #     Type     = '/Font', 
+  #     Subtype  = "/Type1", 
+  #     BaseFont = paste0("/", fontname)
+  #   ),
+  #   pos = 5
+  # )
   
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
