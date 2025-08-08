@@ -42,15 +42,18 @@ is_stream <- function(x) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 as.character.pdf_stream <- function(x, ...) {
   type <- attr(x, 'type', exact = TRUE)
-  gp <- paste(c(
+  gs <- paste(c(
     "0.0 G",
     "5 w", 
+    "0.5 CA",
+    "0.5 ca",
     "0 0 0 rg", 
     "1 0 0 RG", 
     ""
   ), collapse = "\n")
+  gs <- gp_to_gs(x$gp)
   if (type == 'line') {
-    s <- glue::glue_data(x, "{gp}{x1} {y1} m {x2} {y2} l s")
+    s <- glue::glue_data(x, "{gs}{x1} {y1} m {x2} {y2} l s")
   } else if (type == 'rect') {
     # paint types: 
     #  - s close & stroke path
@@ -62,7 +65,7 @@ as.character.pdf_stream <- function(x, ...) {
     #  - b  close, fill & stroke (winding)
     #  - b* close, fill & stroke (even-odd)
     #  - n end path without stroke or fill. used to define clipping path
-    s <- glue::glue_data(x, "{gp}{x} {y} {width} {height} re B")
+    s <- glue::glue_data(x, "{gs}{x} {y} {width} {height} re B")
   } else {
     stop("Unknown stream: ", deparse1(class(x)))
   }
@@ -113,8 +116,13 @@ print.pdf_stream <- function(x, ...) {
 #' @return stream object
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_line <- function(x1, y1, x2, y2) {
-  pdf_stream(type = 'line', x1 = x1, y1 = y1, x2 = x2, y2 = y2)
+pdf_line <- function(x1, y1, x2, y2, ..., gp = pgpar()) {
+  gp <- modifyList(gp, list(...))
+  pdf_stream(
+    type = 'line', 
+    gp   = gp,
+    x1 = x1, y1 = y1, x2 = x2, y2 = y2, gp = gp
+  )
 }
 
 
@@ -126,14 +134,14 @@ pdf_line <- function(x1, y1, x2, y2) {
 #' @return stream object
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_rect <- function(x, y, width, height) {
-  pdf_stream(type = 'rect', x = x, y = y, width = width, height = height)
+pdf_rect <- function(x, y, width, height, ..., gp = pgpar()) {
+  gp <- modifyList(gp, list(...))
+  pdf_stream(
+    type = 'rect', 
+    gp   = gp,
+    x = x, y = y, width = width, height = height
+  )
 }
-
-
-
-
-
 
 
 

@@ -245,11 +245,14 @@ if (FALSE) {
   ll <- pdf_line(0, 0, 100, 100)
   doc <- pdf_add(doc, ll)
   
-  rr <- pdf_rect(120, 120, 200, 100)
+  rr <- pdf_rect(120, 120, 200, 100, fill = 'red', col = NA)
   doc <- pdf_add(doc, rr)
   
-
-  ll <- pdf_line(20, 0, 120, 200)
+  
+  ll <- pdf_line(20, 0, 120, 200, col = 'blue')
+  doc <- pdf_add(doc, ll)
+  
+  ll <- pdf_line(220, 50, 400, 400, col = NA)
   doc <- pdf_add(doc, ll)
   
   doc
