@@ -95,6 +95,7 @@ gp_to_gs_operators <- function(gp) {
   lineCap    <- NULL
   lineJoin   <- NULL
   mitreLimit <- NULL
+  dashArray  <- NULL
   
   lineWidth  <- glue::glue("{gp$lwd} w")
   mitreLimit <- glue::glue("{gp$linemitre} M")
@@ -118,9 +119,39 @@ gp_to_gs_operators <- function(gp) {
     )
   }
   
+  if (!is.null(gp$lty)) {
+    lty <- gp$lty
+    if (is.character(lty)) {
+      lty <- switch(
+        lty,
+        blank    = ,
+        solid    = ,
+        dashed   = ,
+        dotted   = ,
+        dotdash  = ,
+        longdash = ,
+        twodash  = ,
+        stop("lty unknown: ", lty)
+      )
+    }
+    if (lty == 0) stop("Blank lines not handled.  Use an alpha = 0 instead")
+    dashArray <- c(
+      "[] 0 d", 
+      "[3] 0 d", 
+      "[2] 0 d", 
+      "[2 1] 0 d", 
+      "[3 5] 0 d", 
+      "[2 1 3] 0 d"
+    )[lty]
+    
+  }
+  
+  
 
   paste(c(
-    col, fill, lineWidth, lineCap, lineJoin, mitreLimit
+    col, fill, 
+    lineWidth, lineCap, lineJoin, mitreLimit,
+    dashArray
   ), collapse = "\n")
 }
 

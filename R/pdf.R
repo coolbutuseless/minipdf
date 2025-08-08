@@ -253,10 +253,10 @@ tt <- function() {
   doc <- pdf_add(doc, rr)
   
   
-  ll <- pdf_line(20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt')
+  ll <- pdf_line(20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
   doc <- pdf_add(doc, ll)
   
-  ll <- pdf_line(220, 50, 400, 400, col = 'green')
+  ll <- pdf_line(220, 50, 400, 400, col = 'green', lty = 2)
   doc <- pdf_add(doc, ll)
   
   doc
