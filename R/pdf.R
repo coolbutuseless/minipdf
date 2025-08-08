@@ -367,6 +367,36 @@ tt <- function() {
 
 if (FALSE) {
   
+  set.seed(1)
+  doc <- create_pdf()
+  
+  xs <- sample(400, N, TRUE)
+  ys <- sample(400, N, TRUE)
+  rs <- sample(100, N, TRUE)
+  cs <- sample(colors(), N, TRUE)
+
+  for (i in seq_len(N)) {
+    zz <- pdf_circle(xs[i], ys[i], rs[i], col = NA, fill = cs[i], alpha = 0.2)
+    doc <- pdf_add(doc, zz)
+  }
+
+  cs <- rainbow(400)
+  for (i in seq(1, 400, 10)) {
+    zz <- pdf_line(i, 0, 0, 400 - i, col = cs[i], alpha = 0.2)
+    doc <- pdf_add(doc, zz)
+  }
+  
+  zz <- pdf_text("Hello", 20, 300, fontsize = 90, mode = 0, fill = 'black', 
+                 fontface = 'plain')
+  doc <- pdf_add(doc, zz)
+  
+  zz <- pdf_text("#RStats", 20, 200, fontsize = 90, mode = 1, col = 'hotpink', 
+                 fontface = 'bold.italic', lwd = 5)
+  doc <- pdf_add(doc, zz)
+  
+  
+  pdf_render(doc, "working/test.pdf")
+  
 
 }
 
