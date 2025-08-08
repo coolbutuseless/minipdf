@@ -137,30 +137,24 @@ pdf_add <- function(doc, x, pos = NULL) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_render <- function(doc, filename = NULL) {
   
-  fontname <- 'Helvetica'
   width    <- 400
   height   <- 400
   
-  # Render "/Resources" object
-  # Render "/Page" objects
-  # Render "/Pages" object to point to "/Page" objects
-  # Render "/Catalog" object to point to "/Pages" object
   
-  idx_catalog    <- 1L
-  idx_pages      <- idx_catalog + 1L
+  idx_catalog  <- 1L
+  len_catalog  <- 1L
   
-  idx_page1      <- idx_pages + 1L
-  idx_resources1 <- idx_page1 + 1L
+  idx_pages    <- idx_catalog + len_catalog
+  len_pages    <- 1L
   
-  len_resources1 <- 1L
+  idx_resources <- idx_pages + len_pages
+  len_resources <- 1L
   
-  # idx_fonts1 <- idx_resources1 + len_resources1
-  # len_fonts1 <- 1L
-  # idx_objs_start1 <- idx_fonts1 + len_fonts1
+  idx_page1      <- idx_resources + len_resources
+  len_page1      <- 1L
   
-  idx_objs_start1 <- idx_resources1 + len_resources1
-  n_objs_page1    <- length(doc$page[[1]])
-  
+  idx_page1_objs <- idx_page1 + len_page1
+  len_page1_objs <- length(doc$page[[1]])
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # /Catalog 
@@ -226,7 +220,7 @@ pdf_render <- function(doc, filename = NULL) {
   #   - links to /Resources
   #   - contains a list of objects it points to
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  contents <- seq_len(n_objs_page1) + idx_objs_start1 - 1L 
+  contents <- seq_len(len_page1_objs) + idx_page1_objs - 1L 
   contents <- sprintf("%i 0 R", contents)
   contents <- paste(contents, collapse = " ")
   contents <- paste0("[", contents, "]")
