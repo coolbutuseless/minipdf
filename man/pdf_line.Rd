@@ -4,7 +4,7 @@
 \alias{pdf_line}
 \title{Create a line in pdf}
 \usage{
-pdf_line(x1, y1, x2, y2, ..., gp = list())
+pdf_line(x1, y1, x2, y2, ..., gp = pgpar())
 }
 \arguments{
 \item{x1, y1, x2, y2}{endpoints}

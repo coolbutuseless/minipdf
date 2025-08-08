@@ -4,7 +4,7 @@
 \alias{pdf_rect}
 \title{Create a rect}
 \usage{
-pdf_rect(x, y, width, height, ..., gp = list())
+pdf_rect(x, y, width, height, ..., gp = pgpar())
 }
 \arguments{
 \item{x, y}{position}

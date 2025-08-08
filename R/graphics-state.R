@@ -15,8 +15,8 @@
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pgpar <- function(
-    col = 'black', 
-    fill = NA,
+    col   = 'black', 
+    fill  = NA,
     alpha = 1,
     lty,
     lwd,
@@ -135,6 +135,7 @@ gp_to_gs_operators <- function(gp) {
       )
     }
     if (lty == 0) stop("Blank lines not handled.  Use an alpha = 0 instead")
+    if (lty < 1 || lty > 6) stop("lty out of range [1,6]: ", lty)
     dashArray <- c(
       "[] 0 d", 
       "[3] 0 d", 
@@ -147,12 +148,17 @@ gp_to_gs_operators <- function(gp) {
   }
   
   
-
-  paste(c(
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Create string for inline graphics state operators
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  res <- paste(c(
     col, fill, 
     lineWidth, lineCap, lineJoin, mitreLimit,
     dashArray
   ), collapse = "\n")
+  
+  
+  res
 }
 
 

@@ -112,7 +112,7 @@ print.pdf_stream <- function(x, ...) {
 #' @export
 #' @importFrom utils modifyList
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_line <- function(x1, y1, x2, y2, ..., gp = list()) {
+pdf_line <- function(x1, y1, x2, y2, ..., gp = pgpar()) {
   gp <- modifyList(gp, list(...))
   pdf_stream(
     type = 'line', 
@@ -131,7 +131,7 @@ pdf_line <- function(x1, y1, x2, y2, ..., gp = list()) {
 #' @return stream object
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_rect <- function(x, y, width, height, ..., gp = list()) {
+pdf_rect <- function(x, y, width, height, ..., gp = pgpar()) {
   gp <- modifyList(gp, list(...))
   pdf_stream(
     type = 'rect', 
