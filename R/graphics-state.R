@@ -5,7 +5,10 @@
 #' Create graphical parameters 
 #' 
 #' @param col,fill set graphics parameters for this object
-#' @param alpha,rule options
+#' @param alpha additional alpha applied to col, fill
+#' @param lty,lwd,lineend,linejoin,linemitre line optins
+#' @param fontsize,fontfamily,fontface font definition
+#' @param rule fill rule. 'winding' (default) or 'evenodd'
 #' @return a graphics parameter object
 #' @examples
 #' pgpar()
@@ -15,15 +18,18 @@ pgpar <- function(
     col = 'black', 
     fill = NA,
     alpha = 1,
-    rule = 'winding'  # or even odd
+    lty,
+    lwd,
+    lineend,
+    linejoin,
+    linemitre,
+    fontsize,
+    fontfamily,
+    fontface,
+    rule
 ) {
   
-  list(
-    col   = col,
-    fill  = fill,
-    alpha = alpha,
-    rule  = rule
-  )
+  find_args()
 }
 
 
@@ -35,12 +41,38 @@ is_transparent <- function(color) {
 }
 
 
+
+# paint types: 
+#  - s close & stroke path
+#  - S stroke path
+#  - f  fill (winding number)
+#  - f* fill (even-odd)
+#  - B  fill & stroke (winding)
+#  - B* fill & stroke (even-odd)
+#  - b  close, fill & stroke (winding)
+#  - b* close, fill & stroke (even-odd)
+#  - n end path without stroke or fill. used to define clipping path
+gp_to_closed_paint_op <- function(gp) {
+  if (identical(gp$rule, 'evenodd')) {
+    'b*'
+  } else {
+    'b'
+  }
+}
+
+
+
+
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Convert graphics parameters to graphics state operators
 #' 
 #' These are values which can be expressed inline with the object.
 #' Some options (such as 'CA' and 'ca') can only be defined as part
-#' of a graphics state parameter dictionary
+#' of a graphics state parameter dictionary.
+#' 
+#' Table 56 in ISO32000-2:2020(E)
 #' 
 #' @param gp named list 'gp' object as created by \code{\link{pgpar}()}
 #' @return single string represeting graphics state
@@ -53,17 +85,43 @@ gp_to_gs_operators <- function(gp) {
   col   <- (grDevices::col2rgb(gp$col  , alpha = TRUE)/255) |> as.vector()
   fill  <- (grDevices::col2rgb(gp$fill , alpha = TRUE)/255) |> as.vector()
   
-  col_alpha  <- glue::glue("{col[4] * gp$alpha} CA")
-  fill_alpha <- glue::glue("{fill[4] * gp$alpha} ca")
-  
   col  <- glue::glue("{col[1]} {col[2]} {col[3]} RG")
   fill <- glue::glue("{fill[1]} {fill[2]} {fill[3]} rg")
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Line config
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  lineWidth  <- NULL
+  lineCap    <- NULL
+  lineJoin   <- NULL
+  mitreLimit <- NULL
   
-  glue::glue(
-    "{col}
-    {fill}"
-  )
+  lineWidth  <- glue::glue("{gp$lwd} w")
+  mitreLimit <- glue::glue("{gp$linemitre} M")
+  if (!is.null(gp$lineend)) {
+    lineCap <- switch(
+      gp$lineend,
+      butt   = "0 J",
+      round  = "1 J",
+      square = "2 J",
+      stop("gp$lineend not understood: ", gp$lineend)
+    )
+  }
+  
+  if (!is.null(gp$linejoin)) {
+    lineJoin <- switch(
+      gp$linejoin,
+      mitre = "0 j",
+      round = "1 j", 
+      bevel = "2 j",
+      stop("gp$linejoin not understood: ", gp$linejoin)
+    )
+  }
+  
+
+  paste(c(
+    col, fill, lineWidth, lineCap, lineJoin, mitreLimit
+  ), collapse = "\n")
 }
 
 

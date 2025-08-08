@@ -4,12 +4,31 @@
 \alias{pgpar}
 \title{Create graphical parameters}
 \usage{
-pgpar(col = "black", fill = NA, alpha = 1, rule = "winding")
+pgpar(
+  col = "black",
+  fill = NA,
+  alpha = 1,
+  lty,
+  lwd,
+  lineend,
+  linejoin,
+  linemitre,
+  fontsize,
+  fontfamily,
+  fontface,
+  rule
+)
 }
 \arguments{
 \item{col, fill}{set graphics parameters for this object}
 
-\item{alpha, rule}{options}
+\item{alpha}{additional alpha applied to col, fill}
+
+\item{lty, lwd, lineend, linejoin, linemitre}{line optins}
+
+\item{fontsize, fontfamily, fontface}{font definition}
+
+\item{rule}{fill rule. 'winding' (default) or 'evenodd'}
 }
 \value{
 a graphics parameter object

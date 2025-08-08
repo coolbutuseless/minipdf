@@ -238,16 +238,22 @@ pdf_render <- function(doc, filename = NULL) {
 }
 
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Demo
+#' @noRd
+#' @importFrom grDevices colors
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tt <- function() {
   doc <- create_pdf()
   ll <- pdf_line(0, 0, 100, 100)
   doc <- pdf_add(doc, ll)
   
-  rr <- pdf_rect(120, 120, 200, 100, fill = 'red', col = NA)
+  rr <- pdf_rect(120, 120, 200, 100, fill = sample(colors(), 1), col = NA)
   doc <- pdf_add(doc, rr)
   
   
-  ll <- pdf_line(20, 0, 120, 200, col = 'blue')
+  ll <- pdf_line(20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt')
   doc <- pdf_add(doc, ll)
   
   ll <- pdf_line(220, 50, 400, 400, col = 'green')

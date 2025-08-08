@@ -42,26 +42,27 @@ is_stream <- function(x) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 as.character.pdf_stream <- function(x, ...) {
   
-  type <- attr(x, 'type', exact = TRUE)
-  gs   <- gp_to_gs_operators(x$gp)
+  type  <- attr(x, 'type', exact = TRUE)
+  paint <- gp_to_closed_paint_op(x$gp)
   
   if (type == 'line') {
-    s <- glue::glue_data(x, "{gs}\n{x1} {y1} m {x2} {y2} l s")
+    s <- glue::glue_data(x, "{x1} {y1} m {x2} {y2} l s")
   } else if (type == 'rect') {
-    # paint types: 
-    #  - s close & stroke path
-    #  - S stroke path
-    #  - f  fill (winding number)
-    #  - f* fill (even-odd)
-    #  - B  fill & stroke (winding)
-    #  - B* fill & stroke (even-odd)
-    #  - b  close, fill & stroke (winding)
-    #  - b* close, fill & stroke (even-odd)
-    #  - n end path without stroke or fill. used to define clipping path
-    s <- glue::glue_data(x, "{gs}\n{x} {y} {width} {height} re B")
+    s <- glue::glue_data(x, "{x} {y} {width} {height} re {paint}")
   } else {
     stop("Unknown stream: ", deparse1(class(x)))
   }
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Add graphics state operators
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  gs <- gp_to_gs_operators(x$gp)
+  s  <- paste(gs, s, sep = "\n")
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Add reference to graphics state dict
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  s <- paste("/GS11 gs", s, sep = "\n")
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Always push/pop the local graphics state
@@ -79,7 +80,6 @@ as.character.pdf_stream <- function(x, ...) {
     {s}
     endstream"
   )
-  
   
   s
 }
