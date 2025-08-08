@@ -13,10 +13,9 @@
 create_pdf <- function() {
   doc <- list(
     page = list(
-      objs  = list(), 
-      gs    = list(pdf_dict(CA = 1, ca = 1)), # stroke + fill alpha
-      fonts = list()
-    )
+      objs  = list()
+    ), 
+    gs = list(pdf_dict(CA = 1, ca = 1)) # stroke + fill alpha
   )
   # doc <- as.environment(doc)
   class(doc) <- 'pdf_doc'
@@ -34,10 +33,8 @@ gs_idx <- function(doc, gs) {
   stopifnot(!is.null(gs))
   stopifnot(inherits(doc, 'pdf_doc'))
 
-  page <- doc$page
-
-  for (i in seq_along(page$gs)) {
-    if (identical(page$gs[[i]], gs)) {
+  for (i in seq_along(doc$gs)) {
+    if (identical(doc$gs[[i]], gs)) {
       return(i)
     }
   }
@@ -50,11 +47,7 @@ gs_idx <- function(doc, gs) {
 # Unconditionally add a 'gs' object
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add_gs <- function(doc, gs) {
-  page <- doc$page
-
-  page$gs[[length(page$gs) + 1L]] <- gs
-
-  doc$page <- page
+  doc$gs[[length(doc$gs) + 1L]] <- gs
   doc
 }
 
@@ -107,8 +100,7 @@ pdf_add <- function(doc, x, pos = NULL) {
         x$gs_ref <- cur_idx
       } else {
         doc <- add_gs(doc, gs_dict)
-        page     <- doc$page
-        x$gs_ref <- length(page$gs)
+        x$gs_ref <- length(doc$gs)
       }
     }
   }
@@ -187,7 +179,7 @@ pdf_render <- function(doc, filename = NULL) {
   #    - Defines the standard fonts
   #    - Defines the graphics states
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  gs <- doc$page$gs
+  gs <- doc$gs
   names(gs) <- paste0("GS", seq_along(gs))
   gs <- do.call(pdf_dict, gs)
   
