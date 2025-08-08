@@ -175,39 +175,17 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc <- pdf_add(doc, pdf_dict(
     Type      = '/Pages'  , 
-    Kids      = "[3 0 R]", 
-    Resources = "4 0 R",
+    Resources = "3 0 R",
+    Kids      = "[4 0 R]", 
     Count = 1
   ), pos = 2)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # /Page
-  #   - one/page
-  #   - linked from /Pages
-  #   - links to /Resources
-  #   - contains a list of objects it points to
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  contents <- seq_len(n_objs_page1) + idx_objs_start1 - 1L 
-  contents <- sprintf("%i 0 R", contents)
-  contents <- paste(contents, collapse = " ")
-  contents <- paste0("[", contents, "]")
-  
-  doc <- pdf_add(
-    doc, 
-    pdf_dict(
-      Type      = '/Page',
-      Parent    = "2 0 R",
-      MediaBox  = glue::glue("[0 0 {width} {height}]"),
-      Contents  = contents
-    ),
-    pos = 3
-  )
-  
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Resources
-  #    - one/page
-  #    - linked from /Page
-  #    - links to font definitions
+  #    - one/doc
+  #    - linked from /Pages
+  #    - Defines the standard fonts
+  #    - Defines the graphics states
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   gs <- doc$page$gs
   names(gs) <- paste0("GS", seq_along(gs))
@@ -235,6 +213,29 @@ pdf_render <- function(doc, filename = NULL) {
         F13 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Symbol'               ),
         F14 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/ZapfDingbats'         )
       )
+    ),
+    pos = 3
+  )
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # /Page
+  #   - one/page
+  #   - linked from /Pages
+  #   - links to /Resources
+  #   - contains a list of objects it points to
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  contents <- seq_len(n_objs_page1) + idx_objs_start1 - 1L 
+  contents <- sprintf("%i 0 R", contents)
+  contents <- paste(contents, collapse = " ")
+  contents <- paste0("[", contents, "]")
+  
+  doc <- pdf_add(
+    doc, 
+    pdf_dict(
+      Type      = '/Page',
+      Parent    = "2 0 R",
+      MediaBox  = glue::glue("[0 0 {width} {height}]"),
+      Contents  = contents
     ),
     pos = 4
   )
