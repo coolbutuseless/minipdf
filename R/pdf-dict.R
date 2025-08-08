@@ -25,7 +25,7 @@ pdf_dict <- function(...) {
 #' @param depth print depth. Default: 0.  Used to control indentation
 #' @param ... ignored
 #' @return None.
-#' @noRd
+#' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 as.character.pdf_dict <- function(x, depth = 0, ...) {
   indent1 <- paste0(rep("  ", depth), collapse = "")
@@ -52,7 +52,7 @@ as.character.pdf_dict <- function(x, depth = 0, ...) {
 #' @param depth print depth. Default: 0.  Used to control indentation
 #' @param ... ignored
 #' @return None.
-#' @noRd
+#' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print.pdf_dict <- function(x, depth = 0, ...) {
   cat("<dict>\n")

@@ -4,12 +4,16 @@
 \alias{pdf_rect}
 \title{Create a rect}
 \usage{
-pdf_rect(x, y, width, height)
+pdf_rect(x, y, width, height, ..., gp = list())
 }
 \arguments{
 \item{x, y}{position}
 
 \item{width, height}{size}
+
+\item{...}{further arguments to be added to \code{gp}}
+
+\item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 }
 \value{
 stream object

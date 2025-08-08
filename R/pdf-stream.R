@@ -41,19 +41,12 @@ is_stream <- function(x) {
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 as.character.pdf_stream <- function(x, ...) {
+  
   type <- attr(x, 'type', exact = TRUE)
-  gs <- paste(c(
-    "0.0 G",
-    "5 w", 
-    "0.5 CA",
-    "0.5 ca",
-    "0 0 0 rg", 
-    "1 0 0 RG", 
-    ""
-  ), collapse = "\n")
-  gs <- gp_to_gs(x$gp)
+  gs   <- gp_to_gs_operators(x$gp)
+  
   if (type == 'line') {
-    s <- glue::glue_data(x, "{gs}{x1} {y1} m {x2} {y2} l s")
+    s <- glue::glue_data(x, "{gs}\n{x1} {y1} m {x2} {y2} l s")
   } else if (type == 'rect') {
     # paint types: 
     #  - s close & stroke path
@@ -65,7 +58,7 @@ as.character.pdf_stream <- function(x, ...) {
     #  - b  close, fill & stroke (winding)
     #  - b* close, fill & stroke (even-odd)
     #  - n end path without stroke or fill. used to define clipping path
-    s <- glue::glue_data(x, "{gs}{x} {y} {width} {height} re B")
+    s <- glue::glue_data(x, "{gs}\n{x} {y} {width} {height} re B")
   } else {
     stop("Unknown stream: ", deparse1(class(x)))
   }
@@ -113,10 +106,13 @@ print.pdf_stream <- function(x, ...) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a line in pdf
 #' @param x1,y1,x2,y2 endpoints
+#' @param gp A named list \code{gp} object created by \code{\link{pgpar}()}
+#' @param ... further arguments to be added to \code{gp}
 #' @return stream object
 #' @export
+#' @importFrom utils modifyList
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_line <- function(x1, y1, x2, y2, ..., gp = pgpar()) {
+pdf_line <- function(x1, y1, x2, y2, ..., gp = list()) {
   gp <- modifyList(gp, list(...))
   pdf_stream(
     type = 'line', 
@@ -131,10 +127,11 @@ pdf_line <- function(x1, y1, x2, y2, ..., gp = pgpar()) {
 #' Create a rect
 #' @param x,y position
 #' @param width,height size
+#' @inheritParams pdf_line
 #' @return stream object
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_rect <- function(x, y, width, height, ..., gp = pgpar()) {
+pdf_rect <- function(x, y, width, height, ..., gp = list()) {
   gp <- modifyList(gp, list(...))
   pdf_stream(
     type = 'rect', 

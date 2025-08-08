@@ -2,16 +2,21 @@
 % Please edit documentation in R/graphics-state.R
 \name{pgpar}
 \alias{pgpar}
-\title{Set graphical parameters for}
+\title{Create graphical parameters}
 \usage{
 pgpar(col = "black", fill = NA, alpha = 1, rule = "winding")
 }
 \arguments{
 \item{col, fill}{set graphics parameters for this object}
+
+\item{alpha, rule}{options}
 }
 \value{
 a graphics parameter object
 }
 \description{
-Set graphical parameters for
+Create graphical parameters
+}
+\examples{
+pgpar()
 }

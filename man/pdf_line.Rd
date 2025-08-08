@@ -4,10 +4,14 @@
 \alias{pdf_line}
 \title{Create a line in pdf}
 \usage{
-pdf_line(x1, y1, x2, y2)
+pdf_line(x1, y1, x2, y2, ..., gp = list())
 }
 \arguments{
 \item{x1, y1, x2, y2}{endpoints}
+
+\item{...}{further arguments to be added to \code{gp}}
+
+\item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 }
 \value{
 stream object

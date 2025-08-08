@@ -161,8 +161,8 @@ pdf_render <- function(doc, filename = NULL) {
   doc <- pdf_add(
     doc, 
     pdf_dict(
-      Type = '/Font', 
-      Subtype = "/Type1", 
+      Type     = '/Font', 
+      Subtype  = "/Type1", 
       BaseFont = paste0("/", fontname)
     ),
     pos = 5
@@ -238,9 +238,7 @@ pdf_render <- function(doc, filename = NULL) {
 }
 
 
-
-if (FALSE) {
-  
+tt <- function() {
   doc <- create_pdf()
   ll <- pdf_line(0, 0, 100, 100)
   doc <- pdf_add(doc, ll)
@@ -252,12 +250,19 @@ if (FALSE) {
   ll <- pdf_line(20, 0, 120, 200, col = 'blue')
   doc <- pdf_add(doc, ll)
   
-  ll <- pdf_line(220, 50, 400, 400, col = NA)
+  ll <- pdf_line(220, 50, 400, 400, col = 'green')
   doc <- pdf_add(doc, ll)
   
   doc
   pdf_render(doc) |> cat()
   pdf_render(doc, "working/test.pdf")
+  invisible(pdf_render(doc))
+}
+
+
+
+if (FALSE) {
+  
 
 }
 
