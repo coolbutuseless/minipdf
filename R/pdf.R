@@ -13,12 +13,48 @@
 create_pdf <- function() {
   doc <- list(
     page = list(
-      objs      = list(), 
-      resources = list()
+      objs  = list(), 
+      gs    = list(pdf_dict(CA = 1, ca = 0)), # stroke + fill alpha
+      fonts = list()
     )
   )
+  # doc <- as.environment(doc)
   class(doc) <- 'pdf_doc'
   
+  doc
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# If this 'gs' already exists on the doc, then return the index
+# otherwise return NULL
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gs_idx <- function(doc, gs) {
+
+  stopifnot(!is.null(gs))
+  stopifnot(inherits(doc, 'pdf_doc'))
+
+  page <- doc$page
+
+  for (i in seq_along(page$gs)) {
+    if (identical(page$gs[[i]], gs)) {
+      return(i)
+    }
+  }
+
+  NULL
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Unconditionally add a 'gs' object
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+add_gs <- function(doc, gs) {
+  page <- doc$page
+
+  page$gs[[length(page$gs) + 1L]] <- gs
+
+  doc$page <- page
   doc
 }
 
@@ -53,6 +89,30 @@ print.pdf_doc <- function(x, ...) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_add <- function(doc, x, pos = NULL) {
   stopifnot(is_dict(x) || is_stream(x))
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # For a stream object, keep track of the 'graphics state dict' for this
+  # object. If it isn't already present on the 'resources' for this page
+  # then add it.
+  # Add the integer index (gs_ref) to the stream object so we 
+  # add in the reference
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (is_stream(x) && !is.null(x$gp)) {
+    gs_dict <- gp_to_gs_dict(x$gp)
+    if (is.null(gs_dict)) {
+      x$gs_ref <- NULL
+    } else {
+      cur_idx <- gs_idx(doc, gs_dict)
+      if (!is.null(cur_idx)) {
+        x$gs_ref <- cur_idx
+      } else {
+        doc <- add_gs(doc, gs_dict)
+        page     <- doc$page
+        x$gs_ref <- length(page$gs)
+      }
+    }
+  }
+  
   
   if (is.null(pos)) {
     doc$page$objs <- append(doc$page$objs, list(x))
@@ -144,11 +204,17 @@ pdf_render <- function(doc, filename = NULL) {
   #    - linked from /Page
   #    - links to font definitions
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  gs <- doc$page$gs
+  names(gs) <- paste0("GS", seq_along(gs))
+  gs <- do.call(pdf_dict, gs)
+  
   doc <- pdf_add(
     doc, 
     pdf_dict(
       Font      = pdf_dict(F1 = "5 0 R"),
-      ExtGState = pdf_dict(GS11 = pdf_dict(ca = 1, CA = 1))
+      # ExtGState = pdf_dict(GS11 = pdf_dict(ca = 1, CA = 1))
+      ExtGState = gs
+      
     ),
     pos = 4
   )
@@ -249,20 +315,20 @@ tt <- function() {
   ll <- pdf_line(0, 0, 100, 100)
   doc <- pdf_add(doc, ll)
   
-  rr <- pdf_rect(120, 120, 200, 100, fill = sample(colors(), 1), col = NA)
+  rr <- pdf_rect(120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.5)
   doc <- pdf_add(doc, rr)
 
 
   ll <- pdf_line(20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
   doc <- pdf_add(doc, ll)
 
-  ll <- pdf_line(220, 50, 400, 400, col = 'green', lty = 2)
+  ll <- pdf_line(220, 50, 400, 400, col = 'green', lty = 2, alpha = 0.1)
   doc <- pdf_add(doc, ll)
   
   doc
   pdf_render(doc) |> cat()
   pdf_render(doc, "working/test.pdf")
-  invisible(pdf_render(doc))
+  invisible(doc)
 }
 
 

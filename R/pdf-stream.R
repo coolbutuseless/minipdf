@@ -62,7 +62,10 @@ as.character.pdf_stream <- function(x, ...) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Add reference to graphics state dict
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  s <- paste("/GS11 gs", s, sep = "\n")
+  if (!is.null(x$gs_ref)) {
+    gs_ref <- glue::glue("/GS{x$gs_ref} gs")
+    s <- paste(gs_ref, s, sep = "\n")
+  }
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Always push/pop the local graphics state

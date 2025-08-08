@@ -179,10 +179,15 @@ gp_to_gs_dict <- function(gp) {
   col   <- (grDevices::col2rgb(gp$col  , alpha = TRUE)/255) |> as.vector()
   fill  <- (grDevices::col2rgb(gp$fill , alpha = TRUE)/255) |> as.vector()
   
+  if (col[4] == 1 && fill[4] == 1 && gp$alpha == 1) {
+    return(NULL)
+  }
+  
   pdf_dict(
     CA = col[4]  * gp$alpha, # stroke alpha 
     ca = fill[4] * gp$alpha  # fill alpha
   )
+  
 }
 
 
