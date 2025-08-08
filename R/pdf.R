@@ -329,11 +329,13 @@ tt <- function() {
   
   
   
-  N  <- 3
   xs <- c(100, 300, 300)
   ys <- c(100, 100, 300)
   pl <- pdf_polygon(xs, ys, col = 'black', fill = "#ff000080")
   doc <- pdf_add(doc, pl)
+  
+  ci <- pdf_circle(300, 300, 100, col = 'hotpink', fill = '#00ff0080')
+  doc <- pdf_add(doc, ci)
   
   
   doc

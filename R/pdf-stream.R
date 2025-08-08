@@ -48,7 +48,7 @@ as.character.pdf_stream <- function(x, ...) {
   switch(
     type,
     line = {
-      s <- glue::glue_data(x, "{x1} {y1} m {x2} {y2} l s")
+      s <- glue::glue_data(x, "{x1} {y1} m {x2} {y2} l S")
     },
     rect = {
       s <- glue::glue_data(x, "{x} {y} {width} {height} re {paint}")
@@ -59,7 +59,24 @@ as.character.pdf_stream <- function(x, ...) {
     },
     polygon = {
       lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
-      s <- glue::glue("{xs[1]} {ys[1]} m {lines} {paint}") # 'S' = stroke (without closing)
+      s <- glue::glue("{xs[1]} {ys[1]} m {lines} {paint}") 
+    },
+    circle = {
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # Bezier offset. See:
+      # stackoverflow.com/questions/1734745/how-to-create-circle-with-b%C3%A9zier-curves
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      x$b     <- 0.552284749831 * x$r
+      
+      s <- glue::glue_data(
+        x, 
+        "{x+r} {y} m
+         {x+r} {y+b}  {x+b} {y+r}  {x}   {y+r} c
+         {x-b} {y+r}  {x-r} {y+b}  {x-r} {y}   c
+         {x-r} {y-b}  {x-b} {y-r}  {x}   {y-r} c
+         {x+b} {y-r}  {x+r} {y-b}  {x+r} {y}   c
+         {paint}"
+      ) 
     },
     stop("Unknown stream: ", deparse1(class(x)))
   )
@@ -188,6 +205,24 @@ pdf_polygon <- function(xs, ys, ..., gp = pgpar()) {
     type = 'polygon', 
     gp   = gp,
     xs = xs, ys = ys
+  )
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create a polygon
+#' @param x,y,r position and radius
+#' @inheritParams pdf_line
+#' @return stream object
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_circle <- function(x, y, r, ..., gp = pgpar()) {
+  gp <- modifyList(gp, list(...))
+  pdf_stream(
+    type = 'circle', 
+    gp   = gp,
+    x = x, y = y, r = r
   )
 }
 
