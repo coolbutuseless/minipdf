@@ -16,7 +16,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pgpar <- function(
     col   = 'black', 
-    fill  = NA,
+    fill  = 'black',
     alpha = 1,
     lty,
     lwd,
@@ -61,7 +61,83 @@ gp_to_closed_paint_op <- function(gp) {
 }
 
 
-
+# F1  = Helvetica            
+# F2  = Helvetica-Bold       
+# F3  = Helvetica-Oblique    
+# F4  = Helvetica-BoldOblique
+# F5  = Courier              
+# F6  = Courier-Bold         
+# F7  = Courier-Oblique      
+# F8  = Courier-BoldOblique' 
+# F9  = Times-Roman          
+# F10 = Times-Bold           
+# F11 = Times-Italic'        
+# F12 = Times-BoldItalic     
+# F13 = Symbol               
+# F14 = ZapfDingbats         
+gp_to_font_ref <- function(gp) {
+  
+  if (is.null(gp$fontface)) {
+    face <- 'plain'
+  } else if (is.numeric(gp$fontface)) {
+    face <- c('plain', 'bold', 'italic', 'bold.italic')[gp$fontface]
+  } else {
+    face <- gp$fontface
+  }
+  
+  stopifnot(face %in% c('plain', 'bold', 'italic', 'oblique', 'bold.italic'))
+  
+  
+  if (is.null(gp$fontfamily)) {
+    gp$fontfamily <- 'Helvetica'
+  }
+  
+  switch(
+    tolower(gp$fontfamily),
+    helvetica = {
+      res <- switch(
+        face,
+        plain       = "F1",
+        bold        = "F2",
+        oblique     =,
+        italic      = "F3",
+        bold.italic = "F4",
+        stop("Bad face: ", face)
+      )
+    },
+    courier = {
+      res <- switch(
+        face,
+        plain       = "F5",
+        bold        = "F6",
+        oblique     =,
+        italic      = "F7",
+        bold.italic = "F8",
+        stop("Bad face: ", face)
+      )
+    },
+    times = {
+      res <- switch(
+        face,
+        plain       = "F9",
+        bold        = "F10",
+        oblique     =,
+        italic      = "F11",
+        bold.italic = "F12",
+        stop("Bad face: ", face)
+      )
+    },
+    symbol = {
+      res <- "F13"
+    },
+    zapfdingbats = {
+      res <- "F14"
+    },
+    stop("Unknown font family: ", gp$fontfamily)
+  )
+  
+  res
+}
 
 
 

@@ -89,11 +89,11 @@ as.character.pdf_stream <- function(x, ...) {
       # 5 Stroke text and add to path for clipping
       # 6 Fill, then stroke text and add to path for clipping
       # 7 Add text to path for clipping
-      
+      font_ref <- gp_to_font_ref(x$gp)
       s <- glue::glue_data(
         x,
         "BT
-        /F1 {fontsize} Tf
+        /{font_ref} {fontsize} Tf
         {x} {y} Td
         {mode} Tr
         ({text}) Tj

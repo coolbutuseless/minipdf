@@ -14,7 +14,7 @@ create_pdf <- function() {
   doc <- list(
     page = list(
       objs  = list(), 
-      gs    = list(pdf_dict(CA = 1, ca = 0)), # stroke + fill alpha
+      gs    = list(pdf_dict(CA = 1, ca = 1)), # stroke + fill alpha
       fonts = list()
     )
   )
@@ -216,18 +216,18 @@ pdf_render <- function(doc, filename = NULL) {
       # ExtGState = pdf_dict(GS11 = pdf_dict(ca = 1, CA = 1))
       ExtGState = gs,
       Font = pdf_dict(
-        F1  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Roman'          ),
-        F2  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Bold'           ),
-        F3  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Italic'         ),
-        F4  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-BoldItalic'     ),
-        F5  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica'            ),
-        F6  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Bold'       ),
-        F7  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Oblique'    ),
-        F8  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-BoldOblique'),
-        F9  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier'              ),
-        F10 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Bold'         ),
-        F11 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Oblique'      ),
-        F12 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-BoldOblique'  ),
+        F1  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica'            ),
+        F2  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Bold'       ),
+        F3  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Oblique'    ),
+        F4  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-BoldOblique'),
+        F5  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier'              ),
+        F6  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Bold'         ),
+        F7  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Oblique'      ),
+        F8  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-BoldOblique'  ),
+        F9  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Roman'          ),
+        F10 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Bold'           ),
+        F11 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Italic'         ),
+        F12 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-BoldItalic'     ),
         F13 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Symbol'               ),
         F14 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/ZapfDingbats'         )
       )
@@ -353,7 +353,8 @@ tt <- function() {
   ci <- pdf_circle(300, 300, 100, col = 'hotpink', fill = '#00ff0080')
   doc <- pdf_add(doc, ci)
   
-  txt <- pdf_text("Hello\n#RStats", 50, 50, fontsize = 40, fill = 'black')
+  txt <- pdf_text("Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink', 
+                  fontfamily = "Helvetica", fontface = 'bold.italic', mode = 2)
   doc <- pdf_add(doc, txt)
   
   doc

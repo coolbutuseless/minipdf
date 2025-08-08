@@ -6,7 +6,7 @@
 \usage{
 pgpar(
   col = "black",
-  fill = NA,
+  fill = "black",
   alpha = 1,
   lty,
   lwd,
