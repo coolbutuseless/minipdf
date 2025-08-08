@@ -309,11 +309,10 @@ pdf_render <- function(doc, filename = NULL) {
 #' Demo
 #' @noRd
 #' @importFrom grDevices colors
+#' @importFrom stats runif
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tt <- function() {
   doc <- create_pdf()
-  ll <- pdf_line(0, 0, 100, 100)
-  doc <- pdf_add(doc, ll)
   
   rr <- pdf_rect(120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.5)
   doc <- pdf_add(doc, rr)
@@ -321,9 +320,21 @@ tt <- function() {
 
   ll <- pdf_line(20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
   doc <- pdf_add(doc, ll)
-
-  ll <- pdf_line(220, 50, 400, 400, col = 'green', lty = 2, alpha = 0.1)
-  doc <- pdf_add(doc, ll)
+  
+  N  <- 100
+  xs <- runif(N, 1, 400)
+  ys <- runif(N, 1, 400)
+  pl <- pdf_polyline(xs, ys, col = 'darkgreen')
+  doc <- pdf_add(doc, pl)
+  
+  
+  
+  N  <- 3
+  xs <- c(100, 300, 300)
+  ys <- c(100, 100, 300)
+  pl <- pdf_polygon(xs, ys, col = 'black', fill = "#ff000080")
+  doc <- pdf_add(doc, pl)
+  
   
   doc
   pdf_render(doc) |> cat()

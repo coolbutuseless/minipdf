@@ -44,14 +44,26 @@ as.character.pdf_stream <- function(x, ...) {
   
   type  <- attr(x, 'type', exact = TRUE)
   paint <- gp_to_closed_paint_op(x$gp)
-  
-  if (type == 'line') {
-    s <- glue::glue_data(x, "{x1} {y1} m {x2} {y2} l s")
-  } else if (type == 'rect') {
-    s <- glue::glue_data(x, "{x} {y} {width} {height} re {paint}")
-  } else {
+
+  switch(
+    type,
+    line = {
+      s <- glue::glue_data(x, "{x1} {y1} m {x2} {y2} l s")
+    },
+    rect = {
+      s <- glue::glue_data(x, "{x} {y} {width} {height} re {paint}")
+    },
+    polyline = {
+      lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
+      s <- glue::glue("{xs[1]} {ys[1]} m {lines} S") # 'S' = stroke (without closing)
+    },
+    polygon = {
+      lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
+      s <- glue::glue("{xs[1]} {ys[1]} m {lines} {paint}") # 'S' = stroke (without closing)
+    },
     stop("Unknown stream: ", deparse1(class(x)))
-  }
+  )
+
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Add graphics state operators
@@ -140,6 +152,42 @@ pdf_rect <- function(x, y, width, height, ..., gp = pgpar()) {
     type = 'rect', 
     gp   = gp,
     x = x, y = y, width = width, height = height
+  )
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create a polyline
+#' @param xs,ys vertices
+#' @inheritParams pdf_line
+#' @return stream object
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_polyline <- function(xs, ys, ..., gp = pgpar()) {
+  gp <- modifyList(gp, list(...))
+  pdf_stream(
+    type = 'polyline', 
+    gp   = gp,
+    xs = xs, ys = ys
+  )
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create a polygon
+#' @param xs,ys vertices
+#' @inheritParams pdf_line
+#' @return stream object
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_polygon <- function(xs, ys, ..., gp = pgpar()) {
+  gp <- modifyList(gp, list(...))
+  pdf_stream(
+    type = 'polygon', 
+    gp   = gp,
+    xs = xs, ys = ys
   )
 }
 
