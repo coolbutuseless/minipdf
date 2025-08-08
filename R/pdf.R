@@ -173,7 +173,12 @@ pdf_render <- function(doc, filename = NULL) {
   #   - Each page is an index list of objects
   #   - /Pages just points to the index lists for each page
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  doc <- pdf_add(doc, pdf_dict(Type = '/Pages'  , Kids  = "[3 0 R]", Count = 1), pos = 2)
+  doc <- pdf_add(doc, pdf_dict(
+    Type      = '/Pages'  , 
+    Kids      = "[3 0 R]", 
+    Resources = "4 0 R",
+    Count = 1
+  ), pos = 2)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # /Page
@@ -192,7 +197,6 @@ pdf_render <- function(doc, filename = NULL) {
     pdf_dict(
       Type      = '/Page',
       Parent    = "2 0 R",
-      Resources = "4 0 R",
       MediaBox  = glue::glue("[0 0 {width} {height}]"),
       Contents  = contents
     ),
@@ -235,21 +239,6 @@ pdf_render <- function(doc, filename = NULL) {
     pos = 4
   )
   
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Font definition
-  #    - N/page
-  #    - Linked from /Resources
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # doc <- pdf_add(
-  #   doc, 
-  #   pdf_dict(
-  #     Type     = '/Font', 
-  #     Subtype  = "/Type1", 
-  #     BaseFont = paste0("/", fontname)
-  #   ),
-  #   pos = 5
-  # )
-  
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Get sizes of all elements
@@ -265,7 +254,7 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Header
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  s <- c("%PDF-2.0", s)
+  s <- c("%PDF-1.7", s)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # byte offsets (from start) for each obj.  
