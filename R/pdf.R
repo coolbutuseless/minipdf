@@ -30,7 +30,8 @@ create_pdf <- function() {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Images
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    image = list()
+    im = matrix(seq(0, 255), 16, 16),
+    image = list(im)
   )
   # doc <- as.environment(doc)
   class(doc) <- 'pdf_doc'
@@ -96,7 +97,7 @@ print.pdf_doc <- function(x, ...) {
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_add <- function(doc, x, pos = NULL) {
-  stopifnot(is_dict(x) || is_stream(x))
+  stopifnot(is_dict(x) || is_stream(x) || is.character(x))
   stopifnot(inherits(doc, 'pdf_doc'))
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -199,9 +200,13 @@ pdf_render <- function(doc, filename = NULL) {
   names(gs) <- paste0("GS", seq_along(gs))
   gs <- do.call(pdf_dict, gs)
   
+  xobj <- pdf_dict(Im1 = glue::glue("{idx_xobjects} 0 R"))
+  
+  
   doc <- pdf_add(
     doc, 
     pdf_dict(
+      XObject = xobj,
       ExtGState = gs,
       Font = pdf_dict(
         F1  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica'            ),
@@ -222,6 +227,44 @@ pdf_render <- function(doc, filename = NULL) {
     ),
     pos = idx_resources
   )
+  
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Manually create an image object
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  im_bytes <- 
+    doc$image[[1]] |>
+    t() |>
+    as.raw() |> 
+    as.character() |> 
+    paste0(collapse = "") 
+  
+  im_dict <- pdf_dict(
+    Type             = "/XObject",
+    Subtype          = "/Image",
+    Width            = 16,
+    Height           = 16,
+    ColorSpace       = "/DeviceGray",
+    BitsPerComponent = 8,
+    Length           = 512,
+    Filter           = "/ASCIIHexDecode"
+  )
+  
+  s <- paste(
+    as.character(im_dict),
+    "stream",
+    im_bytes,
+    "endstream",
+    sep = "\n"
+  )
+  
+  doc <- pdf_add(
+    doc, 
+    s,
+    pos = idx_xobjects
+  )
+  
+  
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # /Page

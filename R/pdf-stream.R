@@ -102,7 +102,12 @@ as.character.pdf_stream <- function(x, ...) {
     },
     
     image = {
-      s <- glue::glue_data(x, "{x} {y} m {x + 20} {y + 20} l S")
+      s <- glue::glue_data(
+        x, 
+        "100 0 0 100 50 50 cm",
+        "/Im1 Do",
+        .sep = "\n"
+      )
     },
     
     stop("Unknown stream: ", deparse1(class(x)))
