@@ -4,7 +4,7 @@
 \alias{pdf_image}
 \title{Add image}
 \usage{
-pdf_image(doc, im, x, y, scale = 1, ..., gp = pgpar())
+pdf_image(doc, im, x, y, scale = scale, ..., gp = pgpar())
 }
 \arguments{
 \item{doc}{pdf_doc}
@@ -13,7 +13,7 @@ pdf_image(doc, im, x, y, scale = 1, ..., gp = pgpar())
 
 \item{x, y}{position}
 
-\item{scale}{1}
+\item{scale}{scale for image}
 
 \item{...}{further arguments to be added to \code{gp}}
 

@@ -102,10 +102,14 @@ as.character.pdf_stream <- function(x, ...) {
     },
     
     image = {
+      
+      x$w <- ncol(x$im)
+      x$h <- nrow(x$im)
+      
       s <- glue::glue_data(
         x, 
-        "100 0 0 100 50 50 cm",
-        "/Im1 Do",
+        "{w * scale} 0 0 {h * scale} {x} {y} cm",
+        "/Im{idx_offset} Do",
         .sep = "\n"
       )
     },
@@ -316,17 +320,18 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
 #' @inheritParams pdf_line
 #' @param im integer matrix [0, 255]
 #' @param x,y position
-#' @param scale 1
+#' @param scale scale for image
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_image <- function(doc, im, x, y, scale = 1, ..., gp = pgpar()) {
+pdf_image <- function(doc, im, x, y, scale = scale, ..., gp = pgpar()) {
   stopifnot(is.matrix(im))
   stopifnot(is.integer(im))
   gp <- modifyList(gp, list(...))
   
-  idx_offset <- length(doc$image)
+  # idx_offset <- length(doc$image) + 1L
   # doc$image[[idx_offset + 1L]] <- im
+  idx_offset <- 1
   
   obj <- pdf_stream(
     type = 'image', 

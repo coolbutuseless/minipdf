@@ -12,8 +12,6 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 create_pdf <- function() {
   
-  im <- matrix(seq(0, 255), nrow = 8, ncol = 32)
-  
   doc <- list(
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,7 +31,7 @@ create_pdf <- function() {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Images
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    image = list(im)
+    image = list(matrix(seq(0, 255), nrow = 16, ncol = 16))
   )
   # doc <- as.environment(doc)
   class(doc) <- 'pdf_doc'
@@ -437,8 +435,8 @@ tt <- function() {
 
   w <- 10
   h <- 10
-  im <- matrix(sample(256L, w * h) - 1L, w, h)
-  doc <- pdf_image(doc, im, x = 50, y = 50, scale = 1)
+  im <- matrix(as.integer(100 + 50 * sin(8 * seq(w * h))), w, h)
+  doc <- pdf_image(doc, im, x = 50, y = 50, scale = 10)
   
   
   doc
