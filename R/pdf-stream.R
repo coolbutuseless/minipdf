@@ -307,6 +307,13 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Add image
+#' 
+#' @inheritParams pdf_line
+#' @param im integer matrix [0, 255]
+#' @param x,y position
+#' @param scale 1
+#' @return pdf_doc
+#' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_image <- function(doc, im, x, y, scale = 1, ..., gp = pgpar()) {
   stopifnot(is.matrix(im))
