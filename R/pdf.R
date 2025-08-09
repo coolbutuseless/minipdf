@@ -169,7 +169,10 @@ pdf_render <- function(doc, filename = NULL) {
   # /Catalog 
   #    - one/document
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  doc <- pdf_add(doc, pdf_dict(Type = '/Catalog', Pages = "2 0 R"), pos = 1)
+  doc <- pdf_add(doc, pdf_dict(
+    Type = '/Catalog', 
+    Pages = glue::glue("{idx_pages} 0 R")
+  ), pos = 1)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # /Pages
@@ -180,8 +183,8 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc <- pdf_add(doc, pdf_dict(
     Type      = '/Pages'  , 
-    Resources = "3 0 R",
-    Kids      = "[4 0 R]", 
+    Resources = glue::glue("{idx_resources} 0 R"),
+    Kids      = glue::glue("[{idx_page1} 0 R]"), 
     Count = 1
   ), pos = 2)
   
@@ -199,8 +202,6 @@ pdf_render <- function(doc, filename = NULL) {
   doc <- pdf_add(
     doc, 
     pdf_dict(
-      # Font      = pdf_dict(F1 = "5 0 R"),
-      # ExtGState = pdf_dict(GS11 = pdf_dict(ca = 1, CA = 1))
       ExtGState = gs,
       Font = pdf_dict(
         F1  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica'            ),
@@ -238,7 +239,7 @@ pdf_render <- function(doc, filename = NULL) {
     doc, 
     pdf_dict(
       Type      = '/Page',
-      Parent    = "2 0 R",
+      Parent    = glue::glue("{idx_pages} 0 R"),
       MediaBox  = glue::glue("[0 0 {width} {height}]"),
       Contents  = contents
     ),
