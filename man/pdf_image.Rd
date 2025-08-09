@@ -4,7 +4,7 @@
 \alias{pdf_image}
 \title{Add image}
 \usage{
-pdf_image(doc, im, x, y, scale = scale, ..., gp = pgpar())
+pdf_image(doc, im, x, y, scale = scale, ..., gp = pgpar(), tf = NULL)
 }
 \arguments{
 \item{doc}{pdf_doc}
@@ -18,6 +18,10 @@ pdf_image(doc, im, x, y, scale = scale, ..., gp = pgpar())
 \item{...}{further arguments to be added to \code{gp}}
 
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
+
+\item{tf}{either a single transform \code{pdf_translate()}, \code{pdf_scale()},
+\code{pdf_rotate()}, or a list of these transforms.  Default: NULL,
+no transforms applied}
 }
 \value{
 pdf_doc

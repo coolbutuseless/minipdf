@@ -4,7 +4,7 @@
 \alias{pdf_circle}
 \title{Create a polygon}
 \usage{
-pdf_circle(doc, x, y, r, ..., gp = pgpar())
+pdf_circle(doc, x, y, r, ..., gp = pgpar(), tf = NULL)
 }
 \arguments{
 \item{doc}{pdf_doc}
@@ -14,6 +14,10 @@ pdf_circle(doc, x, y, r, ..., gp = pgpar())
 \item{...}{further arguments to be added to \code{gp}}
 
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
+
+\item{tf}{either a single transform \code{pdf_translate()}, \code{pdf_scale()},
+\code{pdf_rotate()}, or a list of these transforms.  Default: NULL,
+no transforms applied}
 }
 \value{
 pdf_doc

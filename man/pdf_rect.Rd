@@ -4,7 +4,7 @@
 \alias{pdf_rect}
 \title{Create a rect}
 \usage{
-pdf_rect(doc, x, y, width, height, ..., gp = pgpar())
+pdf_rect(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL)
 }
 \arguments{
 \item{doc}{pdf_doc}
@@ -16,6 +16,10 @@ pdf_rect(doc, x, y, width, height, ..., gp = pgpar())
 \item{...}{further arguments to be added to \code{gp}}
 
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
+
+\item{tf}{either a single transform \code{pdf_translate()}, \code{pdf_scale()},
+\code{pdf_rotate()}, or a list of these transforms.  Default: NULL,
+no transforms applied}
 }
 \value{
 pdf_doc

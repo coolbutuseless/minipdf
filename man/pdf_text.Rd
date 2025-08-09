@@ -4,7 +4,17 @@
 \alias{pdf_text}
 \title{Create text}
 \usage{
-pdf_text(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar())
+pdf_text(
+  doc,
+  text,
+  x,
+  y,
+  fontsize = 12,
+  mode = 0,
+  ...,
+  gp = pgpar(),
+  tf = NULL
+)
 }
 \arguments{
 \item{doc}{pdf_doc}
@@ -30,6 +40,10 @@ pdf_text(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar())
 \item{...}{further arguments to be added to \code{gp}}
 
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
+
+\item{tf}{either a single transform \code{pdf_translate()}, \code{pdf_scale()},
+\code{pdf_rotate()}, or a list of these transforms.  Default: NULL,
+no transforms applied}
 }
 \value{
 pdf_doc

@@ -4,7 +4,7 @@
 \alias{pdf_line}
 \title{Create a line in pdf}
 \usage{
-pdf_line(doc, x1, y1, x2, y2, ..., gp = pgpar())
+pdf_line(doc, x1, y1, x2, y2, ..., gp = pgpar(), tf = NULL)
 }
 \arguments{
 \item{doc}{pdf_doc}
@@ -14,6 +14,10 @@ pdf_line(doc, x1, y1, x2, y2, ..., gp = pgpar())
 \item{...}{further arguments to be added to \code{gp}}
 
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
+
+\item{tf}{either a single transform \code{pdf_translate()}, \code{pdf_scale()},
+\code{pdf_rotate()}, or a list of these transforms.  Default: NULL,
+no transforms applied}
 }
 \value{
 pdf_doc
