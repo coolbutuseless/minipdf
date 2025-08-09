@@ -25,7 +25,12 @@ create_pdf <- function() {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     gs = list(
       pdf_dict(CA = 1, ca = 1)
-    ) 
+    ),
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Images
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    image = list()
   )
   # doc <- as.environment(doc)
   class(doc) <- 'pdf_doc'
@@ -150,7 +155,10 @@ pdf_render <- function(doc, filename = NULL) {
   idx_resources <- idx_pages + len_pages
   len_resources <- 1L
   
-  idx_page1      <- idx_resources + len_resources
+  idx_xobjects <- idx_resources + len_resources
+  len_xobjects <- length(doc$image)
+  
+  idx_page1      <- idx_xobjects + len_xobjects
   len_page1      <- 1L
   
   idx_page1_objs <- idx_page1 + len_page1

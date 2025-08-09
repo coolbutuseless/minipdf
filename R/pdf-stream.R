@@ -281,7 +281,26 @@ pdf_text <- function(text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()) {
 
 
 
-
+#' #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' #' Add image
+#' #' @param im grey matrix
+#' #' @param x,y position
+#' #' @param scale scale factor.  TODO: replace with generic transform mechanism
+#' #' @inheritParams pdf_line
+#' #' @return stream object
+#' #' @export
+#' #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' pdf_image <- function(im, x, y, scale = 1, ..., gp = pgpar()) {
+#'   stopifnot(is.matrix(im))
+#'   stopifnot(is.numeric(im))
+#'   gp <- modifyList(gp, list(...))
+#'   pdf_stream(
+#'     type = 'image', 
+#'     gp   = gp,
+#'     im   = im,
+#'     x = x, y = y, scale = scale
+#'   )
+#' }
 
 
 
