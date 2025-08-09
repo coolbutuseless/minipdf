@@ -172,7 +172,7 @@ pdf_render <- function(doc, filename = NULL) {
   doc <- pdf_add(doc, pdf_dict(
     Type = '/Catalog', 
     Pages = glue::glue("{idx_pages} 0 R")
-  ), pos = 1)
+  ), pos = idx_catalog)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # /Pages
@@ -186,7 +186,7 @@ pdf_render <- function(doc, filename = NULL) {
     Resources = glue::glue("{idx_resources} 0 R"),
     Kids      = glue::glue("[{idx_page1} 0 R]"), 
     Count = 1
-  ), pos = 2)
+  ), pos = idx_pages)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Resources
@@ -220,7 +220,7 @@ pdf_render <- function(doc, filename = NULL) {
         F14 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/ZapfDingbats'         )
       )
     ),
-    pos = 3
+    pos = idx_resources
   )
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -243,7 +243,7 @@ pdf_render <- function(doc, filename = NULL) {
       MediaBox  = glue::glue("[0 0 {width} {height}]"),
       Contents  = contents
     ),
-    pos = 4
+    pos = idx_page1
   )
   
   
@@ -328,21 +328,22 @@ tt <- function() {
   doc <- create_pdf()
   
   doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.5)
-  # doc <- pdf_line(doc, 20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
-  # 
-  # N  <- 100
-  # xs <- runif(N, 1, 400)
-  # ys <- runif(N, 1, 400)
-  # doc <- pdf_polyline(doc, xs, ys, col = 'darkgreen')
-  # 
-  # xs <- c(100, 300, 300)
-  # ys <- c(100, 100, 300)
-  # doc <- pdf_polygon(doc, xs, ys, col = 'black', fill = "#ff000080")
-  # 
-  # doc <- pdf_circle(doc, 300, 300, 100, col = 'hotpink', fill = '#00ff0080')
-  # 
-  # doc <- pdf_text(doc, "Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink', 
-  #                 fontfamily = "mono", fontface = 'bold.italic', mode = 2)
+  doc <- pdf_line(doc, 20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
+
+  set.seed(1)
+  N  <- 10
+  xs <- runif(N, 1, 400)
+  ys <- runif(N, 1, 400)
+  doc <- pdf_polyline(doc, xs, ys, col = 'darkgreen', alpha = 0.2)
+
+  xs <- c(100, 300, 300)
+  ys <- c(100, 100, 300)
+  doc <- pdf_polygon(doc, xs, ys, col = 'black', fill = "#ff000080")
+
+  doc <- pdf_circle(doc, 300, 300, 100, col = 'hotpink', fill = '#00ff0080')
+
+  doc <- pdf_text(doc, "Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink',
+                  fontfamily = "mono", fontface = 'bold.italic', mode = 2)
 
   
   w <- 10
