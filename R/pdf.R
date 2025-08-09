@@ -97,6 +97,7 @@ print.pdf_doc <- function(x, ...) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_add <- function(doc, x, pos = NULL) {
   stopifnot(is_dict(x) || is_stream(x))
+  stopifnot(inherits(doc, 'pdf_doc'))
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # For a stream object, keep track of the 'graphics state dict' for this
@@ -326,22 +327,29 @@ tt <- function() {
   doc <- create_pdf()
   
   doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.5)
-  doc <- pdf_line(doc, 20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
+  # doc <- pdf_line(doc, 20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
+  # 
+  # N  <- 100
+  # xs <- runif(N, 1, 400)
+  # ys <- runif(N, 1, 400)
+  # doc <- pdf_polyline(doc, xs, ys, col = 'darkgreen')
+  # 
+  # xs <- c(100, 300, 300)
+  # ys <- c(100, 100, 300)
+  # doc <- pdf_polygon(doc, xs, ys, col = 'black', fill = "#ff000080")
+  # 
+  # doc <- pdf_circle(doc, 300, 300, 100, col = 'hotpink', fill = '#00ff0080')
+  # 
+  # doc <- pdf_text(doc, "Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink', 
+  #                 fontfamily = "mono", fontface = 'bold.italic', mode = 2)
 
-  N  <- 100
-  xs <- runif(N, 1, 400)
-  ys <- runif(N, 1, 400)
-  doc <- pdf_polyline(doc, xs, ys, col = 'darkgreen')
-
-  xs <- c(100, 300, 300)
-  ys <- c(100, 100, 300)
-  doc <- pdf_polygon(doc, xs, ys, col = 'black', fill = "#ff000080")
-
-  doc <- pdf_circle(doc, 300, 300, 100, col = 'hotpink', fill = '#00ff0080')
-
-  doc <- pdf_text(doc, "Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink', 
-                  fontfamily = "mono", fontface = 'bold.italic', mode = 2)
-
+  
+  w <- 10
+  h <- 10
+  im <- matrix(sample(256L, w * h) - 1L, w, h)
+  doc <- pdf_image(doc, im, x = 50, y = 50, scale = 1)
+  
+  
   doc
   pdf_render(doc) |> cat()
   pdf_render(doc, "working/test.pdf")

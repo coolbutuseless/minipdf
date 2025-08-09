@@ -100,6 +100,11 @@ as.character.pdf_stream <- function(x, ...) {
         ET"
       )
     },
+    
+    image = {
+      s <- glue::glue_data(x, "{x} {y} m {x + 20} {y + 20} l S")
+    },
+    
     stop("Unknown stream: ", deparse1(class(x)))
   )
 
@@ -298,6 +303,29 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
   pdf_add(doc, obj)
 }
 
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Add image
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_image <- function(doc, im, x, y, scale = 1, ..., gp = pgpar()) {
+  stopifnot(is.matrix(im))
+  stopifnot(is.integer(im))
+  gp <- modifyList(gp, list(...))
+  
+  idx_offset <- length(doc$image)
+  # doc$image[[idx_offset + 1L]] <- im
+  
+  obj <- pdf_stream(
+    type = 'image', 
+    gp   = gp,
+    im = im,
+    idx_offset = idx_offset,
+    x = x, y = y, scale = scale
+  )
+  
+  pdf_add(doc, obj)
+}
 
 
 
