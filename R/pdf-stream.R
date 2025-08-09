@@ -55,11 +55,11 @@ as.character.pdf_stream <- function(x, ...) {
     },
     polyline = {
       lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
-      s <- glue::glue("{xs[1]} {ys[1]} m {lines} S") # 'S' = stroke (without closing)
+      s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} S") # 'S' = stroke (without closing)
     },
     polygon = {
       lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
-      s <- glue::glue("{xs[1]} {ys[1]} m {lines} {paint}") 
+      s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} {paint}") 
     },
     circle = {
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

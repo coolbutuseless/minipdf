@@ -11,6 +11,9 @@
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 create_pdf <- function() {
+  
+  im <- matrix(seq(0, 255), nrow = 8, ncol = 32)
+  
   doc <- list(
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -30,7 +33,6 @@ create_pdf <- function() {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Images
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    im = matrix(seq(0, 255), 16, 16),
     image = list(im)
   )
   # doc <- as.environment(doc)
@@ -232,21 +234,26 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Manually create an image object
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  im <- doc$image[[1]]
+  
   im_bytes <- 
-    doc$image[[1]] |>
+    im |>
     t() |>
     as.raw() |> 
     as.character() |> 
     paste0(collapse = "") 
   
+  w <- ncol(im)
+  h <- nrow(im)
+  
   im_dict <- pdf_dict(
     Type             = "/XObject",
     Subtype          = "/Image",
-    Width            = 16,
-    Height           = 16,
+    Width            = w,
+    Height           = h,
     ColorSpace       = "/DeviceGray",
     BitsPerComponent = 8,
-    Length           = 16 * 16 * 2,
+    Length           = w * h * 2,
     Filter           = "/ASCIIHexDecode",
     SMask            = glue::glue("{idx_xobjects + 1} 0 R")
   )
@@ -268,21 +275,25 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  im <- 255 - doc$image[[1]]
   alpha_bytes <- 
-    (255 - doc$image[[1]]) |>
+    im |>
     t() |>
     as.raw() |> 
     as.character() |> 
     paste0(collapse = "")
   
+  w <- ncol(im)
+  h <- nrow(im)
+  
   alpha_dict <- pdf_dict(
     Type             = "/XObject",
     Subtype          = "/Image",
-    Width            = 16,
-    Height           = 16,
+    Width            = w,
+    Height           = h,
     ColorSpace       = "/DeviceGray",
     BitsPerComponent = 8,
-    Length           = 16 * 16 * 2,
+    Length           = w * h * 2,
     Filter           = "/ASCIIHexDecode"
   )
   
@@ -406,10 +417,9 @@ pdf_render <- function(doc, filename = NULL) {
 tt <- function() {
   doc <- create_pdf()
   
-  doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.5)
+  doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
   doc <- pdf_line(doc, 20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
 
-  set.seed(1)
   N  <- 10
   xs <- runif(N, 1, 400)
   ys <- runif(N, 1, 400)
@@ -424,7 +434,7 @@ tt <- function() {
   doc <- pdf_text(doc, "Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink',
                   fontfamily = "mono", fontface = 'bold.italic', mode = 2)
 
-  
+
   w <- 10
   h <- 10
   im <- matrix(sample(256L, w * h) - 1L, w, h)
@@ -444,6 +454,7 @@ if (FALSE) {
   set.seed(1)
   doc <- create_pdf()
   
+  N <- 100
   xs <- sample(400, N, TRUE)
   ys <- sample(400, N, TRUE)
   rs <- sample(100, N, TRUE)
