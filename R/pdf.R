@@ -45,16 +45,16 @@ create_pdf <- function() {
 # otherwise return NULL
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 gs_idx <- function(doc, gs) {
-
+  
   stopifnot(!is.null(gs))
   stopifnot(inherits(doc, 'pdf_doc'))
-
+  
   for (i in seq_along(doc$gs)) {
     if (identical(doc$gs[[i]], gs)) {
       return(i)
     }
   }
-
+  
   NULL
 }
 
@@ -200,8 +200,14 @@ pdf_render <- function(doc, filename = NULL) {
   names(gs) <- paste0("GS", seq_along(gs))
   gs <- do.call(pdf_dict, gs)
   
-  xobj <- pdf_dict(Im1 = glue::glue("{idx_xobjects} 0 R"))
   
+  im_nms  <- paste0("Im", seq_along(doc$image))
+  im_idxs <- idx_xobjects + (seq_along(doc$image) - 1L) * 2
+  im_refs <- glue::glue("{im_idxs} 0 R") |> as.list()
+  names(im_refs) <- im_nms
+  
+  # xobj <- pdf_dict(Im1 = glue::glue("{idx_xobjects} 0 R"))
+  xobj <- do.call(pdf_dict, im_refs)
   
   doc <- pdf_add(
     doc, 
@@ -232,83 +238,90 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Manually create an image object
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  im <- doc$image[[1]]
+  obj_idx <- idx_xobjects
   
-  im_bytes <- 
-    im |>
-    t() |>
-    as.raw() |> 
-    as.character() |> 
-    paste0(collapse = "") 
-  
-  w <- ncol(im)
-  h <- nrow(im)
-  
-  im_dict <- pdf_dict(
-    Type             = "/XObject",
-    Subtype          = "/Image",
-    Width            = w,
-    Height           = h,
-    ColorSpace       = "/DeviceGray",
-    BitsPerComponent = 8,
-    Length           = w * h * 2,
-    Filter           = "/ASCIIHexDecode",
-    SMask            = glue::glue("{idx_xobjects + 1} 0 R")
-  )
-  
-  s <- paste(
-    as.character(im_dict),
-    "stream",
-    im_bytes,
-    "endstream",
-    sep = "\n"
-  )
-  
-  doc <- pdf_add(
-    doc, 
-    s,
-    pos = idx_xobjects
-  )
-  
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # 
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  im <- 255 - doc$image[[1]]
-  alpha_bytes <- 
-    im |>
-    t() |>
-    as.raw() |> 
-    as.character() |> 
-    paste0(collapse = "")
-  
-  w <- ncol(im)
-  h <- nrow(im)
-  
-  alpha_dict <- pdf_dict(
-    Type             = "/XObject",
-    Subtype          = "/Image",
-    Width            = w,
-    Height           = h,
-    ColorSpace       = "/DeviceGray",
-    BitsPerComponent = 8,
-    Length           = w * h * 2,
-    Filter           = "/ASCIIHexDecode"
-  )
-  
-  alpha_mask <- paste(
-    as.character(alpha_dict),
-    "stream",
-    alpha_bytes,
-    "endstream",
-    sep = "\n"
-  )
-  
-  doc <- pdf_add(
-    doc, 
-    alpha_mask,
-    pos = idx_xobjects + 1L
-  )
-  
+  for (i in seq_along(doc$image)) {
+    im <- doc$image[[i]]
+    
+    im_bytes <- 
+      im |>
+      t() |>
+      as.raw() |> 
+      as.character() |> 
+      paste0(collapse = "") 
+    
+    w <- ncol(im)
+    h <- nrow(im)
+    
+    im_dict <- pdf_dict(
+      Type             = "/XObject",
+      Subtype          = "/Image",
+      Width            = w,
+      Height           = h,
+      ColorSpace       = "/DeviceGray",
+      BitsPerComponent = 8,
+      Length           = w * h * 2,
+      Filter           = "/ASCIIHexDecode",
+      SMask            = glue::glue("{obj_idx + 1} 0 R") # Refer to the soft mask
+    )
+    
+    s <- paste(
+      as.character(im_dict),
+      "stream",
+      im_bytes,
+      "endstream",
+      sep = "\n"
+    )
+    
+    doc <- pdf_add(
+      doc, 
+      s,
+      pos = obj_idx
+    )
+    
+    obj_idx <- obj_idx + 1L
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Write the alpha image as a soft mask
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    im <- 255 - im
+    alpha_bytes <- 
+      im |>
+      t() |>
+      as.raw() |> 
+      as.character() |> 
+      paste0(collapse = "")
+    
+    w <- ncol(im)
+    h <- nrow(im)
+    
+    alpha_dict <- pdf_dict(
+      Type             = "/XObject",
+      Subtype          = "/Image",
+      Width            = w,
+      Height           = h,
+      ColorSpace       = "/DeviceGray",
+      BitsPerComponent = 8,
+      Length           = w * h * 2,
+      Filter           = "/ASCIIHexDecode"
+    )
+    
+    alpha_mask <- paste(
+      as.character(alpha_dict),
+      "stream",
+      alpha_bytes,
+      "endstream",
+      sep = "\n"
+    )
+    
+    doc <- pdf_add(
+      doc, 
+      alpha_mask,
+      pos = obj_idx
+    )
+    
+    obj_idx <- obj_idx + 1L
+  }
   
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -417,26 +430,33 @@ tt <- function() {
   
   doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
   doc <- pdf_line(doc, 20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
-
+  
   N  <- 10
   xs <- runif(N, 1, 400)
   ys <- runif(N, 1, 400)
   doc <- pdf_polyline(doc, xs, ys, col = 'darkgreen', alpha = 0.2)
-
+  
   xs <- c(100, 300, 300)
   ys <- c(100, 100, 300)
   doc <- pdf_polygon(doc, xs, ys, col = 'black', fill = "#ff000080")
-
+  
   doc <- pdf_circle(doc, 300, 300, 100, col = 'hotpink', fill = '#00ff0080')
-
+  
   doc <- pdf_text(doc, "Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink',
                   fontfamily = "mono", fontface = 'bold.italic', mode = 2)
-
-
+  
+  
   w <- 10
   h <- 10
   im <- matrix(as.integer(100 + 50 * sin(8 * seq(w * h))), w, h)
   doc <- pdf_image(doc, im, x = 50, y = 50, scale = 10)
+  
+  
+  w <- 10
+  h <- 10
+  im <- matrix(as.integer(100 + 50 * cos(16 * seq(w * h))), w, h)
+  doc <- pdf_image(doc, im, x = 150, y = 150, scale = 10)
+  
   
   
   doc
@@ -457,25 +477,25 @@ if (FALSE) {
   ys <- sample(400, N, TRUE)
   rs <- sample(100, N, TRUE)
   cs <- sample(colors(), N, TRUE)
-
+  
   for (i in seq_len(N)) {
     doc <- pdf_circle(doc, xs[i], ys[i], rs[i], col = NA, fill = cs[i], alpha = 0.2)
   }
-
+  
   cs <- rainbow(400)
   for (i in seq(1, 400, 10)) {
     doc <- pdf_line(doc, i, 0, 0, 400 - i, col = cs[i], alpha = 0.2)
   }
   
   doc <- pdf_text(doc, "Hello", 20, 300, fontsize = 90, mode = 0, fill = 'black', 
-                 fontface = 'plain')
-
+                  fontface = 'plain')
+  
   doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 90, mode = 1, col = 'hotpink', 
-                 fontface = 'bold.italic', lwd = 5)
-
+                  fontface = 'bold.italic', lwd = 5)
+  
   pdf_render(doc, "working/test.pdf")
   
-
+  
 }
 
 

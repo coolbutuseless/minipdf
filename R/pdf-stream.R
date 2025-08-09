@@ -329,9 +329,9 @@ pdf_image <- function(doc, im, x, y, scale = scale, ..., gp = pgpar()) {
   stopifnot(is.integer(im))
   gp <- modifyList(gp, list(...))
   
-  # idx_offset <- length(doc$image) + 1L
-  # doc$image[[idx_offset + 1L]] <- im
-  idx_offset <- 1
+  idx_offset <- length(doc$image) + 1L
+  doc$image[[idx_offset]] <- im
+  # idx_offset <- 1
   
   obj <- pdf_stream(
     type = 'image', 
