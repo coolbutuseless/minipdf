@@ -158,7 +158,7 @@ pdf_render <- function(doc, filename = NULL) {
   len_resources <- 1L
   
   idx_xobjects <- idx_resources + len_resources
-  len_xobjects <- length(doc$image)
+  len_xobjects <- length(doc$image) * 2  # 1 for the image, 1 for the alpha mask
   
   idx_page1      <- idx_xobjects + len_xobjects
   len_page1      <- 1L
@@ -246,8 +246,9 @@ pdf_render <- function(doc, filename = NULL) {
     Height           = 16,
     ColorSpace       = "/DeviceGray",
     BitsPerComponent = 8,
-    Length           = 512,
-    Filter           = "/ASCIIHexDecode"
+    Length           = 16 * 16 * 2,
+    Filter           = "/ASCIIHexDecode",
+    SMask            = glue::glue("{idx_xobjects + 1} 0 R")
   )
   
   s <- paste(
@@ -262,6 +263,41 @@ pdf_render <- function(doc, filename = NULL) {
     doc, 
     s,
     pos = idx_xobjects
+  )
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  alpha_bytes <- 
+    (255 - doc$image[[1]]) |>
+    t() |>
+    as.raw() |> 
+    as.character() |> 
+    paste0(collapse = "")
+  
+  alpha_dict <- pdf_dict(
+    Type             = "/XObject",
+    Subtype          = "/Image",
+    Width            = 16,
+    Height           = 16,
+    ColorSpace       = "/DeviceGray",
+    BitsPerComponent = 8,
+    Length           = 16 * 16 * 2,
+    Filter           = "/ASCIIHexDecode"
+  )
+  
+  alpha_mask <- paste(
+    as.character(alpha_dict),
+    "stream",
+    alpha_bytes,
+    "endstream",
+    sep = "\n"
+  )
+  
+  doc <- pdf_add(
+    doc, 
+    alpha_mask,
+    pos = idx_xobjects + 1L
   )
   
   
