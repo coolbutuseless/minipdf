@@ -325,33 +325,23 @@ pdf_render <- function(doc, filename = NULL) {
 tt <- function() {
   doc <- create_pdf()
   
-  rr <- pdf_rect(120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.5)
-  doc <- pdf_add(doc, rr)
-
-
-  ll <- pdf_line(20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
-  doc <- pdf_add(doc, ll)
+  doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.5)
+  doc <- pdf_line(doc, 20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
 
   N  <- 100
   xs <- runif(N, 1, 400)
   ys <- runif(N, 1, 400)
-  pl <- pdf_polyline(xs, ys, col = 'darkgreen')
-  doc <- pdf_add(doc, pl)
-
-
+  doc <- pdf_polyline(doc, xs, ys, col = 'darkgreen')
 
   xs <- c(100, 300, 300)
   ys <- c(100, 100, 300)
-  pl <- pdf_polygon(xs, ys, col = 'black', fill = "#ff000080")
-  doc <- pdf_add(doc, pl)
+  doc <- pdf_polygon(doc, xs, ys, col = 'black', fill = "#ff000080")
 
-  ci <- pdf_circle(300, 300, 100, col = 'hotpink', fill = '#00ff0080')
-  doc <- pdf_add(doc, ci)
-  
-  txt <- pdf_text("Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink', 
+  doc <- pdf_circle(doc, 300, 300, 100, col = 'hotpink', fill = '#00ff0080')
+
+  doc <- pdf_text(doc, "Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink', 
                   fontfamily = "mono", fontface = 'bold.italic', mode = 2)
-  doc <- pdf_add(doc, txt)
-  
+
   doc
   pdf_render(doc) |> cat()
   pdf_render(doc, "working/test.pdf")
@@ -371,25 +361,20 @@ if (FALSE) {
   cs <- sample(colors(), N, TRUE)
 
   for (i in seq_len(N)) {
-    zz <- pdf_circle(xs[i], ys[i], rs[i], col = NA, fill = cs[i], alpha = 0.2)
-    doc <- pdf_add(doc, zz)
+    doc <- pdf_circle(doc, xs[i], ys[i], rs[i], col = NA, fill = cs[i], alpha = 0.2)
   }
 
   cs <- rainbow(400)
   for (i in seq(1, 400, 10)) {
-    zz <- pdf_line(i, 0, 0, 400 - i, col = cs[i], alpha = 0.2)
-    doc <- pdf_add(doc, zz)
+    doc <- pdf_line(doc, i, 0, 0, 400 - i, col = cs[i], alpha = 0.2)
   }
   
-  zz <- pdf_text("Hello", 20, 300, fontsize = 90, mode = 0, fill = 'black', 
+  doc <- pdf_text(doc, "Hello", 20, 300, fontsize = 90, mode = 0, fill = 'black', 
                  fontface = 'plain')
-  doc <- pdf_add(doc, zz)
-  
-  zz <- pdf_text("#RStats", 20, 200, fontsize = 90, mode = 1, col = 'hotpink', 
+
+  doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 90, mode = 1, col = 'hotpink', 
                  fontface = 'bold.italic', lwd = 5)
-  doc <- pdf_add(doc, zz)
-  
-  
+
   pdf_render(doc, "working/test.pdf")
   
 

@@ -4,9 +4,11 @@
 \alias{pdf_polyline}
 \title{Create a polyline}
 \usage{
-pdf_polyline(xs, ys, ..., gp = pgpar())
+pdf_polyline(doc, xs, ys, ..., gp = pgpar())
 }
 \arguments{
+\item{doc}{pdf_doc}
+
 \item{xs, ys}{vertices}
 
 \item{...}{further arguments to be added to \code{gp}}
@@ -14,7 +16,7 @@ pdf_polyline(xs, ys, ..., gp = pgpar())
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 }
 \value{
-stream object
+pdf_doc
 }
 \description{
 Create a polyline

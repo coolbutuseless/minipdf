@@ -4,9 +4,11 @@
 \alias{pdf_line}
 \title{Create a line in pdf}
 \usage{
-pdf_line(x1, y1, x2, y2, ..., gp = pgpar())
+pdf_line(doc, x1, y1, x2, y2, ..., gp = pgpar())
 }
 \arguments{
+\item{doc}{pdf_doc}
+
 \item{x1, y1, x2, y2}{endpoints}
 
 \item{...}{further arguments to be added to \code{gp}}
@@ -14,7 +16,7 @@ pdf_line(x1, y1, x2, y2, ..., gp = pgpar())
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 }
 \value{
-stream object
+pdf_doc
 }
 \description{
 Create a line in pdf

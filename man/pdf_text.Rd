@@ -4,9 +4,11 @@
 \alias{pdf_text}
 \title{Create text}
 \usage{
-pdf_text(text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar())
+pdf_text(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar())
 }
 \arguments{
+\item{doc}{pdf_doc}
+
 \item{text}{text}
 
 \item{x, y}{position}
@@ -30,7 +32,7 @@ pdf_text(text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar())
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 }
 \value{
-stream object
+pdf_doc
 }
 \description{
 Create text

@@ -4,9 +4,11 @@
 \alias{pdf_circle}
 \title{Create a polygon}
 \usage{
-pdf_circle(x, y, r, ..., gp = pgpar())
+pdf_circle(doc, x, y, r, ..., gp = pgpar())
 }
 \arguments{
+\item{doc}{pdf_doc}
+
 \item{x, y, r}{position and radius}
 
 \item{...}{further arguments to be added to \code{gp}}
@@ -14,7 +16,7 @@ pdf_circle(x, y, r, ..., gp = pgpar())
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 }
 \value{
-stream object
+pdf_doc
 }
 \description{
 Create a polygon

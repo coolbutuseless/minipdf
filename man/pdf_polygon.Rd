@@ -4,9 +4,11 @@
 \alias{pdf_polygon}
 \title{Create a polygon}
 \usage{
-pdf_polygon(xs, ys, ..., gp = pgpar())
+pdf_polygon(doc, xs, ys, ..., gp = pgpar())
 }
 \arguments{
+\item{doc}{pdf_doc}
+
 \item{xs, ys}{vertices}
 
 \item{...}{further arguments to be added to \code{gp}}
@@ -14,7 +16,7 @@ pdf_polygon(xs, ys, ..., gp = pgpar())
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 }
 \value{
-stream object
+pdf_doc
 }
 \description{
 Create a polygon

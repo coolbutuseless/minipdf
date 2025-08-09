@@ -159,20 +159,24 @@ print.pdf_stream <- function(x, ...) {
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a line in pdf
+#' @param doc pdf_doc
 #' @param x1,y1,x2,y2 endpoints
 #' @param gp A named list \code{gp} object created by \code{\link{pgpar}()}
 #' @param ... further arguments to be added to \code{gp}
-#' @return stream object
+#' @return pdf_doc
 #' @export
 #' @importFrom utils modifyList
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_line <- function(x1, y1, x2, y2, ..., gp = pgpar()) {
+pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar()) {
   gp <- modifyList(gp, list(...))
-  pdf_stream(
+  
+  obj <- pdf_stream(
     type = 'line', 
     gp   = gp,
     x1 = x1, y1 = y1, x2 = x2, y2 = y2, gp = gp
   )
+  
+  pdf_add(doc, obj)
 }
 
 
@@ -182,16 +186,19 @@ pdf_line <- function(x1, y1, x2, y2, ..., gp = pgpar()) {
 #' @param x,y position
 #' @param width,height size
 #' @inheritParams pdf_line
-#' @return stream object
+#' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_rect <- function(x, y, width, height, ..., gp = pgpar()) {
+pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar()) {
   gp <- modifyList(gp, list(...))
-  pdf_stream(
+  
+  obj <- pdf_stream(
     type = 'rect', 
     gp   = gp,
     x = x, y = y, width = width, height = height
   )
+  
+  pdf_add(doc, obj)
 }
 
 
@@ -200,16 +207,19 @@ pdf_rect <- function(x, y, width, height, ..., gp = pgpar()) {
 #' Create a polyline
 #' @param xs,ys vertices
 #' @inheritParams pdf_line
-#' @return stream object
+#' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_polyline <- function(xs, ys, ..., gp = pgpar()) {
+pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar()) {
   gp <- modifyList(gp, list(...))
-  pdf_stream(
+  
+  obj <- pdf_stream(
     type = 'polyline', 
     gp   = gp,
     xs = xs, ys = ys
   )
+  
+  pdf_add(doc, obj)
 }
 
 
@@ -218,16 +228,19 @@ pdf_polyline <- function(xs, ys, ..., gp = pgpar()) {
 #' Create a polygon
 #' @param xs,ys vertices
 #' @inheritParams pdf_line
-#' @return stream object
+#' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_polygon <- function(xs, ys, ..., gp = pgpar()) {
+pdf_polygon <- function(doc, xs, ys, ..., gp = pgpar()) {
   gp <- modifyList(gp, list(...))
-  pdf_stream(
+  
+  obj <- pdf_stream(
     type = 'polygon', 
     gp   = gp,
     xs = xs, ys = ys
   )
+  
+  pdf_add(doc, obj)
 }
 
 
@@ -236,16 +249,19 @@ pdf_polygon <- function(xs, ys, ..., gp = pgpar()) {
 #' Create a polygon
 #' @param x,y,r position and radius
 #' @inheritParams pdf_line
-#' @return stream object
+#' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_circle <- function(x, y, r, ..., gp = pgpar()) {
+pdf_circle <- function(doc, x, y, r, ..., gp = pgpar()) {
   gp <- modifyList(gp, list(...))
-  pdf_stream(
+  
+  obj <- pdf_stream(
     type = 'circle', 
     gp   = gp,
     x = x, y = y, r = r
   )
+  
+  pdf_add(doc, obj)
 }
 
 
@@ -267,40 +283,22 @@ pdf_circle <- function(x, y, r, ..., gp = pgpar()) {
 #'   \item{7 - Add text to path for clipping}
 #' }
 #' @inheritParams pdf_line
-#' @return stream object
+#' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_text <- function(text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()) {
+pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()) {
   gp <- modifyList(gp, list(...))
-  pdf_stream(
+  
+  obj <- pdf_stream(
     type = 'text', 
     gp   = gp,
     x = x, y = y, text = text, mode = mode, fontsize = fontsize
   )
+  
+  pdf_add(doc, obj)
 }
 
 
-
-#' #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' #' Add image
-#' #' @param im grey matrix
-#' #' @param x,y position
-#' #' @param scale scale factor.  TODO: replace with generic transform mechanism
-#' #' @inheritParams pdf_line
-#' #' @return stream object
-#' #' @export
-#' #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' pdf_image <- function(im, x, y, scale = 1, ..., gp = pgpar()) {
-#'   stopifnot(is.matrix(im))
-#'   stopifnot(is.numeric(im))
-#'   gp <- modifyList(gp, list(...))
-#'   pdf_stream(
-#'     type = 'image', 
-#'     gp   = gp,
-#'     im   = im,
-#'     x = x, y = y, scale = scale
-#'   )
-#' }
 
 
 

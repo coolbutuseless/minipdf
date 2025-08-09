@@ -4,9 +4,11 @@
 \alias{pdf_rect}
 \title{Create a rect}
 \usage{
-pdf_rect(x, y, width, height, ..., gp = pgpar())
+pdf_rect(doc, x, y, width, height, ..., gp = pgpar())
 }
 \arguments{
+\item{doc}{pdf_doc}
+
 \item{x, y}{position}
 
 \item{width, height}{size}
@@ -16,7 +18,7 @@ pdf_rect(x, y, width, height, ..., gp = pgpar())
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 }
 \value{
-stream object
+pdf_doc
 }
 \description{
 Create a rect
