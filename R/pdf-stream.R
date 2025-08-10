@@ -116,6 +116,11 @@ as.character.pdf_stream <- function(x, ...) {
       )
     },
     
+    pdf_transform = {
+      restore_state <- FALSE
+      s <- as.character(x$transform)
+    },
+    
     image = {
       
       x$w <- ncol(x$im)

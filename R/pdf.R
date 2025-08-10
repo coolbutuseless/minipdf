@@ -541,6 +541,8 @@ tt <- function() {
     doc <- pdf_line(doc, i, 0, 0, 400 - i, col = cs[i], alpha = 0.2)
   }
   
+  doc <- pdf_translate(doc, 50, 0)
+  
   doc <- pdf_text(doc, "Hello", 20, 300, fontsize = 90, mode = 0, fill = 'black', 
                   fontface = 'plain')
   
@@ -571,6 +573,9 @@ ttt <- function() {
  
   
   doc <- pdf_newpage(doc)
+
+  doc <- pdf_scale(doc, 0.5)  
+  doc <- pdf_translate(doc, 100, 100)
   doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
   
   

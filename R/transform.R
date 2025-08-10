@@ -28,6 +28,7 @@ as.character.pdf_translate <- function(x, ...) {
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a transform specification for rotation
 #' 
@@ -104,6 +105,85 @@ as.character.pdf_transform_list <- function(x, ...) {
     paste(res, collapse = "\n")
   }
 }
+
+
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Update global transformation matrix
+#' 
+#' Note: This can only be updated, and not reset.  If per-object transforms
+#'       are desired use the \code{tf} argument on each object.
+#' @inheritParams pdf_line
+#' @inheritParams tf_translate
+#' @return pdf_doc
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_translate <- function(doc, x, y) {
+  
+  obj <- pdf_stream(
+    type = 'pdf_transform', 
+    gp   = pgpar(),
+    tf   = NULL,
+    transform = tf_translate(x, y)
+  )
+  
+  pdf_add(doc, obj)
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Update global transformation matrix
+#' 
+#' Note: This can only be updated, and not reset.  If per-object transforms
+#'       are desired use the \code{tf} argument on each object.
+#' @inheritParams pdf_line
+#' @inheritParams tf_rotate
+#' @return pdf_doc
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_rotate <- function(doc, rads, x = 0, y = 0) {
+  
+  obj <- pdf_stream(
+    type = 'pdf_transform', 
+    gp   = pgpar(),
+    tf   = NULL,
+    transform = tf_rotate(rads, x, y)
+  )
+  
+  pdf_add(doc, obj)
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Update global transformation matrix
+#' 
+#' Note: This can only be updated, and not reset.  If per-object transforms
+#'       are desired use the \code{tf} argument on each object.
+#' @inheritParams pdf_line
+#' @inheritParams tf_scale
+#' @return pdf_doc
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_scale <- function(doc, x, y = x) {
+  
+  obj <- pdf_stream(
+    type = 'pdf_transform', 
+    gp   = pgpar(),
+    tf   = NULL,
+    transform = tf_scale(x, y)
+  )
+  
+  pdf_add(doc, obj)
+}
+
+
+
+
 
 
 if (FALSE) {
