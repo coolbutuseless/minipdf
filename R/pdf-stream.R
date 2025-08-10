@@ -71,6 +71,11 @@ as.character.pdf_stream <- function(x, ...) {
       lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
       s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} {paint}") 
     },
+    clip_polygon = {
+      restore_state <- FALSE
+      lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
+      s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} W n") 
+    },
     circle = {
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # Bezier offset. See:
@@ -306,6 +311,28 @@ pdf_polygon <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
   
   obj <- pdf_stream(
     type = 'polygon', 
+    gp   = gp,
+    tf   = tf,
+    xs = xs, ys = ys
+  )
+  
+  pdf_add(doc, obj)
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create a polygonal clip
+#' @param xs,ys vertices
+#' @inheritParams pdf_line
+#' @return pdf_doc
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_clip_polygon <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
+  gp <- modifyList(gp, list(...))
+  
+  obj <- pdf_stream(
+    type = 'clip_polygon', 
     gp   = gp,
     tf   = tf,
     xs = xs, ys = ys
