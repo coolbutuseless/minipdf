@@ -260,51 +260,6 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a rectangular clip path
-#' @param x,y position
-#' @param width,height size
-#' @inheritParams pdf_line
-#' @return pdf_doc
-#' @export
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_clip_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL) {
-  gp <- modifyList(gp, list(...))
-  
-  obj <- pdf_stream(
-    type = 'clip_rect', 
-    gp   = gp,
-    tf   = tf,
-    x = x, y = y, width = width, height = height
-  )
-  
-  pdf_add(doc, obj)
-}
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polyline
-#' @param xs,ys vertices
-#' @inheritParams pdf_line
-#' @return pdf_doc
-#' @export
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
-  gp <- modifyList(gp, list(...))
-  
-  obj <- pdf_stream(
-    type = 'polyline', 
-    gp   = gp,
-    tf   = tf,
-    xs = xs, ys = ys
-  )
-  
-  pdf_add(doc, obj)
-}
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a polygon
 #' @param xs,ys vertices
 #' @inheritParams pdf_line
