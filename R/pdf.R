@@ -11,6 +11,10 @@ pdf_newpage <- function(doc) {
   
   doc$page_num <- doc$page_num + 1;
   doc$page <- append(doc$page, list(list()))
+  
+  # Do this so every page has at least one object in it
+  doc <- pdf_clip_rect(doc, 0, 0, doc$width, doc$height)
+  
   doc
 }
 
@@ -185,12 +189,12 @@ pdf_render <- function(doc, filename = NULL) {
   idx_xobjects <- idx_resources + len_resources
   len_xobjects <- length(doc$image) * 2  # 1 for the image, 1 for the alpha mask
   
-  idx_page1      <- idx_xobjects + len_xobjects
-  len_page1      <- 1L
-  
-  idx_page1_objs <- idx_page1 + len_page1
-  len_page1_objs <- length(doc$page[[1]])
-  
+  idx_page_start <- idx_xobjects + len_xobjects
+  idx_page_len   <- length(doc$page)
+
+  idx_objs  <- idx_page_start + idx_page_len
+  lens_objs <- lengths(doc$page)
+
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # /Catalog 
   #    - one/document
@@ -356,21 +360,30 @@ pdf_render <- function(doc, filename = NULL) {
   #   - links to /Resources
   #   - contains a list of objects it points to
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  contents <- seq_len(len_page1_objs) + idx_page1_objs - 1L 
-  contents <- sprintf("%i 0 R", contents)
-  contents <- paste(contents, collapse = " ")
-  contents <- paste0("[", contents, "]")
+  # For page, add a /page object with contents
   
-  doc <- pdf_add(
-    doc, 
-    pdf_dict(
-      Type      = '/Page',
-      Parent    = glue::glue("{idx_pages} 0 R"),
-      MediaBox  = glue::glue_data(doc, "[0 0 {width} {height}]"),
-      Contents  = contents
-    ),
-    pos = idx_page1
-  )
+  page_num <- 1L
+  nobjs_prior <- 0L
+  {
+    # Assemble a list of references to all pages
+    contents <- seq_len(lens_objs[page_num]) + (idx_objs - 1L) + nobjs_prior
+    contents <- sprintf("%i 0 R", contents)
+    contents <- paste(contents, collapse = " ")
+    contents <- paste0("[", contents, "]")
+    
+    doc <- pdf_add(
+      doc, 
+      pdf_dict(
+        Type      = '/Page',
+        Parent    = glue::glue("{idx_pages} 0 R"),
+        MediaBox  = glue::glue_data(doc, "[0 0 {width} {height}]"),
+        Contents  = contents
+      ),
+      pos = (idx_page_start - 1L) + page_num
+    )
+    
+    nobjs_prior <- nobjs_prior + lens_objs[page_num]
+  }
   
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
