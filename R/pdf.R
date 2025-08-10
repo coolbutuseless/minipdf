@@ -177,6 +177,8 @@ pdf_add <- function(doc, x, pos = NULL) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_render <- function(doc, filename = NULL) {
   
+  doc$page_num <- 1L
+  
   idx_catalog  <- 1L
   len_catalog  <- 1L
   
@@ -211,11 +213,16 @@ pdf_render <- function(doc, filename = NULL) {
   #   - Each page is an index list of objects
   #   - /Pages just points to the index lists for each page
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
+  kids <- seq_len(length(doc$page)) + (idx_page_start - 1L)
+  kids <- paste(kids, "0 R", collapse = " ")
+  kids <- paste("[", kids, "]")
+  
   doc <- pdf_add(doc, pdf_dict(
     Type      = '/Pages'  , 
     Resources = glue::glue("{idx_resources} 0 R"),
-    Kids      = glue::glue("[{idx_page_start} 0 R]"), 
-    Count = 1
+    Kids      = kids, 
+    Count = length(doc$page)
   ), pos = idx_pages)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -364,12 +371,15 @@ pdf_render <- function(doc, filename = NULL) {
   
   page_num <- 1L
   nobjs_prior <- 0L
-  {
+  for (page_num in seq_along(doc$page)) {
+  # {
     # Assemble a list of references to all pages
     contents <- seq_len(lens_objs[page_num]) + (idx_objs - 1L) + nobjs_prior
     contents <- sprintf("%i 0 R", contents)
     contents <- paste(contents, collapse = " ")
     contents <- paste0("[", contents, "]")
+    
+    # message(">>> Page ", page_num, " = ", (idx_page_start - 1L) + page_num)
     
     doc <- pdf_add(
       doc, 
@@ -462,9 +472,10 @@ pdf_render <- function(doc, filename = NULL) {
 #' @noRd
 #' @importFrom grDevices colors
 #' @importFrom stats runif
+#' @importFrom grDevices rainbow
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tt <- function() {
-  doc <- create_pdf()
+  doc <- create_pdf(width = 600)
   
   doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
   doc <- pdf_line(doc, 20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
@@ -501,10 +512,36 @@ tt <- function() {
   im <- matrix(as.integer(100 + 50 * cos(16 * seq(w * h))), w, h)
   doc <- pdf_image(doc, im, x = 150, y = 150, scale = 10)
   
-  # doc <- pdf_newpage(doc)
-  # doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  doc <- pdf_newpage(doc)
+  
+  N <- 100
+  xs <- sample(600, N, TRUE)
+  ys <- sample(400, N, TRUE)
+  rs <- sample(100, N, TRUE)
+  cs <- sample(colors(), N, TRUE)
+  
+  for (i in seq_len(N)) {
+    doc <- pdf_circle(doc, xs[i], ys[i], rs[i], col = NA, fill = cs[i], alpha = 0.2)
+  }
+  
+  cs <- rainbow(400)
+  for (i in seq(1, 400, 10)) {
+    doc <- pdf_line(doc, i, 0, 0, 400 - i, col = cs[i], alpha = 0.2)
+  }
+  
+  doc <- pdf_text(doc, "Hello", 20, 300, fontsize = 90, mode = 0, fill = 'black', 
+                  fontface = 'plain')
+  
+  doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 90, mode = 1, col = 'hotpink', 
+                  fontface = 'bold.italic', lwd = 5)
   
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc
   pdf_render(doc) |> cat()
   pdf_render(doc, "working/test.pdf")
