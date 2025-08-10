@@ -177,6 +177,15 @@ pdf_add <- function(doc, x, pos = NULL) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_render <- function(doc, filename = NULL) {
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Ensure that no scientific notion is used in the PDF output
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  opts <- options(scipen = 9999)
+  on.exit(options(opts))
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Calculate indices for objects
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc$page_num <- 1L
   
   idx_catalog  <- 1L
@@ -221,6 +230,7 @@ pdf_render <- function(doc, filename = NULL) {
   doc <- pdf_add(doc, pdf_dict(
     Type      = '/Pages'  , 
     Resources = glue::glue("{idx_resources} 0 R"),
+    MediaBox  = glue::glue_data(doc, "[0 0 {width} {height}]"),
     Kids      = kids, 
     Count = length(doc$page)
   ), pos = idx_pages)
@@ -386,7 +396,6 @@ pdf_render <- function(doc, filename = NULL) {
       pdf_dict(
         Type      = '/Page',
         Parent    = glue::glue("{idx_pages} 0 R"),
-        MediaBox  = glue::glue_data(doc, "[0 0 {width} {height}]"),
         Contents  = contents
       ),
       pos = (idx_page_start - 1L) + page_num
