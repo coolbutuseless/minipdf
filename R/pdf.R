@@ -3,6 +3,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create an empty shell for the PDF intermediate format
 #' 
+#' @param width,height page size
 #' @return List with attributes. List items are PDF objects.  Attributes
 #'         are PDF settings
 #' @examples
@@ -10,9 +11,12 @@
 #' 
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_pdf <- function() {
+create_pdf <- function(width = 400, height = 400) {
   
   doc <- list(
+    
+    width  = width,
+    height = height,
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialise with an empty first page
@@ -143,10 +147,6 @@ pdf_add <- function(doc, x, pos = NULL) {
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_render <- function(doc, filename = NULL) {
-  
-  width    <- 400
-  height   <- 400
-  
   
   idx_catalog  <- 1L
   len_catalog  <- 1L
@@ -341,7 +341,7 @@ pdf_render <- function(doc, filename = NULL) {
     pdf_dict(
       Type      = '/Page',
       Parent    = glue::glue("{idx_pages} 0 R"),
-      MediaBox  = glue::glue("[0 0 {width} {height}]"),
+      MediaBox  = glue::glue_data(doc, "[0 0 {width} {height}]"),
       Contents  = contents
     ),
     pos = idx_page1
