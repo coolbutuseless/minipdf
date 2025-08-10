@@ -442,9 +442,11 @@ tt <- function() {
   
   doc <- pdf_circle(doc, 300, 300, 100, col = 'hotpink', fill = '#00ff0080')
   
+  doc <- pdf_clip_rect(doc, 80, 80, 200, 200);
+  
   doc <- pdf_text(doc, "Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink',
                   fontfamily = "mono", fontface = 'bold.italic', mode = 2,
-                  tf = pdf_rotate(1, 50, 50))
+                  tf = pdf_rotate(0.5, 50, 50))
   
   
   w <- 10

@@ -4,7 +4,10 @@
 \alias{create_pdf}
 \title{Create an empty shell for the PDF intermediate format}
 \usage{
-create_pdf()
+create_pdf(width = 400, height = 400)
+}
+\arguments{
+\item{width, height}{page size}
 }
 \value{
 List with attributes. List items are PDF objects.  Attributes

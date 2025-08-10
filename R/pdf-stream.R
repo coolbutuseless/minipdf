@@ -45,6 +45,12 @@ as.character.pdf_stream <- function(x, ...) {
   type  <- attr(x, 'type', exact = TRUE)
   paint <- gp_to_closed_paint_op(x$gp)
 
+  # Should this stream save/restore state for its operation?
+  # Most things = Yes!
+  # For clipping paths, No - as we want the clipping
+  # path to persist for future operations
+  restore_state <- TRUE
+  
   switch(
     type,
     line = {
@@ -52,6 +58,10 @@ as.character.pdf_stream <- function(x, ...) {
     },
     rect = {
       s <- glue::glue_data(x, "{x} {y} {width} {height} re {paint}")
+    },
+    clip_rect = {
+      restore_state <- FALSE
+      s <- glue::glue_data(x, "{x} {y} {width} {height} re W n")
     },
     polyline = {
       lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
@@ -145,9 +155,14 @@ as.character.pdf_stream <- function(x, ...) {
   }
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Always push/pop the local graphics state
+  # Push/pop the local graphics state
+  #   - always do this for graphics operations
+  #   - never do this for clipping definitions
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  s <- paste('q', s, 'Q', sep = "\n")
+  if (isTRUE(restore_state)) {
+    s <- paste('q', s, 'Q', sep = "\n")
+  }
+  
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # A stream is always prefixed with a dict giving its length
@@ -224,6 +239,29 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL) {
   
   obj <- pdf_stream(
     type = 'rect', 
+    gp   = gp,
+    tf   = tf,
+    x = x, y = y, width = width, height = height
+  )
+  
+  pdf_add(doc, obj)
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Add a rectangular clip path
+#' @param x,y position
+#' @param width,height size
+#' @inheritParams pdf_line
+#' @return pdf_doc
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_clip_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL) {
+  gp <- modifyList(gp, list(...))
+  
+  obj <- pdf_stream(
+    type = 'clip_rect', 
     gp   = gp,
     tf   = tf,
     x = x, y = y, width = width, height = height
