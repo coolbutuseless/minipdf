@@ -13,8 +13,7 @@ all_named <- function(x) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Stolen from ggplot. used with themes to boil down a long
-# argument list to just those values which were used in the function call
+# Simpler? version of modifyList
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # modify_list <- function (old, new) {
 #   for (i in names(new)) old[[i]] <- new[[i]]

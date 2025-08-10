@@ -507,7 +507,7 @@ tt <- function() {
   
   doc <- pdf_text(doc, "Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink',
                   fontfamily = "mono", fontface = 'bold.italic', mode = 2,
-                  tf = pdf_rotate(0.5, 50, 50))
+                  tf = tf_rotate(0.5, 50, 50))
   
   
   w <- 10

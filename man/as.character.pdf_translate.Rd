@@ -5,7 +5,7 @@
 \alias{as.character.pdf_rotate}
 \alias{as.character.pdf_scale}
 \alias{as.character.pdf_transform_list}
-\title{Convert transform to character string}
+\title{Convert scale/rotate/translate specification to a PDF transformation string}
 \usage{
 \method{as.character}{pdf_translate}(x, ...)
 
@@ -16,13 +16,13 @@
 \method{as.character}{pdf_transform_list}(x, ...)
 }
 \arguments{
-\item{x}{object}
+\item{x}{transform specification}
 
 \item{...}{ignored}
 }
 \value{
-string
+String representing a PDF transformation matrix 'cm' operation
 }
 \description{
-Convert transform to character string
+Convert scale/rotate/translate specification to a PDF transformation string
 }

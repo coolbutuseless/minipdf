@@ -1,13 +1,13 @@
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' build a transform object for translation
+#' Create a transform specification for translation
 #' 
 #' @param x,y translation 
-#' @return translation object
+#' @return translation specification
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_translate <- function(x, y) {
+tf_translate <- function(x, y) {
   structure(
     list(x = x, y = y),
     class = c('pdf_transform', 'pdf_translate')
@@ -16,11 +16,11 @@ pdf_translate <- function(x, y) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Convert transform to character string
+#' Convert scale/rotate/translate specification to a PDF transformation string
 #' 
-#' @param x object
+#' @param x transform specification
 #' @param ... ignored
-#' @return string
+#' @return String representing a PDF transformation matrix 'cm' operation
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 as.character.pdf_translate <- function(x, ...) {
@@ -29,14 +29,14 @@ as.character.pdf_translate <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' build a transform object for rotation
+#' Create a transform specification for rotation
 #' 
 #' @param rads rotation angle in radians
 #' @param x,y location to rotate around
-#' @return rotation object
+#' @return rotation specification
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_rotate <- function(rads, x = 0, y = 0) {
+tf_rotate <- function(rads, x = 0, y = 0) {
   structure(
     list(rads = rads, x = x, y = y),
     class = c('pdf_transform', 'pdf_rotate')
@@ -67,13 +67,14 @@ as.character.pdf_rotate <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' build a transform object for rotation
+#' Create a transform specification for scaling
 #' 
-#' @param x,y scale amount. 
-#' @return scale object
+#' @param x,y scale amount in each direction. If 'y' value is not specified
+#'        it is made the same as the 'x' value
+#' @return scale specification
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_scale <- function(x, y = x) {
+tf_scale <- function(x, y = x) {
   structure(
     list(x = x, y = y),
     class = c('pdf_transform', 'pdf_scale')
@@ -109,9 +110,9 @@ if (FALSE) {
   
   tl <- structure(
     list(
-      pdf_scale(12),
-      pdf_rotate(100),
-      pdf_translate(12, 12)
+      tf_scale(12),
+      tf_rotate(100),
+      tf_translate(12, 12)
     ),
     class = "pdf_transform_list"
   )
