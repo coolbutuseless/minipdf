@@ -1,6 +1,20 @@
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Start a new page
+#' 
+#' @param doc pdf_doc
+#' @return doc with new page added (and made the current page)
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_newpage <- function(doc) {
+  
+  doc$page_num <- doc$page_num + 1;
+  doc$page <- append(doc$page, list(list()))
+  doc
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create an empty shell for the PDF intermediate format
 #' 
 #' @param width,height page size
@@ -21,8 +35,9 @@ create_pdf <- function(width = 400, height = 400) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Initialise with an empty first page
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    page_num = 0L,
     page = list(
-      list()  # Page 1
+      # empty 
     ), 
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,6 +54,9 @@ create_pdf <- function(width = 400, height = 400) {
   )
   # doc <- as.environment(doc)
   class(doc) <- 'pdf_doc'
+  
+  
+  doc <- pdf_newpage(doc)
   
   doc
 }
