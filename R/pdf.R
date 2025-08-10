@@ -146,9 +146,16 @@ pdf_add <- function(doc, x, pos = NULL) {
   
   
   if (is.null(pos)) {
-    doc$page[[1]] <- append(doc$page[[1]], list(x))
+    doc$page[[doc$page_num]] <- append(
+      doc$page[[doc$page_num]], 
+      list(x)
+    )
   } else {
-    doc$page[[1]] <- append(doc$page[[1]], list(x), after = pos - 1L)
+    doc$page[[doc$page_num]] <- append(
+      doc$page[[doc$page_num]], 
+      list(x), 
+      after = pos - 1L
+    )
   }
   
   doc
@@ -369,7 +376,7 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Get sizes of all elements
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  page_objs <- doc$page[[1]]
+  page_objs <- do.call(c, doc$page)
   s <- vapply(seq_along(page_objs), function(i) {
     glue::glue(
       "{i} 0 obj
