@@ -11,7 +11,7 @@
 [![R-CMD-check](https://github.com/coolbutuseless/minipdf/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/coolbutuseless/minipdf/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-`minipdf` is a package for creating simple, single-page PDF documents.
+`minipdf` is a package for creating simple PDF documents.
 
 ## Installation
 
@@ -23,18 +23,45 @@ You can install the development version from
 devtools::install_github("coolbutuseless/minipdf")
 ```
 
-See the online documentation
-[here](https://coolbutuseless.github.io/package/minipdf/index.html)
-(thanks to [pkgdown](https://cran.r-project.org/package=pkgdown))
-
 ## `Hello-world.pdf`
 
 ``` r
-# doc <- PDFDocument$new(width = 200, height = 60, fontname = 'Helvetica-Bold')
-# doc$rect(0, 0, 200, 60, fill = '#123456', stroke = NULL)
-# doc$text("Hello World!", x = 10, y = 15, fontsize = 20, fill = 'white')
-# doc$line(0, 10, 200, 10, stroke = 'grey80')
-# doc$save("man/figures/helloworld.pdf")
+doc <- create_pdf(height = 400, width = 600)
+
+N <- 400
+xs <- sample(600, N, TRUE)
+ys <- sample(400, N, TRUE)
+rs <- sample(100, N, TRUE)
+cs <- sample(colors(), N, TRUE)
+
+for (i in seq_len(N)) {
+  doc <- pdf_circle(doc, xs[i], ys[i], rs[i], col = NA, fill = cs[i], alpha = 0.2)
+}
+
+cs <- rainbow(400)
+for (i in seq(1, 400, 10)) {
+  doc <- pdf_line(doc, i, 0, 0, 400 - i, col = cs[i], alpha = 0.2)
+}
+
+doc <- pdf_translate(doc, 50, 0)
+
+doc <- pdf_text(doc, "Hello", 20, 300, fontsize = 90, mode = 0, fill = 'black', 
+                fontface = 'plain')
+
+doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 90, mode = 1, col = 'hotpink', 
+                fontface = 'bold.italic', lwd = 5)
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_render(doc, "man/figures/example1.pdf")
+```
+
+<img src="man/figures/example1.png" width="75%" />
+
+``` r
+# pdf_render(doc) |> cat()
 ```
 
 ## References

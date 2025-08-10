@@ -59,10 +59,6 @@ as.character.pdf_stream <- function(x, ...) {
     rect = {
       s <- glue::glue_data(x, "{x} {y} {width} {height} re {paint}")
     },
-    clip_rect = {
-      restore_state <- FALSE
-      s <- glue::glue_data(x, "{x} {y} {width} {height} re W n")
-    },
     polyline = {
       lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
       s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} S") # 'S' = stroke (without closing)
@@ -71,10 +67,9 @@ as.character.pdf_stream <- function(x, ...) {
       lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
       s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} {paint}") 
     },
-    clip_polygon = {
+    clip = {
       restore_state <- FALSE
-      lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
-      s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} W n") 
+      s <- as.character(x$clip_path)
     },
     circle = {
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -259,6 +254,28 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL) {
 
 
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Create a polyline
+#' @inheritParams pdf_polygon
+#' @return pdf_doc
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
+  gp <- modifyList(gp, list(...))
+  
+  obj <- pdf_stream(
+    type = 'polyline', 
+    gp   = gp,
+    tf   = tf,
+    xs = xs, ys = ys
+  )
+  
+  pdf_add(doc, obj)
+}
+
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a polygon
 #' @param xs,ys vertices
@@ -271,28 +288,6 @@ pdf_polygon <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
   
   obj <- pdf_stream(
     type = 'polygon', 
-    gp   = gp,
-    tf   = tf,
-    xs = xs, ys = ys
-  )
-  
-  pdf_add(doc, obj)
-}
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polygonal clip
-#' @param xs,ys vertices
-#' @inheritParams pdf_line
-#' @return pdf_doc
-#' @export
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_clip_polygon <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
-  gp <- modifyList(gp, list(...))
-  
-  obj <- pdf_stream(
-    type = 'clip_polygon', 
     gp   = gp,
     tf   = tf,
     xs = xs, ys = ys

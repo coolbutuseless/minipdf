@@ -42,6 +42,7 @@ clip_polygon <- function(xs, ys) {
   )
 }
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @rdname as.character.clip_rect
 #' @export
@@ -50,6 +51,8 @@ as.character.clip_polygon <- function(x, ...) {
   lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
   glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} W n") 
 }
+
+
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Add a rectangular clip path
@@ -62,34 +65,35 @@ pdf_clip_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
-    type = 'clip_rect', 
+    type = 'clip', 
     gp   = gp,
     tf   = tf,
-    x = x, y = y, width = width, height = height
+    clip_path = clip_rect(x = x, y = y, width = width, height = height)
   )
   
   pdf_add(doc, obj)
 }
 
 
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polyline
+#' Create a polygonal clip
+#' @param xs,ys vertices
 #' @inheritParams pdf_line
-#' @inheritParams clip_polygon
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
+pdf_clip_polygon <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
-    type = 'polyline', 
+    type = 'clip', 
     gp   = gp,
     tf   = tf,
-    xs = xs, ys = ys
+    clip_path = clip_polygon(xs = xs, ys = ys)
   )
   
   pdf_add(doc, obj)
 }
+
+
 
