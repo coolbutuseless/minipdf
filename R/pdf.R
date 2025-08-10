@@ -214,7 +214,7 @@ pdf_render <- function(doc, filename = NULL) {
   doc <- pdf_add(doc, pdf_dict(
     Type      = '/Pages'  , 
     Resources = glue::glue("{idx_resources} 0 R"),
-    Kids      = glue::glue("[{idx_page1} 0 R]"), 
+    Kids      = glue::glue("[{idx_page_start} 0 R]"), 
     Count = 1
   ), pos = idx_pages)
   
@@ -501,6 +501,8 @@ tt <- function() {
   im <- matrix(as.integer(100 + 50 * cos(16 * seq(w * h))), w, h)
   doc <- pdf_image(doc, im, x = 150, y = 150, scale = 10)
   
+  # doc <- pdf_newpage(doc)
+  # doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
   
   
   doc
@@ -508,6 +510,32 @@ tt <- function() {
   pdf_render(doc, "working/test.pdf")
   invisible(doc)
 }
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Demo
+#' @noRd
+#' @importFrom grDevices colors
+#' @importFrom stats runif
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ttt <- function() {
+  doc <- create_pdf()
+  
+  doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
+ 
+  
+  doc <- pdf_newpage(doc)
+  doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
+  
+  
+  doc
+  pdf_render(doc) |> cat()
+  pdf_render(doc, "working/test.pdf")
+  invisible(doc)
+}
+
+
+
 
 
 
