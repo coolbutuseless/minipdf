@@ -22,23 +22,31 @@ image_to_bytes <- function(im) {
   
   if (is.matrix(im)) {
     res$colorspace <- '/DeviceGray' 
-    
-    res$pixels <- t(im)
-    res$alpha  <- rep(255, res$width * res$height) # Fake alpha
-    
+    res$pixels     <- t(im)
+    res$alpha      <- rep(255, res$width * res$height) # Fake alpha
   } else if (is.array(im)) {
     stopifnot(length(dim(im)) == 3)
     nplanes <- dim(im)[3]
     
-    if (nplanes == 2) {
-      stop("image_to_bytes(): 2 planes not done")
-      res$colorspace == '/DeviceGray'
+    if (nplanes == 1) {
+      res$colorspace <- '/DeviceGray' 
+      res$pixels     <- t(im)
+      res$alpha      <- rep(255, res$width * res$height) # Fake alpha
+    } else if (nplanes == 2) {
+      res$colorspace <-  '/DeviceGray'
+      res$pixels <- im[,,1] |> t()
+      res$alpha  <- im[,,2] |> t()
     } else if (nplanes == 3) {
-      stop("image_to_bytes(): 3 planes not done")
-      res$colorspace == '/DeviceRGB'
+      res$pixels     <- aperm(im, c(3, 2, 1)) |> as.vector()
+      res$colorspace <- '/DeviceRGB'
+      res$alpha      <- rep(255, res$width * res$height) # Fake alpha
     } else if (nplanes == 4) {
-      stop("image_to_bytes(): 4 planes not done")
-      res$colorspace == '/DeviceRGB'
+      res$colorspace <- '/DeviceRGB'
+      alpha          <- im[, , 4]
+      im             <- im[, , 1:3]
+      res$pixels     <- aperm(im, c(3, 2, 1)) |> as.vector()
+      res$colorspace <- '/DeviceRGB'
+      res$alpha       <- t(alpha)
     } else {
       stop("Unhandled num of planes: ", nplanes)
     }

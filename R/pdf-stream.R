@@ -403,8 +403,7 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
 pdf_image <- function(doc, im, x, y, scale = scale, ..., gp = pgpar(), 
                       tf = NULL, clip = NULL) {
   
-  stopifnot(is.matrix(im))
-  stopifnot(is.integer(im))
+
   gp <- modifyList(gp, list(...))
   
   idx_offset <- length(doc$image) + 1L

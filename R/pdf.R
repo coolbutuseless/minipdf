@@ -510,7 +510,10 @@ tt <- function() {
   
   w <- 10
   h <- 10
-  im <- matrix(as.integer(100 + 50 * cos(16 * seq(w * h))), w, h)
+  im <- array(as.integer(0), dim = c(w, h, 2))
+  im[,,1] <- 255
+  im[,,2] <- 200
+  
   doc <- pdf_image(doc, im, x = 150, y = 150, scale = 10)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
