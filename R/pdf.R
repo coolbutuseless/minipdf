@@ -516,6 +516,7 @@ tt <- function() {
   
   doc <- pdf_image(doc, im, x = 150, y = 150, scale = 10)
   
+  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -536,14 +537,18 @@ tt <- function() {
     doc <- pdf_line(doc, i, 0, 0, 400 - i, col = cs[i], alpha = 0.2)
   }
   
-  doc <- pdf_translate(doc, 50, 0)
+  doc <- pdf_translate(doc, 120, -80)
   
   doc <- pdf_text(doc, "Hello", 20, 300, fontsize = 90, mode = 0, fill = 'black', 
                   fontface = 'plain')
   
-  doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 90, mode = 1, col = 'hotpink', 
+  doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 90, mode = 1, col = 'royalblue', 
                   fontface = 'bold.italic', lwd = 5)
   
+  
+  
+  im  <- readPNG(system.file("img", "Rlogo.png", package="png")) * 255
+  doc <- pdf_image(doc, im, x = 250, y = 290, scale = 1)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # 
@@ -631,6 +636,11 @@ if (FALSE) {
 }
 
 
+if (FALSE) {
+  
+  
+  
+}
 
 
 
