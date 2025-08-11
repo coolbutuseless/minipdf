@@ -12,6 +12,9 @@ pdf_dict <- function(...) {
     print(dict)
     stop("pdf_dict(): Not all named")
   }
+  
+  dict <- Filter(Negate(is.null), dict)  
+  
   class(dict) <- 'pdf_dict'
   dict
 }

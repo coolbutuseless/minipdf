@@ -54,7 +54,8 @@ create_pdf <- function(width = 400, height = 400) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Images
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    image = list(matrix(seq(0, 255), nrow = 16, ncol = 16))
+    # image = list(matrix(seq(0, 255), nrow = 16, ncol = 16))
+    image = list()
   )
   # doc <- as.environment(doc)
   class(doc) <- 'pdf_doc'
@@ -247,13 +248,17 @@ pdf_render <- function(doc, filename = NULL) {
   gs <- do.call(pdf_dict, gs)
   
   
-  im_nms  <- paste0("Im", seq_along(doc$image))
-  im_idxs <- idx_xobjects + (seq_along(doc$image) - 1L) * 2
-  im_refs <- glue::glue("{im_idxs} 0 R") |> as.list()
-  names(im_refs) <- im_nms
+  if (length(doc$image) == 0) {
+    xobj = NULL
+  } else {
+    im_nms  <- paste0("Im", seq_along(doc$image))
+    im_idxs <- idx_xobjects + (seq_along(doc$image) - 1L) * 2
+    im_refs <- glue::glue("{im_idxs} 0 R") |> as.list()
+    names(im_refs) <- im_nms
   
-  # xobj <- pdf_dict(Im1 = glue::glue("{idx_xobjects} 0 R"))
-  xobj <- do.call(pdf_dict, im_refs)
+    xobj <- do.call(pdf_dict, im_refs)
+  }
+  
   
   doc <- pdf_add(
     doc, 
