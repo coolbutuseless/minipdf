@@ -2,7 +2,7 @@
 % Please edit documentation in R/clipping.R
 \name{pdf_clip_polygon}
 \alias{pdf_clip_polygon}
-\title{Create a polygonal clip}
+\title{Add a global clipping polygon}
 \usage{
 pdf_clip_polygon(doc, xs, ys, ..., gp = pgpar(), tf = NULL)
 }
@@ -23,5 +23,7 @@ no local transformation applied (global transformations still apply)}
 pdf_doc
 }
 \description{
-Create a polygonal clip
+Clipping regions are cumulative, and these is no operation to expand the 
+global clipping region.
+use local clipping with the \code{clip} argument to individual objects.
 }

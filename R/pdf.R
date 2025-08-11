@@ -489,7 +489,7 @@ tt <- function() {
   doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
   doc <- pdf_line(doc, 20, 0, 120, 200, col = 'blue', lwd = 20, lineend = 'butt', lty = 3)
   
-  doc <- pdf_clip_rect(doc, 80, 80, 300, 300);
+  doc <- pdf_clip_rect(doc, 80, 80, 300, 300); # Global clipping
   
   N  <- 10
   xs <- runif(N, 1, 400)
@@ -502,12 +502,13 @@ tt <- function() {
   
   doc <- pdf_circle(doc, 300, 300, 100, col = 'hotpink', fill = '#00ff0080')
   
-  doc <- pdf_clip_polygon(doc, xs = c(0, 0, 400), ys = c(0, 400, 0))
+  # doc <- pdf_clip_polygon(doc, xs = c(0, 0, 400), ys = c(0, 400, 0))
   
   
   doc <- pdf_text(doc, "Hello #RStats", 50, 50, fontsize = 40, fill = 'black', col = 'hotpink',
                   fontfamily = "mono", fontface = 'bold.italic', mode = 2,
-                  tf = tf_rotate(0.5, 50, 50))
+                  tf = tf_rotate(0.5, 50, 50), 
+                  clip = clip_polygon(xs = c(0, 0, 400), ys = c(0, 400, 0)))
   
   
   w <- 10

@@ -145,6 +145,21 @@ as.character.pdf_stream <- function(x, ...) {
     s <- paste(tf, s, sep = "\n")
   }
   
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # clipping
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (!is.null(x$clip)) {
+    clip <- x$clip
+    stopifnot(is.list(clip))
+    if (!inherits(clip, "clip")) {
+      class(clip) <- c("clip", "clip_list")
+    }
+    clip <- as.character(clip)
+    s <- paste(clip, s, sep = "\n")
+  }
+  
+  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Add graphics state operators
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

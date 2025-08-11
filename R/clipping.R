@@ -55,7 +55,14 @@ as.character.clip_polygon <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a rectangular clip path
+#' Add a global clipping rectangle
+#' 
+#' Clipping regions are cumulative, and these is no operation to expand the 
+#' global clipping region.
+#"
+#" The global clipping regeion is reset when a new page is created.  Otherwise
+#' use local clipping with the \code{clip} argument to individual objects.
+#'
 #' @inheritParams pdf_line
 #' @inheritParams clip_rect
 #' @return pdf_doc
@@ -76,7 +83,14 @@ pdf_clip_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polygonal clip
+#' Add a global clipping polygon
+#' 
+#' Clipping regions are cumulative, and these is no operation to expand the 
+#' global clipping region.
+#"
+#" The global clipping regeion is reset when a new page is created.  Otherwise
+#' use local clipping with the \code{clip} argument to individual objects.
+#" 
 #' @param xs,ys vertices
 #' @inheritParams pdf_line
 #' @return pdf_doc
