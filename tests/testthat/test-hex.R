@@ -1,4 +1,4 @@
-test_that("multiplication works", {
+test_that("hex enc/dec works", {
 
   bytes <- seq(1:25)
   enc_hex(bytes) -> s

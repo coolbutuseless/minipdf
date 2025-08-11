@@ -9,10 +9,15 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 enc_hex <- function(bytes) {
   
-  if (is.integer(bytes)) {
+  if (is.numeric(bytes)) {
     stopifnot(!anyNA(bytes) && all(bytes >= 0 & bytes <= 255))
     bytes <- as.raw(bytes)
   }
+  
+  # if (!is.raw(bytes)) {
+  #   print(bytes)
+  #   stop("Ugh:")
+  # }
   stopifnot(is.raw(bytes))
   
   bytes |>

@@ -336,12 +336,12 @@ pdf_render <- function(doc, filename = NULL) {
     # Write the alpha image as a soft mask
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     im <- 255 - im
-    alpha_bytes <- 
-      im |>
-      t() |>
-      as.raw() |> 
-      as.character() |> 
-      paste0(collapse = "")
+    alpha_bytes <- im |> t() |> as.vector() |> enc_hex()
+      # im |>
+      # t() |>
+      # as.raw() |> 
+      # as.character() |> 
+      # paste0(collapse = "")
     
     w <- ncol(im)
     h <- nrow(im)
