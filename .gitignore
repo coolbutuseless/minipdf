@@ -4,7 +4,6 @@
 .Rproj.user
 *.swp
 working
-*.txt
 inst/doc
 doc
 Meta
