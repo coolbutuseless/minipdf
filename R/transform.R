@@ -112,10 +112,13 @@ as.character.pdf_transform_list <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Update global transformation matrix
+#' Modify global transformation matrix with new translation
 #' 
-#' Note: This can only be updated, and not reset.  If per-object transforms
-#'       are desired use the \code{tf} argument on each object.
+#' Global transformations are cumulative, and these is no operation to reset
+#' the global transformation.
+#"
+#' For local transformations use the \code{tf} argument for individual objects.
+#' 
 #' @inheritParams pdf_line
 #' @inheritParams tf_translate
 #' @return pdf_doc
@@ -136,10 +139,13 @@ pdf_translate <- function(doc, x, y) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Update global transformation matrix
+#' Modify global transformation matrix with new rotation
 #' 
-#' Note: This can only be updated, and not reset.  If per-object transforms
-#'       are desired use the \code{tf} argument on each object.
+#' Global transformations are cumulative, and these is no operation to reset
+#' the global transformation.
+#"
+#' For local transformations use the \code{tf} argument for individual objects.
+#' 
 #' @inheritParams pdf_line
 #' @inheritParams tf_rotate
 #' @return pdf_doc
@@ -160,10 +166,13 @@ pdf_rotate <- function(doc, rads, x = 0, y = 0) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Update global transformation matrix
+#' Modify global transformation matrix with new scaling
 #' 
-#' Note: This can only be updated, and not reset.  If per-object transforms
-#'       are desired use the \code{tf} argument on each object.
+#' Global transformations are cumulative, and these is no operation to reset
+#' the global transformation.
+#"
+#' For local transformations use the \code{tf} argument for individual objects.
+#' 
 #' @inheritParams pdf_line
 #' @inheritParams tf_scale
 #' @return pdf_doc

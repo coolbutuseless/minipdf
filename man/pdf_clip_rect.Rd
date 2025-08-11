@@ -2,7 +2,7 @@
 % Please edit documentation in R/clipping.R
 \name{pdf_clip_rect}
 \alias{pdf_clip_rect}
-\title{Add a rectangular clip path}
+\title{Add a global clipping rectangle}
 \usage{
 pdf_clip_rect(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL)
 }
@@ -17,13 +17,15 @@ pdf_clip_rect(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL)
 
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 
-\item{tf}{either a single transform \code{pdf_translate()}, \code{pdf_scale()},
-\code{pdf_rotate()}, or a list of these transforms.  Default: NULL,
-no transforms applied}
+\item{tf}{either a single transform (\code{tf_translate()}, \code{tf_scale()},
+\code{tf_rotate()}), or a list of these transforms.  Default: NULL,
+no local transformation applied (global transformations still apply)}
 }
 \value{
 pdf_doc
 }
 \description{
-Add a rectangular clip path
+Clipping regions are cumulative, and these is no operation to expand the 
+global clipping region.
+use local clipping with the \code{clip} argument to individual objects.
 }

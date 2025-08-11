@@ -55,7 +55,14 @@ as.character.clip_polygon <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a rectangular clip path
+#' Add a global clipping rectangle
+#' 
+#' Clipping regions are cumulative, and these is no operation to expand the 
+#' global clipping region.
+#"
+#" The global clipping regeion is reset when a new page is created.  Otherwise
+#' use local clipping with the \code{clip} argument to individual objects.
+#'
 #' @inheritParams pdf_line
 #' @inheritParams clip_rect
 #' @return pdf_doc
@@ -76,7 +83,14 @@ pdf_clip_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polygonal clip
+#' Add a global clipping polygon
+#' 
+#' Clipping regions are cumulative, and these is no operation to expand the 
+#' global clipping region.
+#"
+#" The global clipping regeion is reset when a new page is created.  Otherwise
+#' use local clipping with the \code{clip} argument to individual objects.
+#" 
 #' @param xs,ys vertices
 #' @inheritParams pdf_line
 #' @return pdf_doc
@@ -95,5 +109,39 @@ pdf_clip_polygon <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
   pdf_add(doc, obj)
 }
 
+
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @rdname as.character.clip_rect
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+as.character.clip_list <- function(x, ...) {
+  if (length(x) == 0) {
+    character(0)
+  } else {
+    res <- vapply(x, as.character, character(1))
+    paste(res, collapse = "\n")
+  }
+}
+
+
+
+if (FALSE) {
+  
+  clips <- structure(
+    list(
+      clip_rect(0, 0, 100, 100),
+      clip_rect(20, 20, 80, 80)
+    ),
+    class = c("clip", "clip_list")
+  )
+  
+  as.character(clips[[1]])
+  as.character(clips) |> cat()
+
+}
 
 

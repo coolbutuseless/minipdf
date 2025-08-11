@@ -4,7 +4,7 @@
 \alias{pdf_polyline}
 \title{Create a polyline}
 \usage{
-pdf_polyline(doc, xs, ys, ..., gp = pgpar(), tf = NULL)
+pdf_polyline(doc, xs, ys, ..., gp = pgpar(), tf = NULL, clip = NULL)
 }
 \arguments{
 \item{doc}{pdf_doc}
@@ -15,9 +15,13 @@ pdf_polyline(doc, xs, ys, ..., gp = pgpar(), tf = NULL)
 
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 
-\item{tf}{either a single transform \code{pdf_translate()}, \code{pdf_scale()},
-\code{pdf_rotate()}, or a list of these transforms.  Default: NULL,
-no transforms applied}
+\item{tf}{either a single transform (\code{tf_translate()}, \code{tf_scale()},
+\code{tf_rotate()}), or a list of these transforms.  Default: NULL,
+no local transformation applied (global transformations still apply)}
+
+\item{clip}{either a single clip (\code{clip_rect()}, \code{clip_polygon()}),
+or a list of these clips.  Default: NULL,
+no local clipping applied (global clipping still applicable)}
 }
 \value{
 pdf_doc
