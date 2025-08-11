@@ -3,11 +3,14 @@
 \name{as.character.clip_rect}
 \alias{as.character.clip_rect}
 \alias{as.character.clip_polygon}
+\alias{as.character.clip_list}
 \title{Convert clipping spec into PDF string}
 \usage{
 \method{as.character}{clip_rect}(x, ...)
 
 \method{as.character}{clip_polygon}(x, ...)
+
+\method{as.character}{clip_list}(x, ...)
 }
 \arguments{
 \item{x}{clip object}

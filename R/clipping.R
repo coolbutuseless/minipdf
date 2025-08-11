@@ -97,3 +97,37 @@ pdf_clip_polygon <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
 
 
 
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @rdname as.character.clip_rect
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+as.character.clip_list <- function(x, ...) {
+  if (length(x) == 0) {
+    character(0)
+  } else {
+    res <- vapply(x, as.character, character(1))
+    paste(res, collapse = "\n")
+  }
+}
+
+
+
+if (FALSE) {
+  
+  clips <- structure(
+    list(
+      clip_rect(0, 0, 100, 100),
+      clip_rect(20, 20, 80, 80)
+    ),
+    class = c("clip", "clip_list")
+  )
+  
+  as.character(clips[[1]])
+  as.character(clips) |> cat()
+
+}
+
+

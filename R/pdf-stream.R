@@ -208,21 +208,27 @@ print.pdf_stream <- function(x, ...) {
 #' @param doc pdf_doc
 #' @param x1,y1,x2,y2 endpoints
 #' @param gp A named list \code{gp} object created by \code{\link{pgpar}()}
-#' @param tf either a single transform \code{pdf_translate()}, \code{pdf_scale()},
-#'        \code{pdf_rotate()}, or a list of these transforms.  Default: NULL,
-#'        no transforms applied
+#' @param tf either a single transform (\code{tf_translate()}, \code{tf_scale()},
+#'        \code{tf_rotate()}), or a list of these transforms.  Default: NULL,
+#'        no local transformation applied (global transformations still apply)
+#' @param clip either a single clip (\code{clip_rect()}, \code{clip_polygon()}),
+#'        or a list of these clips.  Default: NULL,
+#'        no local clipping applied (global clipping still applicable)
 #' @param ... further arguments to be added to \code{gp}
 #' @return pdf_doc
 #' @export
 #' @importFrom utils modifyList
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(), tf = NULL) {
+pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(), 
+                     tf = NULL, clip = NULL) {
+  
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
     type = 'line', 
     gp   = gp,
     tf   = tf,
+    clip = clip,
     x1 = x1, y1 = y1, x2 = x2, y2 = y2, gp = gp
   )
   
@@ -239,13 +245,16 @@ pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(), tf = NULL) {
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL) {
+pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), 
+                     tf = NULL, clip = NULL) {
+  
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
     type = 'rect', 
     gp   = gp,
     tf   = tf,
+    clip = clip,
     x = x, y = y, width = width, height = height
   )
   
@@ -261,13 +270,16 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL) {
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
+pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(), 
+                         tf = NULL, clip = NULL) {
+  
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
     type = 'polyline', 
     gp   = gp,
     tf   = tf,
+    clip = clip,
     xs = xs, ys = ys
   )
   
@@ -283,13 +295,16 @@ pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_polygon <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
+pdf_polygon <- function(doc, xs, ys, ..., gp = pgpar(), 
+                        tf = NULL, clip = NULL) {
+  
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
     type = 'polygon', 
     gp   = gp,
     tf   = tf,
+    clip = clip,
     xs = xs, ys = ys
   )
   
@@ -305,13 +320,16 @@ pdf_polygon <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(), tf = NULL) {
+pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(), 
+                       tf = NULL, clip = NULL) {
+  
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
     type = 'circle', 
     gp   = gp,
     tf   = tf,
+    clip = clip,
     x = x, y = y, r = r
   )
   
@@ -341,13 +359,14 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(), tf = NULL) {
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar(),
-                     tf = NULL) {
+                     tf = NULL, clip = NULL) {
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
     type = 'text', 
     gp   = gp,
     tf   = tf,
+    clip = clip,    
     x = x, y = y, text = text, mode = mode, fontsize = fontsize
   )
   
@@ -366,7 +385,9 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_image <- function(doc, im, x, y, scale = scale, ..., gp = pgpar(), tf = NULL) {
+pdf_image <- function(doc, im, x, y, scale = scale, ..., gp = pgpar(), 
+                      tf = NULL, clip = NULL) {
+  
   stopifnot(is.matrix(im))
   stopifnot(is.integer(im))
   gp <- modifyList(gp, list(...))
@@ -378,7 +399,8 @@ pdf_image <- function(doc, im, x, y, scale = scale, ..., gp = pgpar(), tf = NULL
     type = 'image', 
     gp   = gp,
     tf   = tf,
-    im = im,
+    clip = clip,
+    im   = im,
     idx_offset = idx_offset,
     x = x, y = y, scale = scale
   )

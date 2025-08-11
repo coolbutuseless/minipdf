@@ -15,9 +15,9 @@ pdf_clip_polygon(doc, xs, ys, ..., gp = pgpar(), tf = NULL)
 
 \item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 
-\item{tf}{either a single transform \code{pdf_translate()}, \code{pdf_scale()},
-\code{pdf_rotate()}, or a list of these transforms.  Default: NULL,
-no transforms applied}
+\item{tf}{either a single transform (\code{tf_translate()}, \code{tf_scale()},
+\code{tf_rotate()}), or a list of these transforms.  Default: NULL,
+no local transformation applied (global transformations still apply)}
 }
 \value{
 pdf_doc
