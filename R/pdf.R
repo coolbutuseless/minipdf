@@ -571,16 +571,30 @@ ttt <- function() {
   doc <- create_pdf()
   
   doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
- 
+  
   
   doc <- pdf_newpage(doc)
-
+  
   doc <- pdf_scale(doc, 0.5)  
   doc <- pdf_translate(doc, 100, 100)
   doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
   
   
   doc
+  pdf_render(doc) |> cat()
+  pdf_render(doc, "working/test.pdf")
+  invisible(doc)
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Demo
+#' @noRd
+#' @importFrom grDevices colors
+#' @importFrom stats runif
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ee <- function() {
+  doc <- create_pdf()
   pdf_render(doc) |> cat()
   pdf_render(doc, "working/test.pdf")
   invisible(doc)
