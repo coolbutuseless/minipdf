@@ -7,7 +7,6 @@
 
 ![](http://img.shields.io/badge/cool-useless-green.svg)
 ![](http://img.shields.io/badge/mini-verse-blue.svg)
-[![R-CMD-check](https://github.com/coolbutuseless/minipdf/workflows/R-CMD-check/badge.svg)](https://github.com/coolbutuseless/minipdf/actions)
 [![R-CMD-check](https://github.com/coolbutuseless/minipdf/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/coolbutuseless/minipdf/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
