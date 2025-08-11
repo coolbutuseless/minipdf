@@ -292,26 +292,18 @@ pdf_render <- function(doc, filename = NULL) {
   obj_idx <- idx_xobjects
   
   for (i in seq_along(doc$image)) {
-    im <- doc$image[[i]]
+    im <- image_to_bytes(doc$image[[i]])
     
-    im_bytes <- 
-      im |>
-      t() |>
-      as.raw() |> 
-      as.character() |> 
-      paste0(collapse = "") 
-    
-    w <- ncol(im)
-    h <- nrow(im)
-    
+    im_bytes <- im$pixels |> enc_hex()
+
     im_dict <- pdf_dict(
       Type             = "/XObject",
       Subtype          = "/Image",
-      Width            = w,
-      Height           = h,
-      ColorSpace       = "/DeviceGray",
+      Width            = im$width,
+      Height           = im$height,
+      ColorSpace       = im$colorspace,
       BitsPerComponent = 8,
-      Length           = w * h * 2,
+      Length           = nchar(im_bytes),
       Filter           = "/ASCIIHexDecode",
       SMask            = glue::glue("{obj_idx + 1} 0 R") # Refer to the soft mask
     )
@@ -335,13 +327,7 @@ pdf_render <- function(doc, filename = NULL) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write the alpha image as a soft mask
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    im <- 255 - im
-    alpha_bytes <- im |> t() |> as.vector() |> enc_hex()
-      # im |>
-      # t() |>
-      # as.raw() |> 
-      # as.character() |> 
-      # paste0(collapse = "")
+    alpha_bytes <- im$alpha |> enc_hex()
     
     w <- ncol(im)
     h <- nrow(im)
@@ -349,11 +335,11 @@ pdf_render <- function(doc, filename = NULL) {
     alpha_dict <- pdf_dict(
       Type             = "/XObject",
       Subtype          = "/Image",
-      Width            = w,
-      Height           = h,
-      ColorSpace       = "/DeviceGray",
+      Width            = im$width,
+      Height           = im$height,
+      ColorSpace       = "/DeviceGray", # Alpha channel is always just 'gray'
       BitsPerComponent = 8,
-      Length           = w * h * 2,
+      Length           = nchar(alpha_bytes),
       Filter           = "/ASCIIHexDecode"
     )
     

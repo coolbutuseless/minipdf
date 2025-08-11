@@ -21,7 +21,7 @@ image_to_bytes <- function(im) {
   res$height <- nrow(im)
   
   if (is.matrix(im)) {
-    res$type <- 'G' 
+    res$colorspace <- '/DeviceGray' 
     
     res$pixels <- t(im)
     res$alpha  <- rep(255, res$width * res$height) # Fake alpha
@@ -32,13 +32,13 @@ image_to_bytes <- function(im) {
     
     if (nplanes == 2) {
       stop("image_to_bytes(): 2 planes not done")
-      res$type == 'G'
+      res$colorspace == '/DeviceGray'
     } else if (nplanes == 3) {
       stop("image_to_bytes(): 3 planes not done")
-      res$type == 'RGB'
+      res$colorspace == '/DeviceRGB'
     } else if (nplanes == 4) {
       stop("image_to_bytes(): 4 planes not done")
-      res$type == 'RGB'
+      res$colorspace == '/DeviceRGB'
     } else {
       stop("Unhandled num of planes: ", nplanes)
     }
@@ -63,7 +63,7 @@ nr_to_bytes <- function(nr) {
   stop("nr_to_bytes(): not done yet")
   
   res <- list()
-  res$type   <- 'RGBA'
+  res$colorspace   <- '/DeviceRGB'
   res$width  <- ncol(nr)
   res$height <- nrow(nr)
   
