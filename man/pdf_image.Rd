@@ -10,6 +10,7 @@ pdf_image(
   x,
   y,
   scale = scale,
+  interpolate = FALSE,
   ...,
   gp = pgpar(),
   tf = NULL,
@@ -24,6 +25,8 @@ pdf_image(
 \item{x, y}{position}
 
 \item{scale}{scale for image}
+
+\item{interpolate}{Should pixel values be interpolated? Default: FALSE}
 
 \item{...}{further arguments to be added to \code{gp}}
 

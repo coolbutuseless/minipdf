@@ -292,7 +292,8 @@ pdf_render <- function(doc, filename = NULL) {
   obj_idx <- idx_xobjects
   
   for (i in seq_along(doc$image)) {
-    im <- image_to_bytes(doc$image[[i]])
+    im_raw <- doc$image[[i]]
+    im <- image_to_bytes(im_raw)
     
     # filter <- "/ASCIIHexDecode"
     # im_bytes <- im$pixels |> enc_hex()
@@ -309,6 +310,7 @@ pdf_render <- function(doc, filename = NULL) {
       BitsPerComponent = 8,
       Length           = nchar(im_bytes),
       Filter           = filter,
+      Interpolate      = ifelse(isTRUE(attr(im_raw, 'interpolate')), 'true', 'false'),
       SMask            = glue::glue("{obj_idx + 1} 0 R") # Refer to the soft mask
     )
     
@@ -350,7 +352,8 @@ pdf_render <- function(doc, filename = NULL) {
       ColorSpace       = "/DeviceGray", # Alpha channel is always just 'gray'
       BitsPerComponent = 8,
       Length           = nchar(alpha_bytes),
-      Filter           = filter
+      Filter           = filter,
+      Interpolate      = ifelse(isTRUE(attr(im_raw, 'interpolate')), 'true', 'false')
     )
     
     alpha_mask <- paste(
@@ -516,7 +519,7 @@ tt <- function() {
   w <- 10
   h <- 10
   im <- matrix(as.integer(100 + 50 * sin(8 * seq(w * h))), w, h)
-  doc <- pdf_image(doc, im, x = 50, y = 50, scale = 10)
+  doc <- pdf_image(doc, im, x = 50, y = 50, scale = 10, interpolate = FALSE)
   
   
   w <- 10

@@ -397,16 +397,18 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
 #' @param im integer matrix [0, 255]
 #' @param x,y position
 #' @param scale scale for image
+#' @param interpolate Should pixel values be interpolated? Default: FALSE
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_image <- function(doc, im, x, y, scale = scale, ..., gp = pgpar(), 
+pdf_image <- function(doc, im, x, y, scale = scale, interpolate = FALSE, ..., gp = pgpar(), 
                       tf = NULL, clip = NULL) {
   
 
   gp <- modifyList(gp, list(...))
   
   idx_offset <- length(doc$image) + 1L
+  attr(im, 'interpolate') <- isTRUE(interpolate)
   doc$image[[idx_offset]] <- im
   
   obj <- pdf_stream(
@@ -415,6 +417,7 @@ pdf_image <- function(doc, im, x, y, scale = scale, ..., gp = pgpar(),
     tf   = tf,
     clip = clip,
     im   = im,
+    interpolate = isTRUE(interpolate),
     idx_offset = idx_offset,
     x = x, y = y, scale = scale
   )
