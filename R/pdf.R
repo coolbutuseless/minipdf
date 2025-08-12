@@ -516,6 +516,12 @@ tt <- function() {
                   clip = clip_polygon(xs = c(0, 0, 400), ys = c(0, 400, 0)))
   
   
+  xs <- c(100, 300, 300, 100,   150, 250, 250, 150) + 50
+  ys <- c(100, 100, 300, 300,   150, 150, 250, 250) + 50
+  id <- c(1, 1, 1, 1, 2, 2, 2, 2)
+  doc <- pdf_polygon(doc, xs, ys, id = id, rule = 'evenodd')
+  
+  
   w <- 10
   h <- 10
   im <- matrix(as.integer(100 + 50 * sin(8 * seq(w * h))), w, h)
@@ -535,6 +541,23 @@ tt <- function() {
   # 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc <- pdf_newpage(doc)
+  
+  theta <- seq(0, 359, 60) + 30
+  xs1 <- 200 * cos(theta * pi/180) + 300
+  ys1 <- 200 * sin(theta * pi/180) + 200
+  xs2 <-  40 * cos(theta * pi/180) + 300
+  ys2 <-  40 * sin(theta * pi/180) + 200
+
+  xs <- c(xs1, xs2)
+  ys <- c(ys1, ys2)
+  id <- c(
+    rep(1, length(xs1)),
+    rep(2, length(xs2))
+  )
+  
+  doc <- pdf_clip_polygon(doc, xs, ys, id = id, rule = 'evenodd')
+  # doc <- pdf_clip_polygon(doc, xs1, ys1)
+    
   
   N <- 100
   xs <- sample(600, N, TRUE)
@@ -556,7 +579,7 @@ tt <- function() {
   doc <- pdf_text(doc, "Hello", 20, 300, fontsize = 90, mode = 0, fill = 'black', 
                   fontface = 'plain')
   
-  doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 90, mode = 1, col = 'royalblue', 
+  doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 80, mode = 1, col = 'royalblue', 
                   fontface = 'bold.italic', lwd = 5)
   
   
@@ -581,17 +604,25 @@ tt <- function() {
 #' @importFrom stats runif
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ttt <- function() {
-  doc <- create_pdf()
+  doc <- create_pdf(width = 600, height = 400)
   
-  doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
+  theta <- seq(0, 359, 60) + 30
+  xs1 <- 200 * cos(theta * pi/180) + 300
+  ys1 <- 200 * sin(theta * pi/180) + 200
+  xs2 <-  80 * cos(theta * pi/180) + 300
+  ys2 <-  80 * sin(theta * pi/180) + 200
   
+  xs <- c(xs1, xs2)
+  ys <- c(ys1, ys2)
+  id <- c(
+    rep(1, length(xs1)),
+    rep(2, length(xs2))
+  )
   
-  doc <- pdf_newpage(doc)
+  doc <- pdf_clip_polygon(doc, xs, ys, id = id, rule = 'evenodd')
+  # doc <- pdf_clip_polygon(doc, xs1, ys1)
   
-  doc <- pdf_scale(doc, 0.5)  
-  doc <- pdf_translate(doc, 100, 100)
-  doc <- pdf_rect(doc, 120, 120, 200, 100, fill = sample(colors(), 1), alpha = 0.8)
-  
+  doc <- pdf_rect(doc, 20, 20, 360, 360)
   
   doc
   pdf_render(doc) |> cat()

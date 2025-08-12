@@ -4,10 +4,16 @@
 \alias{clip_polygon}
 \title{Define a clipping polygon}
 \usage{
-clip_polygon(xs, ys)
+clip_polygon(xs, ys, id = NULL, rule = "winding")
 }
 \arguments{
 \item{xs, ys}{vertices}
+
+\item{id}{A numeric vector used to searpate vertices into multiple polygons.
+All vertices with the same id belong to the same polygon. Default: NULL
+means that all vertices belong to a single polygon.}
+
+\item{rule}{fill rule. 'winding' or 'evenodd'.  Default: 'winding'}
 }
 \value{
 clipping polygon specification

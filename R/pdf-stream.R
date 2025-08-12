@@ -64,8 +64,32 @@ as.character.pdf_stream <- function(x, ...) {
       s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} S") # 'S' = stroke (without closing)
     },
     polygon = {
-      lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
-      s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} {paint}") 
+      if (is.null(x$id)) {
+        lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
+        s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} {paint}") 
+      } else {
+        id <- factor(x$id, levels = unique(x$id))
+        xs_all <- split(x$xs, id)
+        ys_all <- split(x$ys, id)
+        
+        
+        polys <- lapply(seq_along(xs_all), function(i) {
+          xs <- xs_all[[i]]
+          ys <- ys_all[[i]]
+          
+          lines <- paste(xs[-1], ys[-1], 'l', collapse = ' ')
+          
+          glue::glue(
+            "{xs[1]} {ys[1]} m 
+             {lines} h"
+          ) 
+        })
+        
+        s <- paste(polys, collapse = "\n")
+        
+        # Final paoint
+        s <- paste(s, paint, sep = "\n")
+      }
     },
     clip = {
       restore_state <- FALSE
@@ -306,11 +330,14 @@ pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(),
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a polygon
 #' @param xs,ys vertices
+#' @param id A numeric vector used to searpate vertices into multiple polygons.
+#'        All vertices with the same id belong to the same polygon. Default: NULL
+#'        means that all vertices belong to a single polygon.
 #' @inheritParams pdf_line
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_polygon <- function(doc, xs, ys, ..., gp = pgpar(), 
+pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(), 
                         tf = NULL, clip = NULL) {
   
   gp <- modifyList(gp, list(...))
@@ -320,7 +347,9 @@ pdf_polygon <- function(doc, xs, ys, ..., gp = pgpar(),
     gp   = gp,
     tf   = tf,
     clip = clip,
-    xs = xs, ys = ys
+    xs   = xs, 
+    ys   = ys,
+    id   = id
   )
   
   pdf_add(doc, obj)
@@ -424,6 +453,49 @@ pdf_image <- function(doc, im, x, y, scale = scale, interpolate = FALSE, ..., gp
   
   pdf_add(doc, obj)
 }
+
+
+
+
+if (FALSE) {
+  
+  xs <- 1:10
+  ys <- 1:10
+  id <- c(1, 1, 1, 3, 3, 3, 3, 2, 2, 2)
+  id <- factor(id, levels = unique(id))
+  xs_all <- split(xs, id)
+  ys_all <- split(ys, id)
+
+  
+  polys <- lapply(seq_along(xs_all), function(i) {
+    xs <- xs_all[[i]]
+    ys <- ys_all[[i]]
+    
+    lines <- paste(xs[-1], ys[-1], 'l', collapse = ' ')
+    
+    glue::glue(
+      "{xs[1]} {ys[1]} m 
+       {lines}"
+    ) 
+  })
+  
+  s <- paste(polys, collapse = "\n")
+  
+  # Final paoint
+  s <- paste(s, paint, sep = "\n")
+  s
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -4,12 +4,16 @@
 \alias{pdf_polygon}
 \title{Create a polygon}
 \usage{
-pdf_polygon(doc, xs, ys, ..., gp = pgpar(), tf = NULL, clip = NULL)
+pdf_polygon(doc, xs, ys, id = NULL, ..., gp = pgpar(), tf = NULL, clip = NULL)
 }
 \arguments{
 \item{doc}{pdf_doc}
 
 \item{xs, ys}{vertices}
+
+\item{id}{A numeric vector used to searpate vertices into multiple polygons.
+All vertices with the same id belong to the same polygon. Default: NULL
+means that all vertices belong to a single polygon.}
 
 \item{...}{further arguments to be added to \code{gp}}
 

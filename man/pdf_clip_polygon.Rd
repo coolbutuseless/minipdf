@@ -4,16 +4,18 @@
 \alias{pdf_clip_polygon}
 \title{Add a global clipping polygon}
 \usage{
-pdf_clip_polygon(doc, xs, ys, ..., gp = pgpar(), tf = NULL)
+pdf_clip_polygon(doc, xs, ys, id = NULL, rule = "winding", tf = NULL)
 }
 \arguments{
 \item{doc}{pdf_doc}
 
 \item{xs, ys}{vertices}
 
-\item{...}{further arguments to be added to \code{gp}}
+\item{id}{A numeric vector used to searpate vertices into multiple polygons.
+All vertices with the same id belong to the same polygon. Default: NULL
+means that all vertices belong to a single polygon.}
 
-\item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
+\item{rule}{fill rule. 'winding' or 'evenodd'.  Default: 'winding'}
 
 \item{tf}{either a single transform (\code{tf_translate()}, \code{tf_scale()},
 \code{tf_rotate()}), or a list of these transforms.  Default: NULL,

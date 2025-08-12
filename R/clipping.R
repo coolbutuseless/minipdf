@@ -31,13 +31,14 @@ as.character.clip_rect <- function(x, ...) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Define a clipping polygon
 #'
-#' @param xs,ys vertices
+#' @inheritParams pdf_polygon
+#' @param rule fill rule. 'winding' or 'evenodd'.  Default: 'winding'
 #' @return clipping polygon specification
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-clip_polygon <- function(xs, ys) {
+clip_polygon <- function(xs, ys, id = NULL, rule = 'winding') {
   structure(
-    list(xs = xs, ys = ys),
+    list(xs = xs, ys = ys, id = id, rule = rule),
     class = c('clip', 'clip_polygon')
   )
 }
@@ -48,8 +49,40 @@ clip_polygon <- function(xs, ys) {
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 as.character.clip_polygon <- function(x, ...) {
-  lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
-  glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} W n") 
+  # lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
+  # glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} W n") 
+  # print(x)
+  clip_rule <- ifelse(identical(x$rule, 'winding'), 'W', 'W*')
+  # print(clip_rule)
+  
+  if (is.null(x$id)) {
+    lines <- paste(x$xs[-1], x$ys[-1], 'l', collapse = ' ')
+    s <- glue::glue_data(x, "{xs[1]} {ys[1]} m {lines} h {clip_rule} n") 
+  } else {
+    id <- factor(x$id, levels = unique(x$id))
+    xs_all <- split(x$xs, id)
+    ys_all <- split(x$ys, id)
+    
+    
+    polys <- lapply(seq_along(xs_all), function(i) {
+      xs <- xs_all[[i]]
+      ys <- ys_all[[i]]
+      
+      lines <- paste(xs[-1], ys[-1], 'l', collapse = ' ')
+      
+      glue::glue(
+        "{xs[1]} {ys[1]} m 
+         {lines} h"
+      ) 
+    })
+    
+    s <- paste(polys, collapse = "\n")
+    
+    # Final paoint
+    s <- paste(s, paste(clip_rule, "n"), sep = "\n")
+  }
+  
+  s
 }
 
 
@@ -68,12 +101,11 @@ as.character.clip_polygon <- function(x, ...) {
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_clip_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL) {
-  gp <- modifyList(gp, list(...))
+pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
   
   obj <- pdf_stream(
     type = 'clip', 
-    gp   = gp,
+    gp   = NULL,
     tf   = tf,
     clip_path = clip_rect(x = x, y = y, width = width, height = height)
   )
@@ -91,19 +123,18 @@ pdf_clip_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL
 #" The global clipping regeion is reset when a new page is created.  Otherwise
 #' use local clipping with the \code{clip} argument to individual objects.
 #" 
-#' @param xs,ys vertices
+#' @inheritParams clip_polygon
 #' @inheritParams pdf_line
 #' @return pdf_doc
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_clip_polygon <- function(doc, xs, ys, ..., gp = pgpar(), tf = NULL) {
-  gp <- modifyList(gp, list(...))
+pdf_clip_polygon <- function(doc, xs, ys, id = NULL, rule = 'winding', tf = NULL) {
   
   obj <- pdf_stream(
     type = 'clip', 
-    gp   = gp,
+    gp   = NULL,
     tf   = tf,
-    clip_path = clip_polygon(xs = xs, ys = ys)
+    clip_path = clip_polygon(xs = xs, ys = ys, id = id, rule = rule)
   )
   
   pdf_add(doc, obj)

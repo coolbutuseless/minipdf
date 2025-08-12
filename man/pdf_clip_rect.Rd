@@ -4,7 +4,7 @@
 \alias{pdf_clip_rect}
 \title{Add a global clipping rectangle}
 \usage{
-pdf_clip_rect(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL)
+pdf_clip_rect(doc, x, y, width, height, tf = NULL)
 }
 \arguments{
 \item{doc}{pdf_doc}
@@ -12,10 +12,6 @@ pdf_clip_rect(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL)
 \item{x, y}{position}
 
 \item{width, height}{size}
-
-\item{...}{further arguments to be added to \code{gp}}
-
-\item{gp}{A named list \code{gp} object created by \code{\link{pgpar}()}}
 
 \item{tf}{either a single transform (\code{tf_translate()}, \code{tf_scale()},
 \code{tf_rotate()}), or a list of these transforms.  Default: NULL,
