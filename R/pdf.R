@@ -294,7 +294,11 @@ pdf_render <- function(doc, filename = NULL) {
   for (i in seq_along(doc$image)) {
     im <- image_to_bytes(doc$image[[i]])
     
-    im_bytes <- im$pixels |> enc_hex()
+    # filter <- "/ASCIIHexDecode"
+    # im_bytes <- im$pixels |> enc_hex()
+    
+    filter <- "/ASCII85Decode"
+    im_bytes <- im$pixels |> enc_ascii85()
 
     im_dict <- pdf_dict(
       Type             = "/XObject",
@@ -304,7 +308,7 @@ pdf_render <- function(doc, filename = NULL) {
       ColorSpace       = im$colorspace,
       BitsPerComponent = 8,
       Length           = nchar(im_bytes),
-      Filter           = "/ASCIIHexDecode",
+      Filter           = filter,
       SMask            = glue::glue("{obj_idx + 1} 0 R") # Refer to the soft mask
     )
     
@@ -327,10 +331,16 @@ pdf_render <- function(doc, filename = NULL) {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Write the alpha image as a soft mask
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    alpha_bytes <- im$alpha |> enc_hex()
-    
-    w <- ncol(im)
-    h <- nrow(im)
+    # filter      <- "/ASCIIHexDecode"
+    # alpha_bytes <- im$alpha |> enc_hex()
+    # 
+    # filter      <- "/ASCII85Decode"
+    # alpha_bytes <- im$alpha |> enc_ascii85()
+
+    filter      <- "[/ASCII85Decode /RunLengthDecode]"
+    alpha_bytes <- im$alpha |>
+      enc_rle() |>
+      enc_ascii85()
     
     alpha_dict <- pdf_dict(
       Type             = "/XObject",
@@ -340,7 +350,7 @@ pdf_render <- function(doc, filename = NULL) {
       ColorSpace       = "/DeviceGray", # Alpha channel is always just 'gray'
       BitsPerComponent = 8,
       Length           = nchar(alpha_bytes),
-      Filter           = "/ASCIIHexDecode"
+      Filter           = filter
     )
     
     alpha_mask <- paste(
@@ -473,6 +483,7 @@ pdf_render <- function(doc, filename = NULL) {
 #' @importFrom grDevices colors
 #' @importFrom stats runif
 #' @importFrom grDevices rainbow
+#' @importFrom png readPNG
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tt <- function() {
   doc <- create_pdf(width = 600)
@@ -547,7 +558,7 @@ tt <- function() {
   
   
   
-  im  <- readPNG(system.file("img", "Rlogo.png", package="png")) * 255
+  im  <- png::readPNG(system.file("img", "Rlogo.png", package="png")) * 255
   doc <- pdf_image(doc, im, x = 250, y = 290, scale = 1)
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
