@@ -1,6 +1,24 @@
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Sanitise and prepare a string for pdf inclustion
+#' @param x string
+#' @return escpaed string ready for inclusion for PDF
+#' @noRd
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+as_pdf_text <- function(x) {
+  
+  if (is.null(x) || length(x) == 0) {
+    NULL
+  } else {
+    stopifnot(length(x) == 1)
+    paste0("(", x, ")")
+  }
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Start a new page
 #' 
 #' @param doc pdf_doc
@@ -17,6 +35,8 @@ pdf_newpage <- function(doc) {
   
   doc
 }
+
+
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create an empty shell for the PDF intermediate format
@@ -72,13 +92,12 @@ create_pdf <- function(width = 400, height = 400,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Add Document Level meta-info
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  info <- pdf_dict(
+  doc$info <- pdf_dict(
     Title        = as_pdf_text(title),
     Author       = as_pdf_text(author),
     Creator      = as_pdf_text(creator),
     CreationDate = as_pdf_text(creation_date)
   )
-  doc <- pdf_add(doc, info)
   
   doc
 }
@@ -207,7 +226,7 @@ pdf_render <- function(doc, filename = NULL) {
   doc$page_num <- 1L # Add all meta-objects (catalog, pages, resources etc to first page)
   
   idx_docinfo <- 1L
-  len_docinfo <- 1L
+  len_docinfo <- 0L
   
   idx_catalog  <- idx_docinfo + len_docinfo
   len_catalog  <- 1L
