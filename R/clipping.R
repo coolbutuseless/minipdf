@@ -1,6 +1,20 @@
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Helper to sanity check arguments
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+is_numeric_1 <- function(x) {
+  is.numeric(x) &&
+    !is.na(x) && 
+    length(x) == 1
+}
+
+is_numeric_n <- function(x) {
+  is.numeric(x) && !anyNA(x) && length(x) > 0
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Define a clipping rectangle
 #'
 #' @param x,y position
@@ -10,11 +24,20 @@
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 clip_rect <- function(x, y, width, height) {
+  
+  stopifnot(exprs = {
+    is_numeric_1(x)
+    is_numeric_1(y)
+    is_numeric_1(width)
+    is_numeric_1(height)
+  })
+  
   structure(
     list(x = x, y = y, width = width, height = height),
     class = c('clip', 'clip_rect')
   )
 }
+
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,6 +51,7 @@ as.character.clip_rect <- function(x, ...) {
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Define a clipping polygon
 #'
@@ -37,11 +61,27 @@ as.character.clip_rect <- function(x, ...) {
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 clip_polygon <- function(xs, ys, id = NULL, rule = 'winding') {
+  
+  stopifnot(exprs = {
+    is_numeric_n(xs)
+    is_numeric_n(ys)
+    length(xs) == length(ys)
+    rule %in% c('winding', 'evenodd')
+  })
+  
+  if (!is.null(id)) {
+    stopifnot(exprs = {
+      is_numeric_n(id)
+      length(id) == length(xs)
+    })
+  }
+  
   structure(
     list(xs = xs, ys = ys, id = id, rule = rule),
     class = c('clip', 'clip_polygon')
   )
 }
+
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -114,6 +154,7 @@ pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Add a global clipping polygon
 #' 
@@ -142,9 +183,6 @@ pdf_clip_polygon <- function(doc, xs, ys, id = NULL, rule = 'winding', tf = NULL
 
 
 
-
-
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @rdname as.character.clip_rect
 #' @export
@@ -156,23 +194,6 @@ as.character.clip_list <- function(x, ...) {
     res <- vapply(x, as.character, character(1))
     paste(res, collapse = "\n")
   }
-}
-
-
-
-if (FALSE) {
-  
-  clips <- structure(
-    list(
-      clip_rect(0, 0, 100, 100),
-      clip_rect(20, 20, 80, 80)
-    ),
-    class = c("clip", "clip_list")
-  )
-  
-  as.character(clips[[1]])
-  as.character(clips) |> cat()
-
 }
 
 

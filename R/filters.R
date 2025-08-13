@@ -1,5 +1,12 @@
 
 
+is_bytes <- function(x) {
+  is.numeric(x) &&
+    !anyNA(x) &&
+    all(x >= 0) &&
+    all(x <= 255)
+}
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Hex encoding
 #' 
@@ -10,7 +17,7 @@
 enc_hex <- function(bytes) {
   
   if (is.numeric(bytes)) {
-    stopifnot(!anyNA(bytes) && all(bytes >= 0 & bytes <= 255))
+    stopifnot(is_bytes(bytes))
     bytes <- as.raw(bytes)
   }
   
@@ -35,13 +42,18 @@ enc_hex <- function(bytes) {
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dec_hex <- function(s) {
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Check for EOD (end-of-data) marker
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   stopifnot(grepl(">$", s))
   cs <- strsplit(s, '')[[1]]
+  
   # Remove last char. The end-of-data marker ">"
   cs <- cs[-length(cs)]
   
+  # Convert chars to nibble values
   mm <- c(0:9, letters[1:6])
-  
   vals <- match(cs, mm) - 1L
   
   mat <- matrix(vals, ncol = 2, byrow = TRUE) 
@@ -51,7 +63,7 @@ dec_hex <- function(s) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Runlength encode
+#' Run-length encode
 #' 
 #' Encode raw byte data with Run Length Encoding
 #' [controlbyte, sequence, controlbyte, sequence, end-of-data]
@@ -68,9 +80,7 @@ dec_hex <- function(s) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
 enc_rle <- function(rv) {
   
-  stopifnot(!anyNA(rv))
-  stopifnot(all(rv >= 0) && all(rv <= 255))
-  
+  stopifnot(is_bytes(rv))
   rv <- as.integer(rv)
   
   chunks <- chunk128(rv)
@@ -108,9 +118,9 @@ chunk128 <- function(x) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 enc_ascii85 <- function(rv) {
   
-  stopifnot(!anyNA(rv))
-  stopifnot(all(rv >= 0) && all(rv <= 255))
-  
+  rv <- as.integer(rv)
+  stopifnot(is_bytes(rv))
+
   # Pad to a multiple of 4 characters
   pad <- 4 - (length(rv) %% 4)
   pad <- ifelse(pad == 4, 0, pad)
