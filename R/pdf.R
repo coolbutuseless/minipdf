@@ -22,6 +22,10 @@ pdf_newpage <- function(doc) {
 #' Create an empty shell for the PDF intermediate format
 #' 
 #' @param width,height page size
+#' @param title title
+#' @param author author
+#' @param creator creator
+#' @param creation_date creation date
 #' @return List with attributes. List items are PDF objects.  Attributes
 #'         are PDF settings
 #' @examples
@@ -29,7 +33,9 @@ pdf_newpage <- function(doc) {
 #' 
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-create_pdf <- function(width = 400, height = 400) {
+create_pdf <- function(width = 400, height = 400, 
+                       title = NULL, author = NULL, creator = "minipdf/R", 
+                       creation_date = strftime(Sys.time(), format = "D:%Y%m%d%H%M")) {
   
   doc <- list(
     
@@ -62,6 +68,17 @@ create_pdf <- function(width = 400, height = 400) {
   
   
   doc <- pdf_newpage(doc)
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Add Document Level meta-info
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # info <- pdf_dict(
+  #   Title        = as_pdf_text(title),
+  #   Author       = as_pdf_text(author),
+  #   Creator      = as_pdf_text(creator),
+  #   CreationDate = as_pdf_text(creation_date)
+  # )
+  # doc <- pdf_add(doc, info)
   
   doc
 }
