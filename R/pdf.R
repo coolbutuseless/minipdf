@@ -72,13 +72,13 @@ create_pdf <- function(width = 400, height = 400,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Add Document Level meta-info
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # info <- pdf_dict(
-  #   Title        = as_pdf_text(title),
-  #   Author       = as_pdf_text(author),
-  #   Creator      = as_pdf_text(creator),
-  #   CreationDate = as_pdf_text(creation_date)
-  # )
-  # doc <- pdf_add(doc, info)
+  info <- pdf_dict(
+    Title        = as_pdf_text(title),
+    Author       = as_pdf_text(author),
+    Creator      = as_pdf_text(creator),
+    CreationDate = as_pdf_text(creation_date)
+  )
+  doc <- pdf_add(doc, info)
   
   doc
 }
@@ -204,9 +204,12 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Calculate indices for objects
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  doc$page_num <- 1L
+  doc$page_num <- 1L # Add all meta-objects (catalog, pages, resources etc to first page)
   
-  idx_catalog  <- 1L
+  idx_docinfo <- 1L
+  len_docinfo <- 1L
+  
+  idx_catalog  <- idx_docinfo + len_docinfo
   len_catalog  <- 1L
   
   idx_pages    <- idx_catalog + len_catalog
