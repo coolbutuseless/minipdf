@@ -451,7 +451,7 @@ pdf_render <- function(doc, filename = NULL) {
     0 {length(lens)}
     0000000000 65535 f
     {offsets}
-    trailer <</Size {length(lens)}/Root 1 0 R>>
+    trailer <</Size {length(lens)} /Root 1 0 R>>
     startxref
     {startxref}
     %%EOF
