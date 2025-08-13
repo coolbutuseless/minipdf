@@ -1,15 +1,18 @@
 
 
-# minipdf 0.2.5.9002 2025-08-12
+# minipdf 0.2.5.9003 2025-08-13
 
 * Replace object-oriented R6 approach with pipe-able approach
 * Add support for
+    * PDF 1.7 conformance
     * multi-page documents
     * per-text font settings
     * global and local transforms
     * global and local clipping
     * images
     * Filters: Ascii85, Hex, RLE
+    * Document level metadata
+    * String escaping
 
 * Introduction of pipe-able PDF document creation.
 

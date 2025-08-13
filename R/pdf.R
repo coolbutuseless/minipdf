@@ -12,6 +12,10 @@ as_pdf_text <- function(x) {
     NULL
   } else {
     stopifnot(length(x) == 1)
+    x <- as.character(x)
+    x <- gsub("\\(", "\\\\(", x)
+    x <- gsub("\\)", "\\\\)", x)
+    
     paste0("(", x, ")")
   }
 }
@@ -226,7 +230,7 @@ pdf_render <- function(doc, filename = NULL) {
   doc$page_num <- 1L # Add all meta-objects (catalog, pages, resources etc to first page)
   
   idx_docinfo <- 1L
-  len_docinfo <- 0L
+  len_docinfo <- 1L
   
   idx_catalog  <- idx_docinfo + len_docinfo
   len_catalog  <- 1L
@@ -249,7 +253,7 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Document Level metainfo
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # doc <- pdf_add(doc, doc$info, pos = idx_docinfo);
+  doc <- pdf_add(doc, doc$info, pos = idx_docinfo);
   
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -491,12 +495,20 @@ pdf_render <- function(doc, filename = NULL) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # xref and trailer
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  trailer <- pdf_dict(
+    Size = length(lens),
+    Info = glue::glue("{idx_docinfo} 0 R"),
+    Root = glue::glue("{idx_catalog} 0 R")
+  )
+  # <</Size {length(lens)} /Root {idx_catalog} 0 R>>
+  
   xref <- glue::glue(
     "xref
     0 {length(lens)}
     0000000000 65535 f
     {offsets}
-    trailer <</Size {length(lens)} /Root 1 0 R>>
+    trailer 
+    {trailer}
     startxref
     {startxref}
     %%EOF
@@ -651,23 +663,7 @@ tt <- function() {
 ttt <- function() {
   doc <- create_pdf(width = 600, height = 400)
   
-  theta <- seq(0, 359, 60) + 30
-  xs1 <- 200 * cos(theta * pi/180) + 300
-  ys1 <- 200 * sin(theta * pi/180) + 200
-  xs2 <-  80 * cos(theta * pi/180) + 300
-  ys2 <-  80 * sin(theta * pi/180) + 200
-  
-  xs <- c(xs1, xs2)
-  ys <- c(ys1, ys2)
-  id <- c(
-    rep(1, length(xs1)),
-    rep(2, length(xs2))
-  )
-  
-  doc <- pdf_clip_polygon(doc, xs, ys, id = id, rule = 'evenodd')
-  # doc <- pdf_clip_polygon(doc, xs1, ys1)
-  
-  doc <- pdf_rect(doc, 20, 20, 360, 360)
+  doc <- pdf_text(doc, "He)ll(o Use a \\ to escape", 20, 200, fontsize = 30)
   
   doc
   pdf_render(doc) |> cat()

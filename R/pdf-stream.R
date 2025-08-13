@@ -130,7 +130,7 @@ as.character.pdf_stream <- function(x, ...) {
         /{font_ref} {fontsize} Tf
         {x} {y} Td
         {mode} Tr
-        ({text}) Tj
+        {as_pdf_text(text)} Tj
         ET"
       )
     },

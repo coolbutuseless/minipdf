@@ -4,10 +4,25 @@
 \alias{create_pdf}
 \title{Create an empty shell for the PDF intermediate format}
 \usage{
-create_pdf(width = 400, height = 400)
+create_pdf(
+  width = 400,
+  height = 400,
+  title = NULL,
+  author = NULL,
+  creator = "minipdf/R",
+  creation_date = strftime(Sys.time(), format = "D:\%Y\%m\%d\%H\%M")
+)
 }
 \arguments{
 \item{width, height}{page size}
+
+\item{title}{title}
+
+\item{author}{author}
+
+\item{creator}{creator}
+
+\item{creation_date}{creation date}
 }
 \value{
 List with attributes. List items are PDF objects.  Attributes
