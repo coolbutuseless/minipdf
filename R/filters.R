@@ -1,5 +1,7 @@
 
-
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Helper function for argument chekcing
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 is_bytes <- function(x) {
   is.numeric(x) &&
     !anyNA(x) &&
@@ -7,12 +9,14 @@ is_bytes <- function(x) {
     all(x <= 255)
 }
 
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Hex encoding
 #' 
 #' @param bytes raw (or integer) vector with values in [0, 255]
 #' @return hex encoding
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 enc_hex <- function(bytes) {
   
@@ -33,6 +37,7 @@ enc_hex <- function(bytes) {
   
   paste0(res, ">")
 }
+
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,6 +67,7 @@ dec_hex <- function(s) {
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Run-length encode
 #' 
@@ -76,7 +82,7 @@ dec_hex <- function(s) {
 #'        range [0, 255]
 #' @return raw vector of run-length encoded valeus as per PDF docs
 #'         Sect 7.4.5. "RunLengthDecode filter"
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
 enc_rle <- function(rv) {
   
@@ -98,6 +104,7 @@ enc_rle <- function(rv) {
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Split a vector into a list of vectors.  Each vector in the list should 
 # be 128 elements, except for the last vector.
@@ -108,13 +115,11 @@ chunk128 <- function(x) {
 
 
 
-
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Encode binary data into ASCII85-encoded string
 #' @param rv raw,integer or numeric vector with values in range [0, 255]
 #' @return ASCII85-encoded string
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 enc_ascii85 <- function(rv) {
   
@@ -171,11 +176,13 @@ enc_ascii85 <- function(rv) {
   enc
 }
 
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Decode a ASCII85-encoded character string into binary data
 #' @param s string
 #' @return raw vector
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dec_ascii85 <- function(s) {
   
@@ -221,17 +228,4 @@ dec_ascii85 <- function(s) {
 }
 
 
-
-
-
-
-
-if (FALSE) {
-  bytes <- seq(1:25)
-  enc_hex(bytes) -> s
-  s
-
-  enc_hex(bytes) |> dec_hex()
-  identical(as.raw(bytes), enc_hex(bytes) |> dec_hex())
-}
 
