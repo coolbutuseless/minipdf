@@ -1,7 +1,8 @@
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Sanitise and prepare a string for pdf inclustion
+#' Sanitize and prepare a string for PDF inclusion
+#' 
 #' @param x string
 #' @return escpaed string ready for inclusion for PDF
 #' @noRd
@@ -23,9 +24,9 @@ as_pdf_text <- function(x) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Start a new page
+#' Start a new page in a PDF odc
 #' 
-#' @param doc pdf_doc
+#' @param doc A \code{pdf_doc} object created by \code{\link{create_pdf}()}
 #' @return doc with new page added (and made the current page)
 #' @examples
 #' create_pdf() |>
@@ -49,10 +50,8 @@ pdf_newpage <- function(doc) {
 #' Create an empty shell for the PDF intermediate format
 #' 
 #' @param width,height page size
-#' @param title title
-#' @param author author
-#' @param creator creator
-#' @param creation_date creation date
+#' @param title,author,creator,creation_date Document-level metainformation
+#'        about this file.
 #' @return List with attributes. List items are PDF objects.  Attributes
 #'         are PDF settings
 #' @examples
@@ -158,7 +157,7 @@ print.pdf_doc <- function(x, ...) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Add a \code{pdf_dict} or \code{pdf_stream} to a PDF doc
 #' 
-#' @param doc pdf_doc
+#' @inheritParams pdf_newpage
 #' @param x pdf_dict or pdf_stream
 #' @param pos position at which to add item. Item currently at this
 #'        position will be moved to next position
@@ -213,7 +212,7 @@ pdf_add <- function(doc, x, pos = NULL) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Write pdf to file or string
 #'
-#' @param doc pdf_doc
+#' @inheritParams pdf_newpage
 #' @param filename Output filename. Default: NULL  no output to file but return
 #'        a string representation of the PDF
 #' @return string or None

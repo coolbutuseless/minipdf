@@ -2,12 +2,12 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_polygon}
 \alias{pdf_polygon}
-\title{Add a polygon to the PDF}
+\title{Add a polygon to a PDF doc}
 \usage{
 pdf_polygon(doc, xs, ys, id = NULL, ..., gp = pgpar(), tf = NULL, clip = NULL)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{xs, ys}{vertices}
 
@@ -31,7 +31,7 @@ no local clipping applied (global clipping still applicable)}
 \code{pdf_doc}
 }
 \description{
-Add a polygon to the PDF
+Add a polygon to a PDF doc
 }
 \examples{
 doc <- create_pdf() |>

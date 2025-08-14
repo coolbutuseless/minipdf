@@ -2,12 +2,12 @@
 % Please edit documentation in R/clipping.R
 \name{pdf_clip_polygon}
 \alias{pdf_clip_polygon}
-\title{Add a global clipping polygon to the PDF}
+\title{Add a global clipping polygon to a PDF doc}
 \usage{
 pdf_clip_polygon(doc, xs, ys, id = NULL, rule = "winding", tf = NULL)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{xs, ys}{vertices}
 

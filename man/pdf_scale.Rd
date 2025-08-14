@@ -7,7 +7,7 @@
 pdf_scale(doc, x, y = x)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{x, y}{scale amount in each direction. If 'y' value is not specified
 it is made the same as the 'x' value}

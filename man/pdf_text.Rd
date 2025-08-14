@@ -18,7 +18,7 @@ pdf_text(
 )
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{text}{character string to render}
 

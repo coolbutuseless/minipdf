@@ -18,7 +18,7 @@ pdf_image(
 )
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{im}{Image represented as a numeric matrix or array with all values 
 in range [0, 255]}

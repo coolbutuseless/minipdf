@@ -2,12 +2,12 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_polyline}
 \alias{pdf_polyline}
-\title{Add a polyline to the PDF}
+\title{Add a polyline to a PDF doc}
 \usage{
 pdf_polyline(doc, xs, ys, ..., gp = pgpar(), tf = NULL, clip = NULL)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{xs, ys}{vertices}
 
@@ -27,7 +27,7 @@ no local clipping applied (global clipping still applicable)}
 \code{pdf_doc}
 }
 \description{
-Add a polyline to the PDF
+Add a polyline to a PDF doc
 }
 \examples{
 doc <- create_pdf() |>

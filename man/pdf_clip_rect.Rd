@@ -2,12 +2,12 @@
 % Please edit documentation in R/clipping.R
 \name{pdf_clip_rect}
 \alias{pdf_clip_rect}
-\title{Add a global clipping rectangle to the PDF}
+\title{Add a global clipping rectangle to a PDF doc}
 \usage{
 pdf_clip_rect(doc, x, y, width, height, tf = NULL)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{x, y}{position}
 

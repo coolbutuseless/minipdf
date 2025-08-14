@@ -2,18 +2,18 @@
 % Please edit documentation in R/pdf.R
 \name{pdf_newpage}
 \alias{pdf_newpage}
-\title{Start a new page}
+\title{Start a new page in a PDF odc}
 \usage{
 pdf_newpage(doc)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 }
 \value{
 doc with new page added (and made the current page)
 }
 \description{
-Start a new page
+Start a new page in a PDF odc
 }
 \examples{
 create_pdf() |>

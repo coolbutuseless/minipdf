@@ -2,14 +2,14 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_circle}
 \alias{pdf_circle}
-\title{Add a circle to the PDF}
+\title{Add a circle to a PDF doc}
 \usage{
 pdf_circle(doc, x, y, r, ..., gp = pgpar(), tf = NULL, clip = NULL)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
-\item{x, y, r}{position and radius}
+\item{x, y, r}{position of centre and radius of circle}
 
 \item{...}{further arguments to be added to \code{gp}}
 
@@ -27,7 +27,7 @@ no local clipping applied (global clipping still applicable)}
 \code{pdf_doc}
 }
 \description{
-Add a circle to the PDF
+Add a circle to a PDF doc
 }
 \examples{
 doc <- create_pdf() |>

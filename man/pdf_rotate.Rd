@@ -7,7 +7,7 @@
 pdf_rotate(doc, rads, x = 0, y = 0)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{rads}{rotation angle in radians}
 

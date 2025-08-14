@@ -246,9 +246,9 @@ print.pdf_stream <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a line to the PDF
+#' Add a line to a PDF doc
 #' 
-#' @param doc pdf_doc
+#' @inheritParams pdf_newpage
 #' @param x1,y1,x2,y2 endpoints
 #' @param gp A named list \code{gp} object created by \code{\link{pgpar}()}
 #' @param tf either a single transform (\code{tf_translate()}, \code{tf_scale()},
@@ -291,10 +291,10 @@ pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a rectangle to the PDF
+#' Add a rectangle to a PDF doc
 #' 
-#' @param x,y position
-#' @param width,height size
+#' @param x,y position of lower left of rectangle
+#' @param width,height width of height of rectangle
 #' @inheritParams pdf_line
 #' @return \code{pdf_doc}
 #' @examples
@@ -328,7 +328,7 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a polyline to the PDF
+#' Add a polyline to a PDF doc
 #' 
 #' @inheritParams pdf_polygon
 #' @return \code{pdf_doc}
@@ -361,7 +361,7 @@ pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a polygon to the PDF
+#' Add a polygon to a PDF doc
 #' 
 #' @param xs,ys vertices
 #' @param id A numeric vector used to searpate vertices into multiple polygons.
@@ -401,9 +401,9 @@ pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a circle to the PDF
+#' Add a circle to a PDF doc
 #' 
-#' @param x,y,r position and radius
+#' @param x,y,r position of centre and radius of circle
 #' @inheritParams pdf_line
 #' @return \code{pdf_doc}
 #' @examples

@@ -135,7 +135,7 @@ as.character.clip_polygon <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a global clipping rectangle to the PDF
+#' Add a global clipping rectangle to a PDF doc
 #' 
 #' Clipping regions are cumulative, and these is no operation to expand the 
 #' global clipping region.
@@ -166,7 +166,7 @@ pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a global clipping polygon to the PDF
+#' Add a global clipping polygon to a PDF doc
 #' 
 #' Clipping regions are cumulative, and these is no operation to expand the 
 #' global clipping region.

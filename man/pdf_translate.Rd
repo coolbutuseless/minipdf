@@ -7,7 +7,7 @@
 pdf_translate(doc, x, y)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{x, y}{translation}
 }

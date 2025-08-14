@@ -7,7 +7,7 @@
 write_pdf(doc, filename = NULL)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{filename}{Output filename. Default: NULL  no output to file but return
 a string representation of the PDF}
