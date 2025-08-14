@@ -220,11 +220,11 @@ pdf_add <- function(doc, x, pos = NULL) {
 #' @examples
 #' create_pdf() |>
 #'    pdf_circle(200, 200, 50, lwd = 5, fill = 'hotpink') |>
-#'    pdf_render() |>
+#'    write_pdf() |>
 #'    cat()
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_render <- function(doc, filename = NULL) {
+write_pdf <- function(doc, filename = NULL) {
   
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Ensure that no scientific notion is used in the PDF output
@@ -656,8 +656,8 @@ tt <- function() {
   # 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc
-  pdf_render(doc) |> cat()
-  pdf_render(doc, "working/test.pdf")
+  write_pdf(doc) |> cat()
+  write_pdf(doc, "working/test.pdf")
   invisible(doc)
 }
 
@@ -674,8 +674,8 @@ ttt <- function() {
   doc <- pdf_text(doc, "He)ll(o Use a \\ to escape", 20, 200, fontsize = 30)
   
   doc
-  pdf_render(doc) |> cat()
-  pdf_render(doc, "working/test.pdf")
+  write_pdf(doc) |> cat()
+  write_pdf(doc, "working/test.pdf")
   invisible(doc)
 }
 
@@ -688,8 +688,8 @@ ttt <- function() {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ee <- function() {
   doc <- create_pdf()
-  pdf_render(doc) |> cat()
-  pdf_render(doc, "working/test.pdf")
+  write_pdf(doc) |> cat()
+  write_pdf(doc, "working/test.pdf")
   invisible(doc)
 }
 
@@ -724,7 +724,7 @@ if (FALSE) {
   doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 90, mode = 1, col = 'hotpink', 
                   fontface = 'bold.italic', lwd = 5)
   
-  pdf_render(doc, "working/test.pdf")
+  write_pdf(doc, "working/test.pdf")
   
   
 }

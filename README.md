@@ -54,13 +54,13 @@ doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 90, mode = 1, col = 'hotpink
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_render(doc, "man/figures/example1.pdf")
+write_pdf(doc, "man/figures/example1.pdf")
 ```
 
 <img src="man/figures/example1.png" width="75%" />
 
 ``` r
-# pdf_render(doc) |> cat()
+# write_pdf(doc) |> cat()
 ```
 
 ## References
