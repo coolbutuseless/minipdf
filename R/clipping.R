@@ -198,7 +198,7 @@ pdf_clip_polygon <- function(doc, xs, ys, id = NULL, rule = 'winding', tf = NULL
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @rdname as.character.clip_rect
-#' @export
+#' @exportS3Method
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 as.character.clip_list <- function(x, ...) {
   if (length(x) == 0) {

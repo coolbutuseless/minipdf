@@ -90,7 +90,39 @@ devtools::install_github("coolbutuseless/minipdf")
 
 
 
+## Simple Example
+
+```{r}
+doc <- create_pdf(width = 400, height = 200) |>
+  pdf_circle(200, 100, r = 50, col = 'black', lwd = 5, fill = 'blue') |> 
+  pdf_line(0, 0, 400, 200, lty = 2, col = 'red') |> 
+  pdf_text("Hello", 0, 10, fontsize = 80)
+
+
+write_pdf(doc, "man/figures/simple.pdf")
+```
+
+
+```{r echo=FALSE}
+system("magick -density 300 man/figures/simple.pdf -resize 50% man/figures/simple.png")
+knitr::include_graphics("man/figures/simple.png")
+```
+
+
+```{r}
+write_pdf(doc) |> cat()
+```
+
+
+
+
+
 ## `Hello-world.pdf`
+
+```{r echo=FALSE}
+set.seed(1)
+```
+
 
 ```{r}
 doc <- create_pdf(height = 400, width = 600)
@@ -105,17 +137,9 @@ for (i in seq_len(N)) {
   doc <- pdf_circle(doc, xs[i], ys[i], rs[i], col = NA, fill = cs[i], alpha = 0.2)
 }
 
-cs <- rainbow(400)
-for (i in seq(1, 400, 10)) {
-  doc <- pdf_line(doc, i, 0, 0, 400 - i, col = cs[i], alpha = 0.2)
-}
-
 doc <- pdf_translate(doc, 50, 0)
 
-doc <- pdf_text(doc, "Hello", 20, 300, fontsize = 90, mode = 0, fill = 'black', 
-                fontface = 'plain')
-
-doc <- pdf_text(doc, "#RStats", 20, 200, fontsize = 90, mode = 1, col = 'hotpink', 
+doc <- pdf_text(doc, "#RStats", 10, 150, fontsize = 120, mode = 1, col = 'black', 
                 fontface = 'bold.italic', lwd = 5)
 
 
@@ -131,11 +155,6 @@ system("magick -density 300 man/figures/example1.pdf -resize 25% man/figures/exa
 knitr::include_graphics("man/figures/example1.png")
 ```
 
-
-
-```{r}
-# write_pdf(doc) |> cat()
-```
 
 
 
