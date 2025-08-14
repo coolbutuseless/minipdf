@@ -15,3 +15,7 @@ doc with new page added (and made the current page)
 \description{
 Start a new page
 }
+\examples{
+create_pdf() |>
+   pdf_newpage()
+}

@@ -2,14 +2,12 @@
 % Please edit documentation in R/pdf-dict.R
 \name{print.pdf_dict}
 \alias{print.pdf_dict}
-\title{Print a pdf Can be nested}
+\title{Print a pdf_dict}
 \usage{
-\method{print}{pdf_dict}(x, depth = 0, ...)
+\method{print}{pdf_dict}(x, ...)
 }
 \arguments{
 \item{x}{pdf_dict}
-
-\item{depth}{print depth. Default: 0.  Used to control indentation}
 
 \item{...}{ignored}
 }
@@ -17,5 +15,5 @@
 None.
 }
 \description{
-Print a pdf Can be nested
+Print a pdf_dict
 }

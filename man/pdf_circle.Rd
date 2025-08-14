@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_circle}
 \alias{pdf_circle}
-\title{Create a polygon}
+\title{Add a circle to the PDF}
 \usage{
 pdf_circle(doc, x, y, r, ..., gp = pgpar(), tf = NULL, clip = NULL)
 }
@@ -27,5 +27,9 @@ no local clipping applied (global clipping still applicable)}
 \code{pdf_doc}
 }
 \description{
-Create a polygon
+Add a circle to the PDF
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_circle(x = 200, y = 200, r = 50)
 }

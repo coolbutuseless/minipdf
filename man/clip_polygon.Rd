@@ -2,7 +2,7 @@
 % Please edit documentation in R/clipping.R
 \name{clip_polygon}
 \alias{clip_polygon}
-\title{Define a clipping polygon}
+\title{Define a clipping polygon for use as a \code{clip} argument}
 \usage{
 clip_polygon(xs, ys, id = NULL, rule = "winding")
 }
@@ -19,5 +19,10 @@ means that all vertices belong to a single polygon.}
 clipping polygon specification
 }
 \description{
-Define a clipping polygon
+Define a clipping polygon for use as a \code{clip} argument
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_rect(0, 0, 100, 100, clip = clip_polygon(xs = c(0, 100, 100), 
+   ys = c(0, 0, 100)))
 }

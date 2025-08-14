@@ -27,6 +27,9 @@ as_pdf_text <- function(x) {
 #' 
 #' @param doc pdf_doc
 #' @return doc with new page added (and made the current page)
+#' @examples
+#' create_pdf() |>
+#'    pdf_newpage()
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_newpage <- function(doc) {
@@ -145,23 +148,22 @@ add_gs <- function(doc, gs) {
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print.pdf_doc <- function(x, ...) {
-  cat("<pdf doc> with", length(x), "pages\n")
-  page <- x$page
-  cat(sprintf("  Page 1: %i objects\n", length(page[[1]])))
+  cat("<pdf doc> with", x$page_num, "pages\n")
+  cat("  Objects per page: ", deparse1(as.numeric(lengths(x$page))))
   invisible(x)
 }
 
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a 'dict' or stream to the 'pdf'
+#' Add a \code{pdf_dict} or \code{pdf_stream} to a PDF doc
 #' 
 #' @param doc pdf_doc
 #' @param x pdf_dict or pdf_stream
 #' @param pos position at which to add item. Item currently at this
 #'        position will be moved to next position
 #' @return pdf
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_add <- function(doc, x, pos = NULL) {
   stopifnot(is_dict(x) || is_stream(x) || is.character(x))
@@ -209,11 +211,17 @@ pdf_add <- function(doc, x, pos = NULL) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' export pdf
+#' Write pdf to file or string
 #'
 #' @param doc pdf_doc
-#' @param filename defualt: NULL -> return string
-#' @return string
+#' @param filename Output filename. Default: NULL  no output to file but return
+#'        a string representation of the PDF
+#' @return string or None
+#' @examples
+#' create_pdf() |>
+#'    pdf_circle(200, 200, 50, lwd = 5, fill = 'hotpink') |>
+#'    pdf_render() |>
+#'    cat()
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_render <- function(doc, filename = NULL) {

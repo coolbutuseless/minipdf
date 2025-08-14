@@ -2,7 +2,7 @@
 % Please edit documentation in R/transform.R
 \name{tf_rotate}
 \alias{tf_rotate}
-\title{Create a transform specification for rotation}
+\title{Create a rotation specification (for use as \code{tf} argument)}
 \usage{
 tf_rotate(rads, x = 0, y = 0)
 }
@@ -15,5 +15,9 @@ tf_rotate(rads, x = 0, y = 0)
 rotation specification
 }
 \description{
-Create a transform specification for rotation
+Create a rotation specification (for use as \code{tf} argument)
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_text(text = "hello", x = 0, y = 0, tf = tf_rotate(rads = pi))
 }

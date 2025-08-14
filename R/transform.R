@@ -1,13 +1,22 @@
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a transform specification for translation
+#' Create a translation specification (for use as \code{tf} argument)
 #' 
 #' @param x,y translation 
 #' @return translation specification
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_text(text = "hello", x = 0, y = 0, tf = tf_translate(x = 10, y = 10))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tf_translate <- function(x, y) {
+  
+  stopifnot(
+    is_numeric_1(x),
+    is_numeric_1(y)
+  )
+  
   structure(
     list(x = x, y = y),
     class = c('pdf_transform', 'pdf_translate')
@@ -30,14 +39,24 @@ as.character.pdf_translate <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a transform specification for rotation
+#' Create a rotation specification (for use as \code{tf} argument)
 #' 
 #' @param rads rotation angle in radians
 #' @param x,y location to rotate around
 #' @return rotation specification
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_text(text = "hello", x = 0, y = 0, tf = tf_rotate(rads = pi))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tf_rotate <- function(rads, x = 0, y = 0) {
+  
+  stopifnot(
+    is_numeric_1(rads),
+    is_numeric_1(x),
+    is_numeric_1(y)
+  )
+  
   structure(
     list(rads = rads, x = x, y = y),
     class = c('pdf_transform', 'pdf_rotate')
@@ -68,14 +87,23 @@ as.character.pdf_rotate <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a transform specification for scaling
+#' Create a scaling specification (for use as \code{tf} argument)
 #' 
 #' @param x,y scale amount in each direction. If 'y' value is not specified
 #'        it is made the same as the 'x' value
-#' @return scale specification
+#' @return scale transform specification
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_text(text = "hello", x = 0, y = 0, tf = tf_scale(x = 10))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tf_scale <- function(x, y = x) {
+  
+  stopifnot(
+    is_numeric_1(x),
+    is_numeric_1(y)
+  )
+  
   structure(
     list(x = x, y = y),
     class = c('pdf_transform', 'pdf_scale')
@@ -112,7 +140,7 @@ as.character.pdf_transform_list <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Modify global transformation matrix with new translation
+#' Modify global transformation matrix with additional translation
 #' 
 #' Global transformations are cumulative, and these is no operation to reset
 #' the global transformation.
@@ -122,6 +150,9 @@ as.character.pdf_transform_list <- function(x, ...) {
 #' @inheritParams pdf_line
 #' @inheritParams tf_translate
 #' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_translate(x = 10, y = 10)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_translate <- function(doc, x, y) {
@@ -139,7 +170,7 @@ pdf_translate <- function(doc, x, y) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Modify global transformation matrix with new rotation
+#' Modify global transformation matrix with additional rotation
 #' 
 #' Global transformations are cumulative, and these is no operation to reset
 #' the global transformation.
@@ -149,6 +180,9 @@ pdf_translate <- function(doc, x, y) {
 #' @inheritParams pdf_line
 #' @inheritParams tf_rotate
 #' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_rotate(rads = pi)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_rotate <- function(doc, rads, x = 0, y = 0) {
@@ -166,7 +200,7 @@ pdf_rotate <- function(doc, rads, x = 0, y = 0) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Modify global transformation matrix with new scaling
+#' Modify global transformation matrix with additional scaling
 #' 
 #' Global transformations are cumulative, and these is no operation to reset
 #' the global transformation.
@@ -176,6 +210,9 @@ pdf_rotate <- function(doc, rads, x = 0, y = 0) {
 #' @inheritParams pdf_line
 #' @inheritParams tf_scale
 #' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_scale(x = 10)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_scale <- function(doc, x, y = x) {
@@ -189,29 +226,5 @@ pdf_scale <- function(doc, x, y = x) {
   
   pdf_add(doc, obj)
 }
-
-
-
-
-
-
-if (FALSE) {
-  
-  tl <- structure(
-    list(
-      tf_scale(12),
-      tf_rotate(100),
-      tf_translate(12, 12)
-    ),
-    class = "pdf_transform_list"
-  )
-  
-  as.character(tl)
-  
-  
-}
-
-
-
 
 

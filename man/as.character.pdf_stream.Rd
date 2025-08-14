@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdf-stream.R
 \name{as.character.pdf_stream}
 \alias{as.character.pdf_stream}
-\title{Convert stream to character}
+\title{Convert \code{pdf_stream} to character}
 \usage{
 \method{as.character}{pdf_stream}(x, ...)
 }
@@ -15,5 +15,5 @@
 character string
 }
 \description{
-Convert stream to character
+Convert \code{pdf_stream} to character
 }

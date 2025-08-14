@@ -2,18 +2,25 @@
 % Please edit documentation in R/pdf.R
 \name{pdf_render}
 \alias{pdf_render}
-\title{export pdf}
+\title{Write pdf to file or string}
 \usage{
 pdf_render(doc, filename = NULL)
 }
 \arguments{
 \item{doc}{pdf_doc}
 
-\item{filename}{defualt: NULL -> return string}
+\item{filename}{Output filename. Default: NULL  no output to file but return
+a string representation of the PDF}
 }
 \value{
-string
+string or None
 }
 \description{
-export pdf
+Write pdf to file or string
+}
+\examples{
+create_pdf() |>
+   pdf_circle(200, 200, 50, lwd = 5, fill = 'hotpink') |>
+   pdf_render() |>
+   cat()
 }

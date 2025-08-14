@@ -1,9 +1,10 @@
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a pdf stream object
+#' Create a \code{pdf_stream} object
+#' 
 #' @param ... named arguments
-#' @return 'stream' object
+#' @return \code{pdf_stream} object
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_stream <- function(type, ...) {
@@ -20,7 +21,7 @@ pdf_stream <- function(type, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Check if an object is a 'pdf_stream'
+#' Check if an object is a \code{pdf_stream}
 #' @param x object to test
 #' @return logical
 #' @noRd
@@ -32,7 +33,7 @@ is_stream <- function(x) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Convert stream to character
+#' Convert \code{pdf_stream} to character
 #' 
 #' @param x pdf_stream object
 #' @param ... ignored
@@ -185,13 +186,13 @@ as.character.pdf_stream <- function(x, ...) {
   
   if (type != 'clip') {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Add graphics state operators
+    # Add graphics state operators. Not needed for clipping
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     gs <- gp_to_gs_operators(x$gp)
     s  <- paste(gs, s, sep = "\n")
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Add reference to graphics state dict
+    # Add reference to graphics state dict. Not needed for clipping.
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if (!is.null(x$gs_ref)) {
       gs_ref <- glue::glue("/GS{x$gs_ref} gs")
@@ -227,7 +228,8 @@ as.character.pdf_stream <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' print stream
+#' Print \code{pdf_stream}
+#' 
 #' @param x pdf_stream
 #' @param ... ignored
 #' @return None
@@ -244,7 +246,8 @@ print.pdf_stream <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a line in pdf
+#' Add a line to the PDF
+#' 
 #' @param doc pdf_doc
 #' @param x1,y1,x2,y2 endpoints
 #' @param gp A named list \code{gp} object created by \code{\link{pgpar}()}
@@ -256,11 +259,21 @@ print.pdf_stream <- function(x, ...) {
 #'        no local clipping applied (global clipping still applicable)
 #' @param ... further arguments to be added to \code{gp}
 #' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_line(10, 10, 100, 100, col = 'red')
 #' @export
 #' @importFrom utils modifyList
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(), 
                      tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is_numeric_1(x1)
+    is_numeric_1(y1)
+    is_numeric_1(x2)
+    is_numeric_1(y2)
+  })
   
   gp <- modifyList(gp, list(...))
   
@@ -278,15 +291,26 @@ pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a rect
+#' Add a rectangle to the PDF
+#' 
 #' @param x,y position
 #' @param width,height size
 #' @inheritParams pdf_line
 #' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_rect(10, 10, 100, 100, gp = pgpar(fill = 'red'))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), 
                      tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is_numeric_1(x)
+    is_numeric_1(y)
+    is_numeric_1(width)
+    is_numeric_1(height)
+  })
   
   gp <- modifyList(gp, list(...))
   
@@ -303,15 +327,23 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(),
 
 
 
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polyline
+#' Add a polyline to the PDF
+#' 
 #' @inheritParams pdf_polygon
 #' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_polyline(xs = c(100, 200, 200), ys = c(100, 100, 200))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(), 
                          tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is_numeric_n(xs)
+    is_numeric_n(ys)
+  })
   
   gp <- modifyList(gp, list(...))
   
@@ -329,18 +361,28 @@ pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polygon
+#' Add a polygon to the PDF
+#' 
 #' @param xs,ys vertices
 #' @param id A numeric vector used to searpate vertices into multiple polygons.
 #'        All vertices with the same id belong to the same polygon. Default: NULL
 #'        means that all vertices belong to a single polygon.
 #' @inheritParams pdf_line
 #' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_polygon(xs = c(100, 200, 200), ys = c(100, 100, 200))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(), 
                         tf = NULL, clip = NULL) {
   
+  stopifnot(exprs = {
+    is_numeric_n(xs)
+    is_numeric_n(ys)
+    is.null(id) || (is_numeric_n(id) && length(id) == length(xs))
+  })
+
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
@@ -359,14 +401,24 @@ pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polygon
+#' Add a circle to the PDF
+#' 
 #' @param x,y,r position and radius
 #' @inheritParams pdf_line
 #' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_circle(x = 200, y = 200, r = 50)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(), 
                        tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is_numeric_1(x)
+    is_numeric_1(y)
+    is_numeric_1(r)
+  })
   
   gp <- modifyList(gp, list(...))
   
@@ -409,6 +461,15 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(),
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar(),
                      tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is.character(text)
+    is_numeric_1(x)
+    is_numeric_1(y)
+    is_numeric_1(fontsize)
+    is_numeric_1(mode)
+  })
+  
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
@@ -444,8 +505,15 @@ pdf_image <- function(doc, im, x, y, scale = 1, interpolate = FALSE, ..., gp = p
                       tf = NULL, clip = NULL) {
   
   # Sanity check
-  stopifnot(is.array(im) || is.matrix(im))
-  stopifnot(is_bytes(im))
+  stopifnot(exprs = {
+    is.array(im) || is.matrix(im)
+    is_bytes(im)
+    is_numeric_1(x)
+    is_numeric_1(y)
+    is_numeric_1(scale)
+    is.logical(interpolate)
+  })
+  
 
   # Assemble graphical parameters
   gp <- modifyList(gp, list(...))

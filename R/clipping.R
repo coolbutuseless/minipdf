@@ -15,12 +15,15 @@ is_numeric_n <- function(x) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Define a clipping rectangle
+#' Define a clipping rectangle for use as a \code{clip} argument
 #'
 #' @param x,y position
 #' @param width,height size
 #'
 #' @return clipping rectangle specification
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_rect(0, 0, 100, 100, clip = clip_rect(50, 50, 200, 200))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 clip_rect <- function(x, y, width, height) {
@@ -53,11 +56,15 @@ as.character.clip_rect <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Define a clipping polygon
+#' Define a clipping polygon for use as a \code{clip} argument
 #'
 #' @inheritParams pdf_polygon
 #' @param rule fill rule. 'winding' or 'evenodd'.  Default: 'winding'
 #' @return clipping polygon specification
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_rect(0, 0, 100, 100, clip = clip_polygon(xs = c(0, 100, 100), 
+#'    ys = c(0, 0, 100)))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 clip_polygon <- function(xs, ys, id = NULL, rule = 'winding') {
@@ -128,7 +135,7 @@ as.character.clip_polygon <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a global clipping rectangle
+#' Add a global clipping rectangle to the PDF
 #' 
 #' Clipping regions are cumulative, and these is no operation to expand the 
 #' global clipping region.
@@ -139,6 +146,9 @@ as.character.clip_polygon <- function(x, ...) {
 #' @inheritParams pdf_line
 #' @inheritParams clip_rect
 #' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_clip_rect(0, 0, 200, 200)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
@@ -156,7 +166,7 @@ pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add a global clipping polygon
+#' Add a global clipping polygon to the PDF
 #' 
 #' Clipping regions are cumulative, and these is no operation to expand the 
 #' global clipping region.
@@ -167,6 +177,9 @@ pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
 #' @inheritParams clip_polygon
 #' @inheritParams pdf_line
 #' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_clip_polygon(xs = c(0, 100, 100), ys = c(0, 0, 100))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_clip_polygon <- function(doc, xs, ys, id = NULL, rule = 'winding', tf = NULL) {

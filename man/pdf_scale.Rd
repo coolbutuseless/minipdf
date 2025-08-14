@@ -2,7 +2,7 @@
 % Please edit documentation in R/transform.R
 \name{pdf_scale}
 \alias{pdf_scale}
-\title{Modify global transformation matrix with new scaling}
+\title{Modify global transformation matrix with additional scaling}
 \usage{
 pdf_scale(doc, x, y = x)
 }
@@ -19,4 +19,8 @@ it is made the same as the 'x' value}
 Global transformations are cumulative, and these is no operation to reset
 the global transformation.
 For local transformations use the \code{tf} argument for individual objects.
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_scale(x = 10)
 }

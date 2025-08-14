@@ -17,6 +17,12 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(minipdf)
 })
+
+if (FALSE) {
+# Check for functions which do not have an @examples block for roxygen
+system("grep -c examples man/*Rd", intern = TRUE) |> 
+  grep(":0$", x = _, value = TRUE)
+}
 ```
 
 

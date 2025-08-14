@@ -2,7 +2,7 @@
 % Please edit documentation in R/clipping.R
 \name{clip_rect}
 \alias{clip_rect}
-\title{Define a clipping rectangle}
+\title{Define a clipping rectangle for use as a \code{clip} argument}
 \usage{
 clip_rect(x, y, width, height)
 }
@@ -15,5 +15,9 @@ clip_rect(x, y, width, height)
 clipping rectangle specification
 }
 \description{
-Define a clipping rectangle
+Define a clipping rectangle for use as a \code{clip} argument
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_rect(0, 0, 100, 100, clip = clip_rect(50, 50, 200, 200))
 }

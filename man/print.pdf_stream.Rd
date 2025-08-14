@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdf-stream.R
 \name{print.pdf_stream}
 \alias{print.pdf_stream}
-\title{print stream}
+\title{Print \code{pdf_stream}}
 \usage{
 \method{print}{pdf_stream}(x, ...)
 }
@@ -15,5 +15,5 @@
 None
 }
 \description{
-print stream
+Print \code{pdf_stream}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_rect}
 \alias{pdf_rect}
-\title{Create a rect}
+\title{Add a rectangle to the PDF}
 \usage{
 pdf_rect(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL, clip = NULL)
 }
@@ -29,5 +29,9 @@ no local clipping applied (global clipping still applicable)}
 \code{pdf_doc}
 }
 \description{
-Create a rect
+Add a rectangle to the PDF
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_rect(10, 10, 100, 100, gp = pgpar(fill = 'red'))
 }

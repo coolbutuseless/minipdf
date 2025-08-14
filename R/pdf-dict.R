@@ -2,6 +2,10 @@
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a PDF Dict object 
+#' 
+#' PDF Dicts are just lists of "name = value" mappings.
+#' Any object with a value of NULL is removed.
+#' 
 #' @param ... named arguments
 #' @return 'pdf_dict' object
 #' @noRd
@@ -22,7 +26,7 @@ pdf_dict <- function(...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Convert dict to character
+#' Render \code{pdf_dict} as character string
 #' 
 #' @param x pdf_dict
 #' @param depth print depth. Default: 0.  Used to control indentation
@@ -38,11 +42,14 @@ as.character.pdf_dict <- function(x, depth = 0, ...) {
   
   s <- lapply(seq_along(nms), \(i) {
     if (is_dict(elems[[i]])) {
+      # Recurse
       glue::glue("{indent2}/{nms[i]}\n{as.character(elems[[i]], depth = depth + 1)}")
     } else {
       glue::glue("{indent2}/{nms[i]} {as.character(elems[[i]])}")
     }
   })
+  
+  # indent and collapse the members of the dict
   s <- paste(s, collapse = "\n")
   glue::glue("{indent1}<<\n{s}\n{indent1}>>")
 }
@@ -50,14 +57,13 @@ as.character.pdf_dict <- function(x, depth = 0, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Print a pdf Can be nested
+#' Print a pdf_dict
 #' @param x pdf_dict
-#' @param depth print depth. Default: 0.  Used to control indentation
 #' @param ... ignored
 #' @return None.
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-print.pdf_dict <- function(x, depth = 0, ...) {
+print.pdf_dict <- function(x, ...) {
   cat("<dict>\n")
   cat(as.character(x), "\n")
   invisible(x)
@@ -88,15 +94,5 @@ is_dict <- function(x) {
 assert_dict <- function(x) {
   stopifnot(is_dict(x))
 }
-
-
-
-
-if (FALSE) {
-  zz <- pdf_dict(type = "Hello", greg = pdf_dict(x = "next"))
-  zz
-}
-
-
 
 

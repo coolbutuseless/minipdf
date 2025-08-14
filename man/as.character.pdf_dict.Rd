@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdf-dict.R
 \name{as.character.pdf_dict}
 \alias{as.character.pdf_dict}
-\title{Convert dict to character}
+\title{Render \code{pdf_dict} as character string}
 \usage{
 \method{as.character}{pdf_dict}(x, depth = 0, ...)
 }
@@ -17,5 +17,5 @@
 None.
 }
 \description{
-Convert dict to character
+Render \code{pdf_dict} as character string
 }
