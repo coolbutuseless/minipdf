@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_text}
 \alias{pdf_text}
-\title{Create text}
+\title{Add text to PDF}
 \usage{
 pdf_text(
   doc,
@@ -20,7 +20,7 @@ pdf_text(
 \arguments{
 \item{doc}{pdf_doc}
 
-\item{text}{text}
+\item{text}{character string to render}
 
 \item{x, y}{position}
 
@@ -51,8 +51,12 @@ or a list of these clips.  Default: NULL,
 no local clipping applied (global clipping still applicable)}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
-Create text
+Add text to PDF
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_text("Hello", x = 20, y = 20, fontsize = 50)
 }

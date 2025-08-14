@@ -255,7 +255,7 @@ print.pdf_stream <- function(x, ...) {
 #'        or a list of these clips.  Default: NULL,
 #'        no local clipping applied (global clipping still applicable)
 #' @param ... further arguments to be added to \code{gp}
-#' @return pdf_doc
+#' @return \code{pdf_doc}
 #' @export
 #' @importFrom utils modifyList
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -282,7 +282,7 @@ pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(),
 #' @param x,y position
 #' @param width,height size
 #' @inheritParams pdf_line
-#' @return pdf_doc
+#' @return \code{pdf_doc}
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), 
@@ -307,7 +307,7 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(),
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Create a polyline
 #' @inheritParams pdf_polygon
-#' @return pdf_doc
+#' @return \code{pdf_doc}
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(), 
@@ -335,7 +335,7 @@ pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(),
 #'        All vertices with the same id belong to the same polygon. Default: NULL
 #'        means that all vertices belong to a single polygon.
 #' @inheritParams pdf_line
-#' @return pdf_doc
+#' @return \code{pdf_doc}
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(), 
@@ -362,7 +362,7 @@ pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(),
 #' Create a polygon
 #' @param x,y,r position and radius
 #' @inheritParams pdf_line
-#' @return pdf_doc
+#' @return \code{pdf_doc}
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(), 
@@ -384,9 +384,10 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create text
+#' Add text to PDF
+#' 
 #' @param x,y position
-#' @param text text
+#' @param text character string to render
 #' @param fontsize Default: 12
 #' @param mode Default: 0
 #' \itemize{
@@ -400,7 +401,10 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(),
 #'   \item{7 - Add text to path for clipping}
 #' }
 #' @inheritParams pdf_line
-#' @return pdf_doc
+#' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_text("Hello", x = 20, y = 20, fontsize = 50)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar(),
@@ -421,27 +425,37 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add image
+#' Add image to PDF
 #' 
 #' @inheritParams pdf_line
-#' @param im integer matrix [0, 255]
-#' @param x,y position
-#' @param scale scale for image
+#' @param im Image represented as a numeric matrix or array with all values 
+#'        in range [0, 255]
+#' @param x,y position of bottom-left corner of image
+#' @param scale scale factor when rendering image Default: 1
 #' @param interpolate Should pixel values be interpolated? Default: FALSE
-#' @return pdf_doc
+#' @return \code{pdf_doc}
+#' @examples
+#' im <- matrix(1:100, 10, 10)
+#' doc <- create_pdf() |>
+#'    pdf_image(im, 20, 20, scale = 2)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_image <- function(doc, im, x, y, scale = scale, interpolate = FALSE, ..., gp = pgpar(), 
+pdf_image <- function(doc, im, x, y, scale = 1, interpolate = FALSE, ..., gp = pgpar(), 
                       tf = NULL, clip = NULL) {
   
+  # Sanity check
   stopifnot(is.array(im) || is.matrix(im))
+  stopifnot(is_bytes(im))
 
+  # Assemble graphical parameters
   gp <- modifyList(gp, list(...))
   
+  # Insert the image data into the document at the top level
   idx_offset <- length(doc$image) + 1L
   attr(im, 'interpolate') <- isTRUE(interpolate)
   doc$image[[idx_offset]] <- im
   
+  # This stream inserts a "Do" reference to the iamge
   obj <- pdf_stream(
     type = 'image', 
     gp   = gp,
@@ -455,51 +469,5 @@ pdf_image <- function(doc, im, x, y, scale = scale, interpolate = FALSE, ..., gp
   
   pdf_add(doc, obj)
 }
-
-
-
-
-if (FALSE) {
-  
-  xs <- 1:10
-  ys <- 1:10
-  id <- c(1, 1, 1, 3, 3, 3, 3, 2, 2, 2)
-  id <- factor(id, levels = unique(id))
-  xs_all <- split(xs, id)
-  ys_all <- split(ys, id)
-
-  
-  polys <- lapply(seq_along(xs_all), function(i) {
-    xs <- xs_all[[i]]
-    ys <- ys_all[[i]]
-    
-    lines <- paste(xs[-1], ys[-1], 'l', collapse = ' ')
-    
-    glue::glue(
-      "{xs[1]} {ys[1]} m 
-       {lines}"
-    ) 
-  })
-  
-  s <- paste(polys, collapse = "\n")
-  
-  # Final paoint
-  s <- paste(s, paint, sep = "\n")
-  s
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

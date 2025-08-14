@@ -14,7 +14,7 @@ pdf_rotate(doc, rads, x = 0, y = 0)
 \item{x, y}{location to rotate around}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
 Global transformations are cumulative, and these is no operation to reset

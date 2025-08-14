@@ -13,7 +13,7 @@ pdf_scale(doc, x, y = x)
 it is made the same as the 'x' value}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
 Global transformations are cumulative, and these is no operation to reset

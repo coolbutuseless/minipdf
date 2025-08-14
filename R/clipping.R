@@ -138,7 +138,7 @@ as.character.clip_polygon <- function(x, ...) {
 #'
 #' @inheritParams pdf_line
 #' @inheritParams clip_rect
-#' @return pdf_doc
+#' @return \code{pdf_doc}
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
@@ -166,7 +166,7 @@ pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
 #" 
 #' @inheritParams clip_polygon
 #' @inheritParams pdf_line
-#' @return pdf_doc
+#' @return \code{pdf_doc}
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_clip_polygon <- function(doc, xs, ys, id = NULL, rule = 'winding', tf = NULL) {

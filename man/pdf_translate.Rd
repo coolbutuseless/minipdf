@@ -12,7 +12,7 @@ pdf_translate(doc, x, y)
 \item{x, y}{translation}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
 Global transformations are cumulative, and these is no operation to reset

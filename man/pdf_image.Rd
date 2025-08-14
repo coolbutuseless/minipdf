@@ -2,14 +2,14 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_image}
 \alias{pdf_image}
-\title{Add image}
+\title{Add image to PDF}
 \usage{
 pdf_image(
   doc,
   im,
   x,
   y,
-  scale = scale,
+  scale = 1,
   interpolate = FALSE,
   ...,
   gp = pgpar(),
@@ -20,11 +20,12 @@ pdf_image(
 \arguments{
 \item{doc}{pdf_doc}
 
-\item{im}{integer matrix [0, 255]}
+\item{im}{Image represented as a numeric matrix or array with all values 
+in range [0, 255]}
 
-\item{x, y}{position}
+\item{x, y}{position of bottom-left corner of image}
 
-\item{scale}{scale for image}
+\item{scale}{scale factor when rendering image Default: 1}
 
 \item{interpolate}{Should pixel values be interpolated? Default: FALSE}
 
@@ -41,8 +42,13 @@ or a list of these clips.  Default: NULL,
 no local clipping applied (global clipping still applicable)}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
-Add image
+Add image to PDF
+}
+\examples{
+im <- matrix(1:100, 10, 10)
+doc <- create_pdf() |>
+   pdf_image(im, 20, 20, scale = 2)
 }

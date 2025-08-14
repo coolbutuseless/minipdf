@@ -22,7 +22,7 @@ means that all vertices belong to a single polygon.}
 no local transformation applied (global transformations still apply)}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
 Clipping regions are cumulative, and these is no operation to expand the 

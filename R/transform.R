@@ -121,7 +121,7 @@ as.character.pdf_transform_list <- function(x, ...) {
 #' 
 #' @inheritParams pdf_line
 #' @inheritParams tf_translate
-#' @return pdf_doc
+#' @return \code{pdf_doc}
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_translate <- function(doc, x, y) {
@@ -148,7 +148,7 @@ pdf_translate <- function(doc, x, y) {
 #' 
 #' @inheritParams pdf_line
 #' @inheritParams tf_rotate
-#' @return pdf_doc
+#' @return \code{pdf_doc}
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_rotate <- function(doc, rads, x = 0, y = 0) {
@@ -175,7 +175,7 @@ pdf_rotate <- function(doc, rads, x = 0, y = 0) {
 #' 
 #' @inheritParams pdf_line
 #' @inheritParams tf_scale
-#' @return pdf_doc
+#' @return \code{pdf_doc}
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_scale <- function(doc, x, y = x) {

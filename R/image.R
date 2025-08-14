@@ -64,33 +64,7 @@ image_to_bytes <- function(im) {
     } else {
       stop("Unhandled num of planes: ", nplanes)
     }
-    
-  } else if (inherits(im, 'nativeRaster')) {
-    res <- nr_to_bytes(im)
   }
-  
-  res
-}
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' NativeRaster to bytes
-#' 
-#' @param nr nativeRaster
-#' @return named list of 3 elements: type, rgb (or g) and alpha
-#' @noRd
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-nr_to_bytes <- function(nr) {
-  stop("nr_to_bytes(): not done yet")
-  
-  res <- list()
-  res$colorspace   <- '/DeviceRGB'
-  res$width  <- ncol(nr)
-  res$height <- nrow(nr)
-  
-  res$pixels <- NULL
-  res$alpha  <- NULL
   
   res
 }

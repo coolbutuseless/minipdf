@@ -18,7 +18,7 @@ pdf_clip_rect(doc, x, y, width, height, tf = NULL)
 no local transformation applied (global transformations still apply)}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
 Clipping regions are cumulative, and these is no operation to expand the 
