@@ -434,6 +434,7 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
 pdf_image <- function(doc, im, x, y, scale = scale, interpolate = FALSE, ..., gp = pgpar(), 
                       tf = NULL, clip = NULL) {
   
+  stopifnot(is.array(im) || is.matrix(im))
 
   gp <- modifyList(gp, list(...))
   
