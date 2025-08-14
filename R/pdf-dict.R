@@ -61,7 +61,7 @@ as.character.pdf_dict <- function(x, depth = 0, ...) {
 #' @param x pdf_dict
 #' @param ... ignored
 #' @return None.
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print.pdf_dict <- function(x, ...) {
   cat("<dict>\n")

@@ -233,7 +233,7 @@ as.character.pdf_stream <- function(x, ...) {
 #' @param x pdf_stream
 #' @param ... ignored
 #' @return None
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print.pdf_stream <- function(x, ...) {
   cat("<stream: ")
