@@ -124,7 +124,7 @@ as.character.pdf_stream <- function(x, ...) {
       # 5 Stroke text and add to path for clipping
       # 6 Fill, then stroke text and add to path for clipping
       # 7 Add text to path for clipping
-      font_ref <- gp_to_font_ref(x$gp)
+      font_ref <- font_to_font_ref(x$fontfamily, x$fontface)
       s <- glue::glue_data(
         x,
         "BT
@@ -433,13 +433,32 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(),
   pdf_add(doc, obj)
 }
 
-
+# ff <- Hmisc::Cs(
+# Helvetica            ,
+# Helvetica-Bold       ,
+# Helvetica-Oblique    ,
+# Helvetica-BoldOblique,
+# Courier              ,
+# Courier-Bold         ,
+# Courier-Oblique      ,
+# Courier-BoldOblique,
+# Times-Roman          ,
+# Times-Bold           ,
+# Times-Italic  ,
+# Times-BoldItalic     ,
+# Symbol               ,
+# ZapfDingbats         
+# )
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Add text to PDF
 #' 
 #' @param x,y position
 #' @param text character string to render
+#' @param fontfamily Font name. Default: 'Helvetica'. One of: "Helvetica", 
+#'        "Courier", "Times", "Symbol", "ZapfDingbats"
+#' @param fontface Font styling. Default: 'plain'. One of: 'plain', 'bold', 
+#'        'italic', 'bold.italic'
 #' @param fontsize Default: 12
 #' @param mode Default: 0
 #' \itemize{
@@ -459,7 +478,8 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(),
 #'    pdf_text("Hello", x = 20, y = 20, fontsize = 50)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar(),
+pdf_text <- function(doc, text, x, y, fontfamily = 'Helvetica', fontface = 'plain', 
+                     fontsize = 12, mode = 0, ..., gp = pgpar(),
                      tf = NULL, clip = NULL) {
   
   stopifnot(exprs = {
@@ -477,7 +497,9 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
     gp   = gp,
     tf   = tf,
     clip = clip,    
-    x = x, y = y, text = text, mode = mode, fontsize = fontsize
+    x = x, y = y, text = text, mode = mode, 
+    fontfamily = fontfamily, fontface = fontface,
+    fontsize = fontsize
   )
   
   pdf_add(doc, obj)

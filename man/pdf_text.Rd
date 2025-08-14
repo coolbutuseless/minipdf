@@ -9,6 +9,8 @@ pdf_text(
   text,
   x,
   y,
+  fontfamily = "Helvetica",
+  fontface = "plain",
   fontsize = 12,
   mode = 0,
   ...,
@@ -23,6 +25,12 @@ pdf_text(
 \item{text}{character string to render}
 
 \item{x, y}{position}
+
+\item{fontfamily}{Font name. Default: 'Helvetica'. One of: "Helvetica", 
+"Courier", "Times", "Symbol", "ZapfDingbats"}
+
+\item{fontface}{Font styling. Default: 'plain'. One of: 'plain', 'bold', 
+'italic', 'bold.italic'}
 
 \item{fontsize}{Default: 12}
 

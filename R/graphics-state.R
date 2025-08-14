@@ -7,7 +7,6 @@
 #' @param col,fill set graphics parameters for this object
 #' @param alpha additional alpha applied to col, fill
 #' @param lty,lwd,lineend,linejoin,linemitre line optins
-#' @param fontsize,fontfamily,fontface font definition
 #' @param rule fill rule. 'winding' (default) or 'evenodd'
 #' @return a graphics parameter object
 #' @examples
@@ -23,9 +22,6 @@ pgpar <- function(
     lineend,
     linejoin,
     linemitre,
-    fontsize,
-    fontfamily,
-    fontface,
     rule
 ) {
   
@@ -87,25 +83,25 @@ gp_to_closed_paint_op <- function(gp) {
 # F13 = Symbol               
 # F14 = ZapfDingbats         
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-gp_to_font_ref <- function(gp) {
+font_to_font_ref <- function(fontfamily, fontface) {
   
-  if (is.null(gp$fontface)) {
+  if (is.null(fontface)) {
     face <- 'plain'
-  } else if (is.numeric(gp$fontface)) {
-    face <- c('plain', 'bold', 'italic', 'bold.italic')[gp$fontface]
+  } else if (is.numeric(fontface)) {
+    face <- c('plain', 'bold', 'italic', 'bold.italic')[fontface]
   } else {
-    face <- gp$fontface
+    face <- fontface
   }
   
   stopifnot(face %in% c('plain', 'bold', 'italic', 'oblique', 'bold.italic'))
   
   
-  if (is.null(gp$fontfamily)) {
-    gp$fontfamily <- 'Helvetica'
+  if (is.null(fontfamily)) {
+    fontfamily <- 'Helvetica'
   }
   
   switch(
-    tolower(gp$fontfamily),
+    tolower(fontfamily),
     sans      =,
     helvetica = {
       res <- switch(
@@ -148,7 +144,7 @@ gp_to_font_ref <- function(gp) {
     zapfdingbats = {
       res <- "F14"
     },
-    stop("Unknown font family: ", gp$fontfamily)
+    warning("Unknown font family: '", fontfamily, "'. Using 'Helvetic'")
   )
   
   res
