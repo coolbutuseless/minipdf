@@ -26,7 +26,7 @@ devtools::install_github("coolbutuseless/minipdf")
 
 ``` r
 doc <- create_pdf(width = 400, height = 200) |>
-  pdf_circle(200, 100, r = 50, col = 'black', lwd = 5, fill = 'blue') |> 
+  pdf_circle(x = 200, y = 100, r = 50, col = 'black', lwd = 5, fill = 'blue') |> 
   pdf_line(0, 0, 400, 200, lty = 2, col = 'red') |> 
   pdf_text("Hello", 0, 10, fontsize = 80)
 
@@ -37,12 +37,14 @@ write_pdf(doc, "man/figures/simple.pdf")
 <img src="man/figures/simple.png" width="75%" />
 
 ``` r
+# IF the output filename is not specified, then `write_pdf()` returns 
+# the PDF document as a string
 write_pdf(doc) |> cat()
 #> %PDF-1.7
 #> 1 0 obj
 #> <<
 #>   /Creator (minipdf/R)
-#>   /CreationDate (D:202508150623)
+#>   /CreationDate (D:202508170936)
 #> >>
 #> endobj
 #> 2 0 obj
