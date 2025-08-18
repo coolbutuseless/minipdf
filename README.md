@@ -44,7 +44,7 @@ write_pdf(doc) |> cat()
 #> 1 0 obj
 #> <<
 #>   /Creator (minipdf/R)
-#>   /CreationDate (D:202508181406)
+#>   /CreationDate (D:202508181446)
 #> >>
 #> endobj
 #> 2 0 obj
@@ -79,84 +79,6 @@ write_pdf(doc) |> cat()
 #>       /Type /Font
 #>       /Subtype /Type1
 #>       /BaseFont /Helvetica
-#>     >>
-#>     /F2
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Helvetica-Bold
-#>     >>
-#>     /F3
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Helvetica-Oblique
-#>     >>
-#>     /F4
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Helvetica-BoldOblique
-#>     >>
-#>     /F5
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Courier
-#>     >>
-#>     /F6
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Courier-Bold
-#>     >>
-#>     /F7
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Courier-Oblique
-#>     >>
-#>     /F8
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Courier-BoldOblique
-#>     >>
-#>     /F9
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Times-Roman
-#>     >>
-#>     /F10
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Times-Bold
-#>     >>
-#>     /F11
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Times-Italic
-#>     >>
-#>     /F12
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Times-BoldItalic
-#>     >>
-#>     /F13
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Symbol
-#>     >>
-#>     /F14
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /ZapfDingbats
 #>     >>
 #>   >>
 #> >>
@@ -232,11 +154,11 @@ write_pdf(doc) |> cat()
 #> 0000000086 00000 n
 #> 0000000139 00000 n
 #> 0000000249 00000 n
-#> 0000001664 00000 n
-#> 0000001753 00000 n
-#> 0000001842 00000 n
-#> 0000002143 00000 n
-#> 0000002242 00000 n
+#> 0000000447 00000 n
+#> 0000000536 00000 n
+#> 0000000625 00000 n
+#> 0000000926 00000 n
+#> 0000001025 00000 n
 #> trailer 
 #> <<
 #>   /Size 10
@@ -244,7 +166,7 @@ write_pdf(doc) |> cat()
 #>   /Root 2 0 R
 #> >>
 #> startxref
-#> 2355
+#> 1138
 #> %%EOF
 ```
 

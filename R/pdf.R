@@ -315,28 +315,67 @@ write_pdf <- function(doc, filename = NULL) {
     xobj <- do.call(pdf_dict, im_refs)
   }
   
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Only include fonts in the /resources if they are actually used 
+  # in the document
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  all_font_dicts <- list(
+    F1  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica'            ),
+    F2  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Bold'       ),
+    F3  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Oblique'    ),
+    F4  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-BoldOblique'),
+    F5  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier'              ),
+    F6  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Bold'         ),
+    F7  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Oblique'      ),
+    F8  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-BoldOblique'  ),
+    F9  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Roman'          ),
+    F10 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Bold'           ),
+    F11 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Italic'         ),
+    F12 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-BoldItalic'     ),
+    F13 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Symbol'               ),
+    F14 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/ZapfDingbats'         )
+  )
   
+  font_refs <- c()
+  for (page in doc$page) {
+    for (stream in page) {
+      if (!is.null(stream$fontfamily)) {
+        ref <- font_to_font_ref(stream$fontfamily, stream$fontface)
+        font_refs <- c(font_refs, ref)
+      }
+    }
+  }
+  font_refs <- sort(unique(font_refs))
+  font_dicts <- all_font_dicts[font_refs]
+  # print(font_dicts)
+  fonts <- do.call(pdf_dict, font_dicts)
+  
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Write the /Resources
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   doc <- pdf_add(
     doc, 
     pdf_dict(
       XObject = xobj,
       ExtGState = gs,
-      Font = pdf_dict(
-        F1  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica'            ),
-        F2  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Bold'       ),
-        F3  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Oblique'    ),
-        F4  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-BoldOblique'),
-        F5  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier'              ),
-        F6  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Bold'         ),
-        F7  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Oblique'      ),
-        F8  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-BoldOblique'  ),
-        F9  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Roman'          ),
-        F10 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Bold'           ),
-        F11 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Italic'         ),
-        F12 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-BoldItalic'     ),
-        F13 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Symbol'               ),
-        F14 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/ZapfDingbats'         )
-      )
+      Font = fonts
+      # Font = pdf_dict(
+      #   F1  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica'            ),
+      #   F2  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Bold'       ),
+      #   F3  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-Oblique'    ),
+      #   F4  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Helvetica-BoldOblique'),
+      #   F5  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier'              ),
+      #   F6  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Bold'         ),
+      #   F7  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-Oblique'      ),
+      #   F8  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Courier-BoldOblique'  ),
+      #   F9  = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Roman'          ),
+      #   F10 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Bold'           ),
+      #   F11 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-Italic'         ),
+      #   F12 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Times-BoldItalic'     ),
+      #   F13 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/Symbol'               ),
+      #   F14 = pdf_dict(Type='/Font',  Subtype ="/Type1",  BaseFont='/ZapfDingbats'         )
+      # )
     ),
     pos = idx_resources
   )
