@@ -2,12 +2,12 @@
 % Please edit documentation in R/clipping.R
 \name{pdf_clip_rect}
 \alias{pdf_clip_rect}
-\title{Add a global clipping rectangle}
+\title{Add a global clipping rectangle to a PDF doc}
 \usage{
 pdf_clip_rect(doc, x, y, width, height, tf = NULL)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{x, y}{position}
 
@@ -18,10 +18,14 @@ pdf_clip_rect(doc, x, y, width, height, tf = NULL)
 no local transformation applied (global transformations still apply)}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
 Clipping regions are cumulative, and these is no operation to expand the 
 global clipping region.
 use local clipping with the \code{clip} argument to individual objects.
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_clip_rect(0, 0, 200, 200)
 }

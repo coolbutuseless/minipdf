@@ -2,12 +2,12 @@
 % Please edit documentation in R/clipping.R
 \name{pdf_clip_polygon}
 \alias{pdf_clip_polygon}
-\title{Add a global clipping polygon}
+\title{Add a global clipping polygon to a PDF doc}
 \usage{
 pdf_clip_polygon(doc, xs, ys, id = NULL, rule = "winding", tf = NULL)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{xs, ys}{vertices}
 
@@ -22,10 +22,14 @@ means that all vertices belong to a single polygon.}
 no local transformation applied (global transformations still apply)}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
 Clipping regions are cumulative, and these is no operation to expand the 
 global clipping region.
 use local clipping with the \code{clip} argument to individual objects.
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_clip_polygon(xs = c(0, 100, 100), ys = c(0, 0, 100))
 }

@@ -2,13 +2,15 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_text}
 \alias{pdf_text}
-\title{Create text}
+\title{Add text to PDF}
 \usage{
 pdf_text(
   doc,
   text,
   x,
   y,
+  fontfamily = "Helvetica",
+  fontface = "plain",
   fontsize = 12,
   mode = 0,
   ...,
@@ -18,11 +20,17 @@ pdf_text(
 )
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
-\item{text}{text}
+\item{text}{character string to render}
 
 \item{x, y}{position}
+
+\item{fontfamily}{Font name. Default: 'Helvetica'. One of: "Helvetica", 
+"Courier", "Times", "Symbol", "ZapfDingbats"}
+
+\item{fontface}{Font styling. Default: 'plain'. One of: 'plain', 'bold', 
+'italic', 'bold.italic'}
 
 \item{fontsize}{Default: 12}
 
@@ -51,8 +59,12 @@ or a list of these clips.  Default: NULL,
 no local clipping applied (global clipping still applicable)}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
-Create text
+Add text to PDF
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_text("Hello", x = 20, y = 20, fontsize = 50)
 }

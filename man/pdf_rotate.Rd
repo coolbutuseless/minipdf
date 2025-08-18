@@ -2,22 +2,26 @@
 % Please edit documentation in R/transform.R
 \name{pdf_rotate}
 \alias{pdf_rotate}
-\title{Modify global transformation matrix with new rotation}
+\title{Modify global transformation matrix with additional rotation}
 \usage{
 pdf_rotate(doc, rads, x = 0, y = 0)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{rads}{rotation angle in radians}
 
 \item{x, y}{location to rotate around}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
 Global transformations are cumulative, and these is no operation to reset
 the global transformation.
 For local transformations use the \code{tf} argument for individual objects.
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_rotate(rads = pi)
 }

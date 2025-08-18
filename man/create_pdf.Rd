@@ -16,13 +16,8 @@ create_pdf(
 \arguments{
 \item{width, height}{page size}
 
-\item{title}{title}
-
-\item{author}{author}
-
-\item{creator}{creator}
-
-\item{creation_date}{creation date}
+\item{title, author, creator, creation_date}{Document-level metainformation
+about this file.}
 }
 \value{
 List with attributes. List items are PDF objects.  Attributes

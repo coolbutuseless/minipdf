@@ -12,15 +12,23 @@
 #'   \item{RGB with alpha - nativeraster}
 #' }
 #' @return named list of 3 elements: type, rgb (or g) and alpha
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 image_to_bytes <- function(im) {
 
-  res        <- list()
-  res$width  <- ncol(im)
-  res$height <- nrow(im)
-  res$realalpha <- FALSE
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Prepare the return list
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  res           <- list()
+  res$width     <- ncol(im)
+  res$height    <- nrow(im)
+  res$realalpha <- FALSE    # Is this a real alpha channel?
   
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Wrangle the pixels to the right order for inclusion in a PDF
+  # Create a fake alpha channel if image does not have an alpha channel
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (is.matrix(im)) {
     res$colorspace <- '/DeviceGray' 
     res$pixels     <- t(im)
@@ -56,33 +64,7 @@ image_to_bytes <- function(im) {
     } else {
       stop("Unhandled num of planes: ", nplanes)
     }
-    
-  } else if (inherits(im, 'nativeRaster')) {
-    res <- nr_to_bytes(im)
   }
-  
-  res
-}
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' NativeRaster to bytes
-#' 
-#' @param nr nativeRaster
-#' @return named list of 3 elements: type, rgb (or g) and alpha
-#' @noRd
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-nr_to_bytes <- function(nr) {
-  stop("nr_to_bytes(): not done yet")
-  
-  res <- list()
-  res$colorspace   <- '/DeviceRGB'
-  res$width  <- ncol(nr)
-  res$height <- nrow(nr)
-  
-  res$pixels <- NULL
-  res$alpha  <- NULL
   
   res
 }

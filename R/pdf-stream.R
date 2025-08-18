@@ -1,9 +1,10 @@
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a pdf stream object
+#' Create a \code{pdf_stream} object
+#' 
 #' @param ... named arguments
-#' @return 'stream' object
+#' @return \code{pdf_stream} object
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_stream <- function(type, ...) {
@@ -20,7 +21,7 @@ pdf_stream <- function(type, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Check if an object is a 'pdf_stream'
+#' Check if an object is a \code{pdf_stream}
 #' @param x object to test
 #' @return logical
 #' @noRd
@@ -32,7 +33,7 @@ is_stream <- function(x) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Convert stream to character
+#' Convert \code{pdf_stream} to character
 #' 
 #' @param x pdf_stream object
 #' @param ... ignored
@@ -123,7 +124,7 @@ as.character.pdf_stream <- function(x, ...) {
       # 5 Stroke text and add to path for clipping
       # 6 Fill, then stroke text and add to path for clipping
       # 7 Add text to path for clipping
-      font_ref <- gp_to_font_ref(x$gp)
+      font_ref <- font_to_font_ref(x$fontfamily, x$fontface)
       s <- glue::glue_data(
         x,
         "BT
@@ -185,13 +186,13 @@ as.character.pdf_stream <- function(x, ...) {
   
   if (type != 'clip') {
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Add graphics state operators
+    # Add graphics state operators. Not needed for clipping
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     gs <- gp_to_gs_operators(x$gp)
     s  <- paste(gs, s, sep = "\n")
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Add reference to graphics state dict
+    # Add reference to graphics state dict. Not needed for clipping.
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if (!is.null(x$gs_ref)) {
       gs_ref <- glue::glue("/GS{x$gs_ref} gs")
@@ -227,11 +228,12 @@ as.character.pdf_stream <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' print stream
+#' Print \code{pdf_stream}
+#' 
 #' @param x pdf_stream
 #' @param ... ignored
 #' @return None
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print.pdf_stream <- function(x, ...) {
   cat("<stream: ")
@@ -244,8 +246,9 @@ print.pdf_stream <- function(x, ...) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a line in pdf
-#' @param doc pdf_doc
+#' Add a line to a PDF doc
+#' 
+#' @inheritParams pdf_newpage
 #' @param x1,y1,x2,y2 endpoints
 #' @param gp A named list \code{gp} object created by \code{\link{pgpar}()}
 #' @param tf either a single transform (\code{tf_translate()}, \code{tf_scale()},
@@ -255,12 +258,22 @@ print.pdf_stream <- function(x, ...) {
 #'        or a list of these clips.  Default: NULL,
 #'        no local clipping applied (global clipping still applicable)
 #' @param ... further arguments to be added to \code{gp}
-#' @return pdf_doc
+#' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_line(10, 10, 100, 100, col = 'red')
 #' @export
 #' @importFrom utils modifyList
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(), 
                      tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is_numeric_1(x1)
+    is_numeric_1(y1)
+    is_numeric_1(x2)
+    is_numeric_1(y2)
+  })
   
   gp <- modifyList(gp, list(...))
   
@@ -278,15 +291,26 @@ pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a rect
-#' @param x,y position
-#' @param width,height size
+#' Add a rectangle to a PDF doc
+#' 
+#' @param x,y position of lower left of rectangle
+#' @param width,height width of height of rectangle
 #' @inheritParams pdf_line
-#' @return pdf_doc
+#' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_rect(10, 10, 100, 100, gp = pgpar(fill = 'red'))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), 
                      tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is_numeric_1(x)
+    is_numeric_1(y)
+    is_numeric_1(width)
+    is_numeric_1(height)
+  })
   
   gp <- modifyList(gp, list(...))
   
@@ -303,15 +327,23 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(),
 
 
 
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polyline
+#' Add a polyline to a PDF doc
+#' 
 #' @inheritParams pdf_polygon
-#' @return pdf_doc
+#' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_polyline(xs = c(100, 200, 200), ys = c(100, 100, 200))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(), 
                          tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is_numeric_n(xs)
+    is_numeric_n(ys)
+  })
   
   gp <- modifyList(gp, list(...))
   
@@ -329,18 +361,28 @@ pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polygon
+#' Add a polygon to a PDF doc
+#' 
 #' @param xs,ys vertices
 #' @param id A numeric vector used to searpate vertices into multiple polygons.
 #'        All vertices with the same id belong to the same polygon. Default: NULL
 #'        means that all vertices belong to a single polygon.
 #' @inheritParams pdf_line
-#' @return pdf_doc
+#' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_polygon(xs = c(100, 200, 200), ys = c(100, 100, 200))
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(), 
                         tf = NULL, clip = NULL) {
   
+  stopifnot(exprs = {
+    is_numeric_n(xs)
+    is_numeric_n(ys)
+    is.null(id) || (is_numeric_n(id) && length(id) == length(xs))
+  })
+
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
@@ -359,14 +401,24 @@ pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(),
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create a polygon
-#' @param x,y,r position and radius
+#' Add a circle to a PDF doc
+#' 
+#' @param x,y,r position of centre and radius of circle
 #' @inheritParams pdf_line
-#' @return pdf_doc
+#' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_circle(x = 200, y = 200, r = 50)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(), 
                        tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is_numeric_1(x)
+    is_numeric_1(y)
+    is_numeric_1(r)
+  })
   
   gp <- modifyList(gp, list(...))
   
@@ -381,12 +433,32 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(),
   pdf_add(doc, obj)
 }
 
-
+# ff <- Hmisc::Cs(
+# Helvetica            ,
+# Helvetica-Bold       ,
+# Helvetica-Oblique    ,
+# Helvetica-BoldOblique,
+# Courier              ,
+# Courier-Bold         ,
+# Courier-Oblique      ,
+# Courier-BoldOblique,
+# Times-Roman          ,
+# Times-Bold           ,
+# Times-Italic  ,
+# Times-BoldItalic     ,
+# Symbol               ,
+# ZapfDingbats         
+# )
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create text
+#' Add text to PDF
+#' 
 #' @param x,y position
-#' @param text text
+#' @param text character string to render
+#' @param fontfamily Font name. Default: 'Helvetica'. One of: "Helvetica", 
+#'        "Courier", "Times", "Symbol", "ZapfDingbats"
+#' @param fontface Font styling. Default: 'plain'. One of: 'plain', 'bold', 
+#'        'italic', 'bold.italic'
 #' @param fontsize Default: 12
 #' @param mode Default: 0
 #' \itemize{
@@ -400,11 +472,24 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(),
 #'   \item{7 - Add text to path for clipping}
 #' }
 #' @inheritParams pdf_line
-#' @return pdf_doc
+#' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'    pdf_text("Hello", x = 20, y = 20, fontsize = 50)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar(),
+pdf_text <- function(doc, text, x, y, fontfamily = 'Helvetica', fontface = 'plain', 
+                     fontsize = 12, mode = 0, ..., gp = pgpar(),
                      tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is.character(text)
+    is_numeric_1(x)
+    is_numeric_1(y)
+    is_numeric_1(fontsize)
+    is_numeric_1(mode)
+  })
+  
   gp <- modifyList(gp, list(...))
   
   obj <- pdf_stream(
@@ -412,7 +497,9 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
     gp   = gp,
     tf   = tf,
     clip = clip,    
-    x = x, y = y, text = text, mode = mode, fontsize = fontsize
+    x = x, y = y, text = text, mode = mode, 
+    fontfamily = fontfamily, fontface = fontface,
+    fontsize = fontsize
   )
   
   pdf_add(doc, obj)
@@ -421,26 +508,44 @@ pdf_text <- function(doc, text, x, y, fontsize = 12, mode = 0, ..., gp = pgpar()
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add image
+#' Add image to PDF
 #' 
 #' @inheritParams pdf_line
-#' @param im integer matrix [0, 255]
-#' @param x,y position
-#' @param scale scale for image
+#' @param im Image represented as a numeric matrix or array with all values 
+#'        in range [0, 255]
+#' @param x,y position of bottom-left corner of image
+#' @param scale scale factor when rendering image Default: 1
 #' @param interpolate Should pixel values be interpolated? Default: FALSE
-#' @return pdf_doc
+#' @return \code{pdf_doc}
+#' @examples
+#' im <- matrix(1:100, 10, 10)
+#' doc <- create_pdf() |>
+#'    pdf_image(im, 20, 20, scale = 2)
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pdf_image <- function(doc, im, x, y, scale = scale, interpolate = FALSE, ..., gp = pgpar(), 
+pdf_image <- function(doc, im, x, y, scale = 1, interpolate = FALSE, ..., gp = pgpar(), 
                       tf = NULL, clip = NULL) {
   
+  # Sanity check
+  stopifnot(exprs = {
+    is.array(im) || is.matrix(im)
+    is_bytes(im)
+    is_numeric_1(x)
+    is_numeric_1(y)
+    is_numeric_1(scale)
+    is.logical(interpolate)
+  })
+  
 
+  # Assemble graphical parameters
   gp <- modifyList(gp, list(...))
   
+  # Insert the image data into the document at the top level
   idx_offset <- length(doc$image) + 1L
   attr(im, 'interpolate') <- isTRUE(interpolate)
   doc$image[[idx_offset]] <- im
   
+  # This stream inserts a "Do" reference to the iamge
   obj <- pdf_stream(
     type = 'image', 
     gp   = gp,
@@ -454,51 +559,5 @@ pdf_image <- function(doc, im, x, y, scale = scale, interpolate = FALSE, ..., gp
   
   pdf_add(doc, obj)
 }
-
-
-
-
-if (FALSE) {
-  
-  xs <- 1:10
-  ys <- 1:10
-  id <- c(1, 1, 1, 3, 3, 3, 3, 2, 2, 2)
-  id <- factor(id, levels = unique(id))
-  xs_all <- split(xs, id)
-  ys_all <- split(ys, id)
-
-  
-  polys <- lapply(seq_along(xs_all), function(i) {
-    xs <- xs_all[[i]]
-    ys <- ys_all[[i]]
-    
-    lines <- paste(xs[-1], ys[-1], 'l', collapse = ' ')
-    
-    glue::glue(
-      "{xs[1]} {ys[1]} m 
-       {lines}"
-    ) 
-  })
-  
-  s <- paste(polys, collapse = "\n")
-  
-  # Final paoint
-  s <- paste(s, paint, sep = "\n")
-  s
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

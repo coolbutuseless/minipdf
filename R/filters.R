@@ -1,16 +1,27 @@
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Helper function for argument chekcing
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+is_bytes <- function(x) {
+  is.numeric(x) &&
+    !anyNA(x) &&
+    all(x >= 0) &&
+    all(x <= 255)
+}
+
+
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Hex encoding
 #' 
 #' @param bytes raw (or integer) vector with values in [0, 255]
 #' @return hex encoding
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 enc_hex <- function(bytes) {
   
   if (is.numeric(bytes)) {
-    stopifnot(!anyNA(bytes) && all(bytes >= 0 & bytes <= 255))
+    stopifnot(is_bytes(bytes))
     bytes <- as.raw(bytes)
   }
   
@@ -28,6 +39,7 @@ enc_hex <- function(bytes) {
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Hex decoding - used for testing only
 #' @param s string containing hex bytes
@@ -35,13 +47,18 @@ enc_hex <- function(bytes) {
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dec_hex <- function(s) {
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Check for EOD (end-of-data) marker
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   stopifnot(grepl(">$", s))
   cs <- strsplit(s, '')[[1]]
+  
   # Remove last char. The end-of-data marker ">"
   cs <- cs[-length(cs)]
   
+  # Convert chars to nibble values
   mm <- c(0:9, letters[1:6])
-  
   vals <- match(cs, mm) - 1L
   
   mat <- matrix(vals, ncol = 2, byrow = TRUE) 
@@ -50,8 +67,9 @@ dec_hex <- function(s) {
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Runlength encode
+#' Run-length encode
 #' 
 #' Encode raw byte data with Run Length Encoding
 #' [controlbyte, sequence, controlbyte, sequence, end-of-data]
@@ -64,13 +82,11 @@ dec_hex <- function(s) {
 #'        range [0, 255]
 #' @return raw vector of run-length encoded valeus as per PDF docs
 #'         Sect 7.4.5. "RunLengthDecode filter"
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
 enc_rle <- function(rv) {
   
-  stopifnot(!anyNA(rv))
-  stopifnot(all(rv >= 0) && all(rv <= 255))
-  
+  stopifnot(is_bytes(rv))
   rv <- as.integer(rv)
   
   chunks <- chunk128(rv)
@@ -88,6 +104,7 @@ enc_rle <- function(rv) {
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Split a vector into a list of vectors.  Each vector in the list should 
 # be 128 elements, except for the last vector.
@@ -98,19 +115,17 @@ chunk128 <- function(x) {
 
 
 
-
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Encode binary data into ASCII85-encoded string
 #' @param rv raw,integer or numeric vector with values in range [0, 255]
 #' @return ASCII85-encoded string
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 enc_ascii85 <- function(rv) {
   
-  stopifnot(!anyNA(rv))
-  stopifnot(all(rv >= 0) && all(rv <= 255))
-  
+  rv <- as.integer(rv)
+  stopifnot(is_bytes(rv))
+
   # Pad to a multiple of 4 characters
   pad <- 4 - (length(rv) %% 4)
   pad <- ifelse(pad == 4, 0, pad)
@@ -161,11 +176,13 @@ enc_ascii85 <- function(rv) {
   enc
 }
 
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Decode a ASCII85-encoded character string into binary data
 #' @param s string
 #' @return raw vector
-#' @export
+#' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dec_ascii85 <- function(s) {
   
@@ -211,17 +228,4 @@ dec_ascii85 <- function(s) {
 }
 
 
-
-
-
-
-
-if (FALSE) {
-  bytes <- seq(1:25)
-  enc_hex(bytes) -> s
-  s
-
-  enc_hex(bytes) |> dec_hex()
-  identical(as.raw(bytes), enc_hex(bytes) |> dec_hex())
-}
 

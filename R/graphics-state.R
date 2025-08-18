@@ -7,7 +7,6 @@
 #' @param col,fill set graphics parameters for this object
 #' @param alpha additional alpha applied to col, fill
 #' @param lty,lwd,lineend,linejoin,linemitre line optins
-#' @param fontsize,fontfamily,fontface font definition
 #' @param rule fill rule. 'winding' (default) or 'evenodd'
 #' @return a graphics parameter object
 #' @examples
@@ -23,9 +22,6 @@ pgpar <- function(
     lineend,
     linejoin,
     linemitre,
-    fontsize,
-    fontfamily,
-    fontface,
     rule
 ) {
   
@@ -33,8 +29,9 @@ pgpar <- function(
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 
+# Is this color transparent?
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 is_transparent <- function(color) {
   grDevices::col2rgb(color, alpha = TRUE)[4] == 0
@@ -42,6 +39,11 @@ is_transparent <- function(color) {
 
 
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Choose the polygon "paint" style based upon the fill rule
+#
+# The alpha channel is used to set the stroke/fill as invisible
+#
 # paint types: 
 #  - s close & stroke path
 #  - S stroke path
@@ -52,6 +54,7 @@ is_transparent <- function(color) {
 #  - b  close, fill & stroke (winding)
 #  - b* close, fill & stroke (even-odd)
 #  - n end path without stroke or fill. used to define clipping path
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 gp_to_closed_paint_op <- function(gp) {
   if (identical(gp$rule, 'evenodd')) {
     'b*'
@@ -61,6 +64,10 @@ gp_to_closed_paint_op <- function(gp) {
 }
 
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Choose the font reference based upon the graphical parameters
+#
 # F1  = Helvetica            
 # F2  = Helvetica-Bold       
 # F3  = Helvetica-Oblique    
@@ -75,25 +82,26 @@ gp_to_closed_paint_op <- function(gp) {
 # F12 = Times-BoldItalic     
 # F13 = Symbol               
 # F14 = ZapfDingbats         
-gp_to_font_ref <- function(gp) {
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+font_to_font_ref <- function(fontfamily, fontface) {
   
-  if (is.null(gp$fontface)) {
+  if (is.null(fontface)) {
     face <- 'plain'
-  } else if (is.numeric(gp$fontface)) {
-    face <- c('plain', 'bold', 'italic', 'bold.italic')[gp$fontface]
+  } else if (is.numeric(fontface)) {
+    face <- c('plain', 'bold', 'italic', 'bold.italic')[fontface]
   } else {
-    face <- gp$fontface
+    face <- fontface
   }
   
   stopifnot(face %in% c('plain', 'bold', 'italic', 'oblique', 'bold.italic'))
   
   
-  if (is.null(gp$fontfamily)) {
-    gp$fontfamily <- 'Helvetica'
+  if (is.null(fontfamily)) {
+    fontfamily <- 'Helvetica'
   }
   
   switch(
-    tolower(gp$fontfamily),
+    tolower(fontfamily),
     sans      =,
     helvetica = {
       res <- switch(
@@ -136,7 +144,7 @@ gp_to_font_ref <- function(gp) {
     zapfdingbats = {
       res <- "F14"
     },
-    stop("Unknown font family: ", gp$fontfamily)
+    warning("Unknown font family: '", fontfamily, "'. Using 'Helvetic'")
   )
   
   res
@@ -241,12 +249,13 @@ gp_to_gs_operators <- function(gp) {
 }
 
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Convert graphics parameters to graphics state operators
 #' 
-#' These are values which can be expressed inline with the object.
-#' Some options (such as 'CA' and 'ca') can only be defined as part
-#' of a graphics state parameter dictionary
+#' These are values which can only be defined as part
+#' of a graphics state parameter dictionary - this dictionary is external
+#' to this object's stream
 #' 
 #' @param gp named list 'gp' object as created by \code{\link{pgpar}()}
 #' @return single string represeting graphics state
@@ -268,10 +277,5 @@ gp_to_gs_dict <- function(gp) {
   )
   
 }
-
-
-
-
-
 
 

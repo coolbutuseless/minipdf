@@ -2,7 +2,7 @@
 % Please edit documentation in R/transform.R
 \name{tf_scale}
 \alias{tf_scale}
-\title{Create a transform specification for scaling}
+\title{Create a scaling specification (for use as \code{tf} argument)}
 \usage{
 tf_scale(x, y = x)
 }
@@ -11,8 +11,12 @@ tf_scale(x, y = x)
 it is made the same as the 'x' value}
 }
 \value{
-scale specification
+scale transform specification
 }
 \description{
-Create a transform specification for scaling
+Create a scaling specification (for use as \code{tf} argument)
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_text(text = "hello", x = 0, y = 0, tf = tf_scale(x = 10))
 }

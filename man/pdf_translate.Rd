@@ -2,20 +2,24 @@
 % Please edit documentation in R/transform.R
 \name{pdf_translate}
 \alias{pdf_translate}
-\title{Modify global transformation matrix with new translation}
+\title{Modify global transformation matrix with additional translation}
 \usage{
 pdf_translate(doc, x, y)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{x, y}{translation}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
 Global transformations are cumulative, and these is no operation to reset
 the global transformation.
 For local transformations use the \code{tf} argument for individual objects.
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_translate(x = 10, y = 10)
 }

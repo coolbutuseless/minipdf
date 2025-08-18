@@ -2,12 +2,12 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_line}
 \alias{pdf_line}
-\title{Create a line in pdf}
+\title{Add a line to a PDF doc}
 \usage{
 pdf_line(doc, x1, y1, x2, y2, ..., gp = pgpar(), tf = NULL, clip = NULL)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{x1, y1, x2, y2}{endpoints}
 
@@ -24,8 +24,12 @@ or a list of these clips.  Default: NULL,
 no local clipping applied (global clipping still applicable)}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
-Create a line in pdf
+Add a line to a PDF doc
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_line(10, 10, 100, 100, col = 'red')
 }

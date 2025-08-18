@@ -2,16 +2,16 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_rect}
 \alias{pdf_rect}
-\title{Create a rect}
+\title{Add a rectangle to a PDF doc}
 \usage{
 pdf_rect(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL, clip = NULL)
 }
 \arguments{
-\item{doc}{pdf_doc}
+\item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
-\item{x, y}{position}
+\item{x, y}{position of lower left of rectangle}
 
-\item{width, height}{size}
+\item{width, height}{width of height of rectangle}
 
 \item{...}{further arguments to be added to \code{gp}}
 
@@ -26,8 +26,12 @@ or a list of these clips.  Default: NULL,
 no local clipping applied (global clipping still applicable)}
 }
 \value{
-pdf_doc
+\code{pdf_doc}
 }
 \description{
-Create a rect
+Add a rectangle to a PDF doc
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_rect(10, 10, 100, 100, gp = pgpar(fill = 'red'))
 }

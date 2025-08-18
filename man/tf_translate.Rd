@@ -2,7 +2,7 @@
 % Please edit documentation in R/transform.R
 \name{tf_translate}
 \alias{tf_translate}
-\title{Create a transform specification for translation}
+\title{Create a translation specification (for use as \code{tf} argument)}
 \usage{
 tf_translate(x, y)
 }
@@ -13,5 +13,9 @@ tf_translate(x, y)
 translation specification
 }
 \description{
-Create a transform specification for translation
+Create a translation specification (for use as \code{tf} argument)
+}
+\examples{
+doc <- create_pdf() |>
+   pdf_text(text = "hello", x = 0, y = 0, tf = tf_translate(x = 10, y = 10))
 }

@@ -13,9 +13,6 @@ pgpar(
   lineend,
   linejoin,
   linemitre,
-  fontsize,
-  fontfamily,
-  fontface,
   rule
 )
 }
@@ -25,8 +22,6 @@ pgpar(
 \item{alpha}{additional alpha applied to col, fill}
 
 \item{lty, lwd, lineend, linejoin, linemitre}{line optins}
-
-\item{fontsize, fontfamily, fontface}{font definition}
 
 \item{rule}{fill rule. 'winding' (default) or 'evenodd'}
 }
