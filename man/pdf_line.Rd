@@ -9,7 +9,7 @@ pdf_line(doc, x1, y1, x2, y2, ..., gp = pgpar(), tf = NULL, clip = NULL)
 \arguments{
 \item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
-\item{x1, y1, x2, y2}{endpoints}
+\item{x1, y1, x2, y2}{endpoints (Length = 1 or n)}
 
 \item{...}{further arguments to be added to \code{gp}}
 

@@ -157,6 +157,9 @@ as.character.pdf_stream <- function(x, ...) {
     stop("Unknown stream: ", deparse1(class(x)))
   )
 
+  s <- paste(s, collapse = "\n")
+  
+  
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # transforms
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -249,7 +252,7 @@ print.pdf_stream <- function(x, ...) {
 #' Add a line to a PDF doc
 #' 
 #' @inheritParams pdf_newpage
-#' @param x1,y1,x2,y2 endpoints
+#' @param x1,y1,x2,y2 endpoints (Length = 1 or n)
 #' @param gp A named list \code{gp} object created by \code{\link{pgpar}()}
 #' @param tf either a single transform (\code{tf_translate()}, \code{tf_scale()},
 #'        \code{tf_rotate()}), or a list of these transforms.  Default: NULL,
@@ -269,13 +272,14 @@ pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(),
                      tf = NULL, clip = NULL) {
   
   stopifnot(exprs = {
-    is_numeric_1(x1)
-    is_numeric_1(y1)
-    is_numeric_1(x2)
-    is_numeric_1(y2)
+    is_numeric_n(x1)
+    is_numeric_n(y1)
+    is_numeric_n(x2)
+    is_numeric_n(y2)
   })
   
   gp <- modifyList(gp, list(...))
+  check_state(gp)
   
   obj <- pdf_stream(
     type = 'line', 
@@ -293,8 +297,8 @@ pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(),
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Add a rectangle to a PDF doc
 #' 
-#' @param x,y position of lower left of rectangle
-#' @param width,height width of height of rectangle
+#' @param x,y position of lower left of rectangle (Length = 1 or n)
+#' @param width,height width of height of rectangle (Length = 1 or n)
 #' @inheritParams pdf_line
 #' @return \code{pdf_doc}
 #' @examples
@@ -306,13 +310,14 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(),
                      tf = NULL, clip = NULL) {
   
   stopifnot(exprs = {
-    is_numeric_1(x)
-    is_numeric_1(y)
-    is_numeric_1(width)
-    is_numeric_1(height)
+    is_numeric_n(x)
+    is_numeric_n(y)
+    is_numeric_n(width)
+    is_numeric_n(height)
   })
   
   gp <- modifyList(gp, list(...))
+  check_state(gp)
   
   obj <- pdf_stream(
     type = 'rect', 
@@ -330,6 +335,7 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(),
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Add a polyline to a PDF doc
 #' 
+#' @param xs,ys vertex coordinates
 #' @inheritParams pdf_polygon
 #' @return \code{pdf_doc}
 #' @examples
@@ -343,9 +349,12 @@ pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(),
   stopifnot(exprs = {
     is_numeric_n(xs)
     is_numeric_n(ys)
+    length(xs) == length(ys)
+    length(xs) > 0
   })
   
   gp <- modifyList(gp, list(...))
+  check_state(gp)
   
   obj <- pdf_stream(
     type = 'polyline', 
@@ -363,8 +372,8 @@ pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(),
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Add a polygon to a PDF doc
 #' 
-#' @param xs,ys vertices
-#' @param id A numeric vector used to searpate vertices into multiple polygons.
+#' @param xs,ys vertex coordinates. Note: polygon will automatically be closed
+#' @param id A numeric vector used to separate vertices into multiple polygons.
 #'        All vertices with the same id belong to the same polygon. Default: NULL
 #'        means that all vertices belong to a single polygon.
 #' @inheritParams pdf_line
@@ -380,10 +389,13 @@ pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(),
   stopifnot(exprs = {
     is_numeric_n(xs)
     is_numeric_n(ys)
+    length(xs) == length(ys)
+    length(xs) > 0
     is.null(id) || (is_numeric_n(id) && length(id) == length(xs))
   })
 
   gp <- modifyList(gp, list(...))
+  check_state(gp)
   
   obj <- pdf_stream(
     type = 'polygon', 
@@ -403,7 +415,7 @@ pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(),
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Add a circle to a PDF doc
 #' 
-#' @param x,y,r position of centre and radius of circle
+#' @param x,y,r position of centre and radius of circle (Length = 1 or n)
 #' @inheritParams pdf_line
 #' @return \code{pdf_doc}
 #' @examples
@@ -415,12 +427,13 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(),
                        tf = NULL, clip = NULL) {
   
   stopifnot(exprs = {
-    is_numeric_1(x)
-    is_numeric_1(y)
-    is_numeric_1(r)
+    is_numeric_n(x)
+    is_numeric_n(y)
+    is_numeric_n(r)
   })
   
   gp <- modifyList(gp, list(...))
+  check_state(gp)
   
   obj <- pdf_stream(
     type = 'circle', 
@@ -451,16 +464,18 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(),
 # )
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add text to PDF
+#' Add text to a PDF doc
 #' 
-#' @param x,y position
-#' @param text character string to render
+#' @param x,y position (Length = 1 or N)
+#' @param text string 
 #' @param fontfamily Font name. Default: 'Helvetica'. One of: "Helvetica", 
-#'        "Courier", "Times", "Symbol", "ZapfDingbats"
+#'        "Courier", "Times", "Symbol", "ZapfDingbats".  'sans', 'mono' and
+#'        'serif' also accepted for 'Helvetica', 'Courier' and 'Times', 
+#'        respectively. (Length = 1)
 #' @param fontface Font styling. Default: 'plain'. One of: 'plain', 'bold', 
-#'        'italic', 'bold.italic'
-#' @param fontsize Default: 12
-#' @param mode Default: 0
+#'        'italic', 'bold.italic' (Length = 1)
+#' @param fontsize Default: 12 (Length = 1)
+#' @param mode Default: 0 (Length = 1)
 #' \itemize{
 #'   \item{0 - Fill text. Normal. Default}
 #'   \item{1 - Stroke text}
@@ -483,21 +498,26 @@ pdf_text <- function(doc, text, x, y, fontfamily = 'Helvetica', fontface = 'plai
                      tf = NULL, clip = NULL) {
   
   stopifnot(exprs = {
-    is.character(text)
-    is_numeric_1(x)
-    is_numeric_1(y)
-    is_numeric_1(fontsize)
-    is_numeric_1(mode)
+    is_char_n(text)
+    is_char_1(fontfamily)
+    is_char_1(fontface)
+    is_numeric_n(x)
+    is_numeric_n(y)
+    is_numeric_n(fontsize)
+    is_numeric_n(mode)
   })
   
   gp <- modifyList(gp, list(...))
+  check_state(gp)
   
   obj <- pdf_stream(
     type = 'text', 
     gp   = gp,
     tf   = tf,
     clip = clip,    
-    x = x, y = y, text = text, mode = mode, 
+    x = x, y = y, 
+    text = paste(text, collapse = ""), 
+    mode = mode, 
     fontfamily = fontfamily, fontface = fontface,
     fontsize = fontsize
   )
@@ -508,14 +528,21 @@ pdf_text <- function(doc, text, x, y, fontfamily = 'Helvetica', fontface = 'plai
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Add image to PDF
+#' Add image to a PDF doc
 #' 
 #' @inheritParams pdf_line
 #' @param im Image represented as a numeric matrix or array with all values 
-#'        in range [0, 255]
-#' @param x,y position of bottom-left corner of image
-#' @param scale scale factor when rendering image Default: 1
-#' @param interpolate Should pixel values be interpolated? Default: FALSE
+#'        in range [0, 255].
+#' \describe{
+#'   \item{matrix}{A gray image}
+#'   \item{array with 2 planes}{Gray image with an alpha channel}
+#'   \item{array with 3 planes}{An RGB image}
+#'   \item{array with 4 planes}{An RGB image with an alpha channel}
+#' }
+#' @param x,y position of bottom-left corner of image. (Length = 1)
+#' @param scale scale factor when rendering image Default: 1. (Length = 1)
+#' @param interpolate Should pixel values be interpolated? Default: FALSE. 
+#'        (Length = 1)
 #' @return \code{pdf_doc}
 #' @examples
 #' im <- matrix(1:100, 10, 10)
@@ -539,6 +566,7 @@ pdf_image <- function(doc, im, x, y, scale = 1, interpolate = FALSE, ..., gp = p
 
   # Assemble graphical parameters
   gp <- modifyList(gp, list(...))
+  check_state(gp)
   
   # Insert the image data into the document at the top level
   idx_offset <- length(doc$image) + 1L

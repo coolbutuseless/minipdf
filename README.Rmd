@@ -7,7 +7,7 @@ output: github_document
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
+  collapse = FALSE,
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "75%"
@@ -88,15 +88,70 @@ You can install the development version from [GitHub](https://github.com/coolbut
 devtools::install_github("coolbutuseless/minipdf")
 ```
 
+# Hello World!
 
-
-## Simple Example
 
 ```{r}
+doc <- create_pdf(width = 400, height = 250) |>
+  pdf_circle(80, 100, 50, fill = 'lightblue', col = 'black') |>
+  pdf_rect(150, 50, 100, 100, fill = 'yellow', col = 'red', lty = 2) |> 
+  pdf_polygon(c(270, 390, 330), c(50, 50, 150)) |>
+  pdf_text("Hello World!", x = 30, y = 170, fontsize = 50) 
+
+write_pdf(doc, "man/figures/helloworld.pdf")
+```
+
+
+```{r echo=FALSE}
+system("magick -density 300 man/figures/helloworld.pdf -resize 50% man/figures/helloworld.png")
+knitr::include_graphics("man/figures/helloworld.png")
+```
+
+
+```{r comment = ""}
+# IF the output filename is not specified, then `write_pdf()` returns 
+# the PDF document as a string
+write_pdf(doc) |> cat()
+```
+
+
+
+## Simple example with vectorised arguments
+
+Most coordinate arguments can be vectors - this means multiple objects
+can be generated with a single call.
+
+Note that all objects created in this way share a single graphics state i.e. 
+they'll all be the same color etc.
+
+```{r}
+
+im  <- png::readPNG(system.file("img", "Rlogo.png", package="png")) * 255
+
+
 doc <- create_pdf(width = 400, height = 200) |>
-  pdf_circle(x = 200, y = 100, r = 50, col = 'black', lwd = 5, fill = 'blue') |> 
-  pdf_line(0, 0, 400, 200, lty = 2, col = 'red') |> 
-  pdf_text("Hello", 0, 10, fontsize = 80)
+  pdf_circle(
+    x = seq(0, 400, length.out = 9), 
+    y = 100, 
+    r = 2 * (1:9), 
+    col = 'black', lwd = 1, fill = 'lightblue'
+  ) |> 
+  pdf_line(
+    x1 = seq(0, 400, length.out = 9), 
+    y1 = 100, 
+    x2 = seq(400, 0, length.out = 9), 
+    y2 = 200, 
+    lty = 3, col = 'blue'
+  ) |> 
+  pdf_text(
+    "#RStats", 
+    x = 0, 
+    y = seq(0, 200, length.out = 10),
+    fill       = 'grey80',
+    fontfamily = 'mono', 
+    fontsize   = seq(12, 30, length.out = 10)
+  ) |> 
+  pdf_image(im = im, x = 300, y = 10, scale = 0.75)
 
 
 write_pdf(doc, "man/figures/simple.pdf")
@@ -109,17 +164,11 @@ knitr::include_graphics("man/figures/simple.png")
 ```
 
 
-```{r}
-# IF the output filename is not specified, then `write_pdf()` returns 
-# the PDF document as a string
-write_pdf(doc) |> cat()
-```
 
 
 
 
-
-## `Hello-world.pdf`
+## Example 
 
 ```{r echo=FALSE}
 set.seed(1)
@@ -158,11 +207,30 @@ knitr::include_graphics("man/figures/example1.png")
 ```
 
 
+## As a device backend
+
+```{r}
+library(grid)
+library(ggplot2)
+library(leopard)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Open the device, draw the plot, call dev.off()
+# Make sure to assign the value returned when opening the device
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+f <- leopard(verbosity = 0, height = 5)
+ggplot(mtcars) + 
+  geom_point(aes(mpg, wt)) +
+  labs(title = "Demo plot")
+invisible(dev.off())
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The value returned when opening the device is a function.
+# Call this function to get a list of data.frames
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dfs <- f()
+```
 
 
-## References
 
-* [PDF specification document](https://www.adobe.com/devnet/pdf/pdf_reference.html)
-* [PDF: An Introduction for Programmers](http://preserve.mactech.com/articles/mactech/Vol.15/15.09/PDFIntro/index.html)
-* [Make your own PDF file](https://blog.idrsolutions.com/2010/09/grow-your-own-pdf-file-part-1-pdf-objects-and-data-types/)
 

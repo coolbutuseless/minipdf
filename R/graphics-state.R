@@ -31,6 +31,35 @@ pgpar <- function(
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Check state for sanity.
+#   no weird names
+#   everything should be a scalar
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+check_state <- function(gs) {
+  
+  bad_names <- setdiff(
+    names(gs),
+    c('col', 'fill', 'alpha', 'lty', 'lwd', 'lineend', 'linejoin', 'linemitre', 'rule')
+  )
+  
+  if (length(bad_names) != 0) {
+    stop("Graphics state does not understand: ", deparse1(bad_names))
+  }
+  
+  for (i in seq_along(gs)) {
+    if (length(gs[[i]]) != 1) {
+      stop("Graphics State: Expecting '", names(gs)[i], "' to be length=1, but got: ", 
+           length(gs[[i]]))
+    }
+  }
+  
+  
+  invisible()
+}
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Is this color transparent?
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 is_transparent <- function(color) {
@@ -126,7 +155,7 @@ font_to_font_ref <- function(fontfamily, fontface) {
         stop("Bad face: ", face)
       )
     },
-    seriv = ,
+    serif = ,
     times = {
       res <- switch(
         face,

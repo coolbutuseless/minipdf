@@ -22,13 +22,202 @@ You can install the development version from
 devtools::install_github("coolbutuseless/minipdf")
 ```
 
-## Simple Example
+# Hello World!
 
 ``` r
+doc <- create_pdf(width = 400, height = 250) |>
+  pdf_circle(80, 100, 50, fill = 'lightblue', col = 'black') |>
+  pdf_rect(150, 50, 100, 100, fill = 'yellow', col = 'red', lty = 2) |> 
+  pdf_polygon(c(270, 390, 330), c(50, 50, 150)) |>
+  pdf_text("Hello World!", x = 30, y = 170, fontsize = 50) 
+
+write_pdf(doc, "man/figures/helloworld.pdf")
+```
+
+<img src="man/figures/helloworld.png" width="75%" />
+
+``` r
+# IF the output filename is not specified, then `write_pdf()` returns 
+# the PDF document as a string
+write_pdf(doc) |> cat()
+```
+
+    %PDF-1.7
+    1 0 obj
+    <<
+      /Creator (minipdf/R)
+      /CreationDate (D:202508211759)
+    >>
+    endobj
+    2 0 obj
+    <<
+      /Type /Catalog
+      /Pages 3 0 R
+    >>
+    endobj
+    3 0 obj
+    <<
+      /Type /Pages
+      /Resources 4 0 R
+      /MediaBox [0 0 400 250]
+      /Kids [ 5 0 R ]
+      /Count 1
+    >>
+    endobj
+    4 0 obj
+    <<
+      /ExtGState
+      <<
+        /GS1
+        <<
+          /CA 1
+          /ca 1
+        >>
+      >>
+      /Font
+      <<
+        /F1
+        <<
+          /Type /Font
+          /Subtype /Type1
+          /BaseFont /Helvetica
+        >>
+      >>
+    >>
+    endobj
+    5 0 obj
+    <<
+      /Type /Page
+      /Parent 3 0 R
+      /Contents [6 0 R 7 0 R 8 0 R 9 0 R 10 0 R]
+    >>
+    endobj
+    6 0 obj
+    <<
+      /Length 37
+    >>
+    stream
+    0 0 400 250 re W n
+    0 0 400 250 re W n
+    endstream
+    endobj
+    7 0 obj
+    <<
+      /Length 284
+    >>
+    stream
+    q
+    0 0 0 RG
+    0.67843137254902 0.847058823529412 0.901960784313726 rg
+    130 100 m
+    130 127.61423749155  107.61423749155 150  80   150 c
+    52.38576250845 150  30 127.61423749155  30 100   c
+    30 72.38576250845  52.38576250845 50  80   50 c
+    107.61423749155 50  130 72.38576250845  130 100   c
+    b
+    Q
+    endstream
+    endobj
+    8 0 obj
+    <<
+      /Length 49
+    >>
+    stream
+    q
+    1 0 0 RG
+    1 1 0 rg
+    [3] 0 d
+    150 50 100 100 re b
+    Q
+    endstream
+    endobj
+    9 0 obj
+    <<
+      /Length 51
+    >>
+    stream
+    q
+    0 0 0 RG
+    0 0 0 rg
+    270 50 m 390 50 l 330 150 l b
+    Q
+    endstream
+    endobj
+    10 0 obj
+    <<
+      /Length 70
+    >>
+    stream
+    q
+    0 0 0 RG
+    0 0 0 rg
+    BT
+    /F1 50 Tf
+    30 170 Td
+    0 Tr
+    (Hello World!) Tj
+    ET
+    Q
+    endstream
+    endobj
+    xref
+    0 11
+    0000000000 65535 f
+    0000000009 00000 n
+    0000000086 00000 n
+    0000000139 00000 n
+    0000000249 00000 n
+    0000000447 00000 n
+    0000000543 00000 n
+    0000000632 00000 n
+    0000000969 00000 n
+    0000001070 00000 n
+    0000001173 00000 n
+    trailer 
+    <<
+      /Size 11
+      /Info 1 0 R
+      /Root 2 0 R
+    >>
+    startxref
+    1296
+    %%EOF
+
+## Simple example with vectorised arguments
+
+Most coordinate arguments can be vectors - this means multiple objects
+can be generated with a single call.
+
+Note that all objects created in this way share a single graphics state
+i.e.  they’ll all be the same color etc.
+
+``` r
+im  <- png::readPNG(system.file("img", "Rlogo.png", package="png")) * 255
+
+
 doc <- create_pdf(width = 400, height = 200) |>
-  pdf_circle(x = 200, y = 100, r = 50, col = 'black', lwd = 5, fill = 'blue') |> 
-  pdf_line(0, 0, 400, 200, lty = 2, col = 'red') |> 
-  pdf_text("Hello", 0, 10, fontsize = 80)
+  pdf_circle(
+    x = seq(0, 400, length.out = 9), 
+    y = 100, 
+    r = 2 * (1:9), 
+    col = 'black', lwd = 1, fill = 'lightblue'
+  ) |> 
+  pdf_line(
+    x1 = seq(0, 400, length.out = 9), 
+    y1 = 100, 
+    x2 = seq(400, 0, length.out = 9), 
+    y2 = 200, 
+    lty = 3, col = 'blue'
+  ) |> 
+  pdf_text(
+    "#RStats", 
+    x = 0, 
+    y = seq(0, 200, length.out = 10),
+    fill       = 'grey80',
+    fontfamily = 'mono', 
+    fontsize   = seq(12, 30, length.out = 10)
+  ) |> 
+  pdf_image(im = im, x = 300, y = 10, scale = 0.75)
 
 
 write_pdf(doc, "man/figures/simple.pdf")
@@ -36,141 +225,7 @@ write_pdf(doc, "man/figures/simple.pdf")
 
 <img src="man/figures/simple.png" width="75%" />
 
-``` r
-# IF the output filename is not specified, then `write_pdf()` returns 
-# the PDF document as a string
-write_pdf(doc) |> cat()
-#> %PDF-1.7
-#> 1 0 obj
-#> <<
-#>   /Creator (minipdf/R)
-#>   /CreationDate (D:202508181446)
-#> >>
-#> endobj
-#> 2 0 obj
-#> <<
-#>   /Type /Catalog
-#>   /Pages 3 0 R
-#> >>
-#> endobj
-#> 3 0 obj
-#> <<
-#>   /Type /Pages
-#>   /Resources 4 0 R
-#>   /MediaBox [0 0 400 200]
-#>   /Kids [ 5 0 R ]
-#>   /Count 1
-#> >>
-#> endobj
-#> 4 0 obj
-#> <<
-#>   /ExtGState
-#>   <<
-#>     /GS1
-#>     <<
-#>       /CA 1
-#>       /ca 1
-#>     >>
-#>   >>
-#>   /Font
-#>   <<
-#>     /F1
-#>     <<
-#>       /Type /Font
-#>       /Subtype /Type1
-#>       /BaseFont /Helvetica
-#>     >>
-#>   >>
-#> >>
-#> endobj
-#> 5 0 obj
-#> <<
-#>   /Type /Page
-#>   /Parent 3 0 R
-#>   /Contents [6 0 R 7 0 R 8 0 R 9 0 R]
-#> >>
-#> endobj
-#> 6 0 obj
-#> <<
-#>   /Length 37
-#> >>
-#> stream
-#> 0 0 400 200 re W n
-#> 0 0 400 200 re W n
-#> endstream
-#> endobj
-#> 7 0 obj
-#> <<
-#>   /Length 248
-#> >>
-#> stream
-#> q
-#> 0 0 0 RG
-#> 0 0 1 rg
-#> 5 w
-#> 250 100 m
-#> 250 127.61423749155  227.61423749155 150  200   150 c
-#> 172.38576250845 150  150 127.61423749155  150 100   c
-#> 150 72.38576250845  172.38576250845 50  200   50 c
-#> 227.61423749155 50  250 72.38576250845  250 100   c
-#> b
-#> Q
-#> endstream
-#> endobj
-#> 8 0 obj
-#> <<
-#>   /Length 47
-#> >>
-#> stream
-#> q
-#> 1 0 0 RG
-#> 0 0 0 rg
-#> [3] 0 d
-#> 0 0 m 400 200 l S
-#> Q
-#> endstream
-#> endobj
-#> 9 0 obj
-#> <<
-#>   /Length 61
-#> >>
-#> stream
-#> q
-#> 0 0 0 RG
-#> 0 0 0 rg
-#> BT
-#> /F1 80 Tf
-#> 0 10 Td
-#> 0 Tr
-#> (Hello) Tj
-#> ET
-#> Q
-#> endstream
-#> endobj
-#> xref
-#> 0 10
-#> 0000000000 65535 f
-#> 0000000009 00000 n
-#> 0000000086 00000 n
-#> 0000000139 00000 n
-#> 0000000249 00000 n
-#> 0000000447 00000 n
-#> 0000000536 00000 n
-#> 0000000625 00000 n
-#> 0000000926 00000 n
-#> 0000001025 00000 n
-#> trailer 
-#> <<
-#>   /Size 10
-#>   /Info 1 0 R
-#>   /Root 2 0 R
-#> >>
-#> startxref
-#> 1138
-#> %%EOF
-```
-
-## `Hello-world.pdf`
+## Example
 
 ``` r
 doc <- create_pdf(height = 400, width = 600)
@@ -199,11 +254,26 @@ write_pdf(doc, "man/figures/example1.pdf")
 
 <img src="man/figures/example1.png" width="75%" />
 
-## References
+## As a device backend
 
-- [PDF specification
-  document](https://www.adobe.com/devnet/pdf/pdf_reference.html)
-- [PDF: An Introduction for
-  Programmers](http://preserve.mactech.com/articles/mactech/Vol.15/15.09/PDFIntro/index.html)
-- [Make your own PDF
-  file](https://blog.idrsolutions.com/2010/09/grow-your-own-pdf-file-part-1-pdf-objects-and-data-types/)
+``` r
+library(grid)
+library(ggplot2)
+library(leopard)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Open the device, draw the plot, call dev.off()
+# Make sure to assign the value returned when opening the device
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+f <- leopard(verbosity = 0, height = 5)
+ggplot(mtcars) + 
+  geom_point(aes(mpg, wt)) +
+  labs(title = "Demo plot")
+invisible(dev.off())
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# The value returned when opening the device is a function.
+# Call this function to get a list of data.frames
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dfs <- f()
+```

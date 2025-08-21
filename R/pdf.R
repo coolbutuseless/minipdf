@@ -47,16 +47,14 @@ pdf_newpage <- function(doc) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create an empty shell for the PDF intermediate format
+#' Create an new PDF
 #' 
-#' @param width,height page size
+#' @param width,height page size in pixels
 #' @param title,author,creator,creation_date Document-level metainformation
-#'        about this file.
-#' @return List with attributes. List items are PDF objects.  Attributes
-#'         are PDF settings
+#'        about this file. Set value to NULL to exclude from PDF.
+#' @return \code{pdf_doc} object (i.e. a named list)
 #' @examples
 #' create_pdf()
-#' 
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 create_pdf <- function(width = 400, height = 400, 
@@ -111,7 +109,8 @@ create_pdf <- function(width = 400, height = 400,
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # If this 'gs' already exists on the doc, then return the index
-# otherwise return NULL
+# otherwise return NULL.
+# TODO: Rather than a linear lookup, this could use a hash table
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 gs_idx <- function(doc, gs) {
   
@@ -129,7 +128,9 @@ gs_idx <- function(doc, gs) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Unconditionally add a 'gs' object
+# Unconditionally add a 'gs' object. 
+# Note: Call `gs_idx()` prior to calling the function to determine if
+# the gs is already recorded.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add_gs <- function(doc, gs) {
   doc$gs[[length(doc$gs) + 1L]] <- gs
@@ -139,7 +140,7 @@ add_gs <- function(doc, gs) {
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Print a 'pdf' object
+#' Print a 'pdf' object to the console
 #' 
 #' @param x pdf object
 #' @param ... ignored
@@ -158,9 +159,12 @@ print.pdf_doc <- function(x, ...) {
 #' Add a \code{pdf_dict} or \code{pdf_stream} to a PDF doc
 #' 
 #' @inheritParams pdf_newpage
-#' @param x pdf_dict or pdf_stream
+#' @param x pdf_dict or pdf_stream. Also possible to add a raw string
+#'        to the PDF, but the caller is responsible for making sure this is a 
+#'        valid PDF object
 #' @param pos position at which to add item. Item currently at this
-#'        position will be moved to next position
+#'        position will be moved to next position.  Default: NULL means to 
+#'        add to the end of the PDF
 #' @return pdf
 #' @noRd
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -213,7 +217,7 @@ pdf_add <- function(doc, x, pos = NULL) {
 #' Write pdf to file or string
 #'
 #' @inheritParams pdf_newpage
-#' @param filename Output filename. Default: NULL  no output to file but return
+#' @param filename Output filename. Default: NULL means no output to file but return
 #'        a string representation of the PDF
 #' @return string or None
 #' @examples

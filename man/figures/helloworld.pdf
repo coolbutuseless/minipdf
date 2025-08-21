@@ -1,108 +1,140 @@
-%PDF-1.2
+%PDF-1.7
 1 0 obj
 <<
-    /Type /Catalog
-    /Pages 2 0 R
+  /Creator (minipdf/R)
+  /CreationDate (D:202508211759)
 >>
 endobj
 2 0 obj
 <<
-    /Type /Pages
-    /Kids [3 0 R]
-    /Count 1
+  /Type /Catalog
+  /Pages 3 0 R
 >>
 endobj
 3 0 obj
 <<
-    /Type /Page
-    /Parent 2 0 R
-    /Resources 4 0 R
-    /MediaBox [0 0 200 60]
-    /Contents [6 0 R 7 0 R 8 0 R 9 0 R]
+  /Type /Pages
+  /Resources 4 0 R
+  /MediaBox [0 0 400 250]
+  /Kids [ 5 0 R ]
+  /Count 1
 >>
 endobj
 4 0 obj
 <<
-    /Font <<
-        /F1 5 0 R
+  /ExtGState
+  <<
+    /GS1
+    <<
+      /CA 1
+      /ca 1
     >>
-    /ExtGState << /GS11 <</ca 1 /CA 1>> >>
+  >>
+  /Font
+  <<
+    /F1
+    <<
+      /Type /Font
+      /Subtype /Type1
+      /BaseFont /Helvetica
+    >>
+  >>
 >>
 endobj
 5 0 obj
 <<
-    /Type /Font
-    /Subtype /Type1
-    /BaseFont /Helvetica-Bold
+  /Type /Page
+  /Parent 3 0 R
+  /Contents [6 0 R 7 0 R 8 0 R 9 0 R 10 0 R]
 >>
 endobj
 6 0 obj
-<< /Length 70 >>
+<<
+  /Length 37
+>>
 stream
-/GS11 gs
-1 w
-0 0 0 rg
-0 0 0 RG
-0 0 m
-200 0 l
-200 60 l
-0 60 l
-0 0 l W n
+0 0 400 250 re W n
+0 0 400 250 re W n
 endstream
 endobj
 7 0 obj
-<< /Length 90 >>
+<<
+  /Length 284
+>>
 stream
 q
-/GS11 gs
-1 w
-0.0705882352941176 0.203921568627451 0.337254901960784 rg
-0 0 200 60 re f
+0 0 0 RG
+0.67843137254902 0.847058823529412 0.901960784313726 rg
+130 100 m
+130 127.61423749155  107.61423749155 150  80   150 c
+52.38576250845 150  30 127.61423749155  30 100   c
+30 72.38576250845  52.38576250845 50  80   50 c
+107.61423749155 50  130 72.38576250845  130 100   c
+b
 Q
 endstream
 endobj
 8 0 obj
-<< /Length 98 >>
+<<
+  /Length 49
+>>
 stream
 q
-/GS11 gs
-1 w
-1 1 1 rg
-0 0 0 RG
-BT
-    /F1 20 Tf
-    10 15 Td
-    0 Tr
-    (Hello World!) Tj
-ET
+1 0 0 RG
+1 1 0 rg
+[3] 0 d
+150 50 100 100 re b
 Q
 endstream
 endobj
 9 0 obj
-<< /Length 58 >>
+<<
+  /Length 51
+>>
 stream
 q
-/GS11 gs
-1 w
+0 0 0 RG
 0 0 0 rg
-0.8 0.8 0.8 RG
-0 10 m 200 10 l s
+270 50 m 390 50 l 330 150 l b
+Q
+endstream
+endobj
+10 0 obj
+<<
+  /Length 70
+>>
+stream
+q
+0 0 0 RG
+0 0 0 rg
+BT
+/F1 50 Tf
+30 170 Td
+0 Tr
+(Hello World!) Tj
+ET
 Q
 endstream
 endobj
 xref
-0 10
-0000000000 65535 f 
-0000000008 00000 n 
-0000000065 00000 n 
-0000000134 00000 n 
-0000000277 00000 n 
-0000000379 00000 n 
-0000000466 00000 n 
-0000000586 00000 n 
-0000000726 00000 n 
-0000000874 00000 n 
-trailer <</Size 10/Root 1 0 R>>
+0 11
+0000000000 65535 f
+0000000009 00000 n
+0000000086 00000 n
+0000000139 00000 n
+0000000249 00000 n
+0000000447 00000 n
+0000000543 00000 n
+0000000632 00000 n
+0000000969 00000 n
+0000001070 00000 n
+0000001173 00000 n
+trailer 
+<<
+  /Size 11
+  /Info 1 0 R
+  /Root 2 0 R
+>>
 startxref
-982
+1296
 %%EOF

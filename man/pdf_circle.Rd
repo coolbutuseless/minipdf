@@ -9,7 +9,7 @@ pdf_circle(doc, x, y, r, ..., gp = pgpar(), tf = NULL, clip = NULL)
 \arguments{
 \item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
-\item{x, y, r}{position of centre and radius of circle}
+\item{x, y, r}{position of centre and radius of circle (Length = 1 or n)}
 
 \item{...}{further arguments to be added to \code{gp}}
 

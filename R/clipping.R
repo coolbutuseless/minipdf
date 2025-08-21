@@ -5,12 +5,20 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 is_numeric_1 <- function(x) {
   is.numeric(x) &&
-    !is.na(x) && 
+    !anyNA(x) && 
     length(x) == 1
 }
 
 is_numeric_n <- function(x) {
   is.numeric(x) && !anyNA(x) && length(x) > 0
+}
+
+is_char_1 <- function(x) {
+  is.character(x) && !anyNA(x) && length(x) == 1
+}
+
+is_char_n <- function(x) {
+  is.character(x) && !anyNA(x) && length(x) > 0
 }
 
 
@@ -140,7 +148,7 @@ as.character.clip_polygon <- function(x, ...) {
 #' Clipping regions are cumulative, and these is no operation to expand the 
 #' global clipping region.
 #"
-#" The global clipping regeion is reset when a new page is created.  Otherwise
+#" The global clipping region is reset when a new page is created.  Otherwise
 #' use local clipping with the \code{clip} argument to individual objects.
 #'
 #' @inheritParams pdf_line
@@ -171,7 +179,7 @@ pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
 #' Clipping regions are cumulative, and these is no operation to expand the 
 #' global clipping region.
 #"
-#" The global clipping regeion is reset when a new page is created.  Otherwise
+#" The global clipping region is reset when a new page is created.  Otherwise
 #' use local clipping with the \code{clip} argument to individual objects.
 #" 
 #' @inheritParams clip_polygon

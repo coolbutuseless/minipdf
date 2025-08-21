@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdf.R
 \name{print.pdf_doc}
 \alias{print.pdf_doc}
-\title{Print a 'pdf' object}
+\title{Print a 'pdf' object to the console}
 \usage{
 \method{print}{pdf_doc}(x, ...)
 }
@@ -15,5 +15,5 @@
 None
 }
 \description{
-Print a 'pdf' object
+Print a 'pdf' object to the console
 }

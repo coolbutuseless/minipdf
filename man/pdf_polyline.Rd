@@ -9,7 +9,7 @@ pdf_polyline(doc, xs, ys, ..., gp = pgpar(), tf = NULL, clip = NULL)
 \arguments{
 \item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
-\item{xs, ys}{vertices}
+\item{xs, ys}{vertex coordinates}
 
 \item{...}{further arguments to be added to \code{gp}}
 

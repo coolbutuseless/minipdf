@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdf.R
 \name{create_pdf}
 \alias{create_pdf}
-\title{Create an empty shell for the PDF intermediate format}
+\title{Create an new PDF}
 \usage{
 create_pdf(
   width = 400,
@@ -14,19 +14,17 @@ create_pdf(
 )
 }
 \arguments{
-\item{width, height}{page size}
+\item{width, height}{page size in pixels}
 
 \item{title, author, creator, creation_date}{Document-level metainformation
-about this file.}
+about this file. Set value to NULL to exclude from PDF.}
 }
 \value{
-List with attributes. List items are PDF objects.  Attributes
-        are PDF settings
+\code{pdf_doc} object (i.e. a named list)
 }
 \description{
-Create an empty shell for the PDF intermediate format
+Create an new PDF
 }
 \examples{
 create_pdf()
-
 }

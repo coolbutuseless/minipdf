@@ -9,9 +9,9 @@ pdf_rect(doc, x, y, width, height, ..., gp = pgpar(), tf = NULL, clip = NULL)
 \arguments{
 \item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
-\item{x, y}{position of lower left of rectangle}
+\item{x, y}{position of lower left of rectangle (Length = 1 or n)}
 
-\item{width, height}{width of height of rectangle}
+\item{width, height}{width of height of rectangle (Length = 1 or n)}
 
 \item{...}{further arguments to be added to \code{gp}}
 

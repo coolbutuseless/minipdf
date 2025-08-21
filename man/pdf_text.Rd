@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_text}
 \alias{pdf_text}
-\title{Add text to PDF}
+\title{Add text to a PDF doc}
 \usage{
 pdf_text(
   doc,
@@ -22,19 +22,21 @@ pdf_text(
 \arguments{
 \item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
-\item{text}{character string to render}
+\item{text}{string}
 
-\item{x, y}{position}
+\item{x, y}{position (Length = 1 or N)}
 
 \item{fontfamily}{Font name. Default: 'Helvetica'. One of: "Helvetica", 
-"Courier", "Times", "Symbol", "ZapfDingbats"}
+"Courier", "Times", "Symbol", "ZapfDingbats".  'sans', 'mono' and
+'serif' also accepted for 'Helvetica', 'Courier' and 'Times', 
+respectively. (Length = 1)}
 
 \item{fontface}{Font styling. Default: 'plain'. One of: 'plain', 'bold', 
-'italic', 'bold.italic'}
+'italic', 'bold.italic' (Length = 1)}
 
-\item{fontsize}{Default: 12}
+\item{fontsize}{Default: 12 (Length = 1)}
 
-\item{mode}{Default: 0
+\item{mode}{Default: 0 (Length = 1)
 \itemize{
   \item{0 - Fill text. Normal. Default}
   \item{1 - Stroke text}
@@ -62,7 +64,7 @@ no local clipping applied (global clipping still applicable)}
 \code{pdf_doc}
 }
 \description{
-Add text to PDF
+Add text to a PDF doc
 }
 \examples{
 doc <- create_pdf() |>

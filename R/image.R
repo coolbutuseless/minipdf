@@ -9,7 +9,7 @@
 #'   \item{Grayscale with alpha - numeric array with 2 planes}
 #'   \item{RGB - numeric array with 3 planes}
 #'   \item{RGB with alpha - numeric array with 4 planes}
-#'   \item{RGB with alpha - nativeraster}
+#'   \item{RGB with alpha - nativeraster. TODO}
 #' }
 #' @return named list of 3 elements: type, rgb (or g) and alpha
 #' @noRd

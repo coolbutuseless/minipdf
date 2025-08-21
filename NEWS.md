@@ -1,6 +1,6 @@
 
 
-# minipdf 0.2.5.9004 2025-08-18
+# minipdf 0.2.5.9005 2025-08-21
 
 * Replace object-oriented R6 approach with pipe-able approach
 * Add support for

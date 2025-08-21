@@ -7,9 +7,9 @@
 clip_polygon(xs, ys, id = NULL, rule = "winding")
 }
 \arguments{
-\item{xs, ys}{vertices}
+\item{xs, ys}{vertex coordinates. Note: polygon will automatically be closed}
 
-\item{id}{A numeric vector used to searpate vertices into multiple polygons.
+\item{id}{A numeric vector used to separate vertices into multiple polygons.
 All vertices with the same id belong to the same polygon. Default: NULL
 means that all vertices belong to a single polygon.}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/pdf-stream.R
 \name{pdf_image}
 \alias{pdf_image}
-\title{Add image to PDF}
+\title{Add image to a PDF doc}
 \usage{
 pdf_image(
   doc,
@@ -21,13 +21,20 @@ pdf_image(
 \item{doc}{A \code{pdf_doc} object created by \code{\link{create_pdf}()}}
 
 \item{im}{Image represented as a numeric matrix or array with all values 
-in range [0, 255]}
+       in range [0, 255].
+\describe{
+  \item{matrix}{A gray image}
+  \item{array with 2 planes}{Gray image with an alpha channel}
+  \item{array with 3 planes}{An RGB image}
+  \item{array with 4 planes}{An RGB image with an alpha channel}
+}}
 
-\item{x, y}{position of bottom-left corner of image}
+\item{x, y}{position of bottom-left corner of image. (Length = 1)}
 
-\item{scale}{scale factor when rendering image Default: 1}
+\item{scale}{scale factor when rendering image Default: 1. (Length = 1)}
 
-\item{interpolate}{Should pixel values be interpolated? Default: FALSE}
+\item{interpolate}{Should pixel values be interpolated? Default: FALSE. 
+(Length = 1)}
 
 \item{...}{further arguments to be added to \code{gp}}
 
@@ -45,7 +52,7 @@ no local clipping applied (global clipping still applicable)}
 \code{pdf_doc}
 }
 \description{
-Add image to PDF
+Add image to a PDF doc
 }
 \examples{
 im <- matrix(1:100, 10, 10)
