@@ -23,3 +23,17 @@ For local transformations use the \code{tf} argument for individual objects.
 doc <- create_pdf() |>
    pdf_translate(x = 10, y = 10)
 }
+\seealso{
+Other transform functions: 
+\code{\link{pdf_rotate}()},
+\code{\link{pdf_scale}()},
+\code{\link{tf_rotate}()},
+\code{\link{tf_scale}()},
+\code{\link{tf_translate}()}
+
+Other global transform functions: 
+\code{\link{pdf_rotate}()},
+\code{\link{pdf_scale}()}
+}
+\concept{global transform functions}
+\concept{transform functions}

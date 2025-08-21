@@ -33,6 +33,7 @@ is_char_n <- function(x) {
 #' doc <- create_pdf() |>
 #'    pdf_rect(0, 0, 100, 100, clip = clip_rect(50, 50, 200, 200))
 #' @export
+#' @family clipping functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 clip_rect <- function(x, y, width, height) {
   
@@ -74,6 +75,7 @@ as.character.clip_rect <- function(x, ...) {
 #'    pdf_rect(0, 0, 100, 100, clip = clip_polygon(xs = c(0, 100, 100), 
 #'    ys = c(0, 0, 100)))
 #' @export
+#' @family clipping functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 clip_polygon <- function(xs, ys, id = NULL, rule = 'winding') {
   
@@ -158,6 +160,8 @@ as.character.clip_polygon <- function(x, ...) {
 #' doc <- create_pdf() |>
 #'    pdf_clip_rect(0, 0, 200, 200)
 #' @export
+#' @family clipping functions
+#' @family global clipping functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
   
@@ -189,6 +193,8 @@ pdf_clip_rect <- function(doc, x, y, width, height, tf = NULL) {
 #' doc <- create_pdf() |>
 #'    pdf_clip_polygon(xs = c(0, 100, 100), ys = c(0, 0, 100))
 #' @export
+#' @family clipping functions
+#' @family global clipping functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_clip_polygon <- function(doc, xs, ys, id = NULL, rule = 'winding', tf = NULL) {
   

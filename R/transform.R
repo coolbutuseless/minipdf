@@ -9,6 +9,7 @@
 #' doc <- create_pdf() |>
 #'    pdf_text(text = "hello", x = 0, y = 0, tf = tf_translate(x = 10, y = 10))
 #' @export
+#' @family transform functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tf_translate <- function(x, y) {
   
@@ -48,6 +49,7 @@ as.character.pdf_translate <- function(x, ...) {
 #' doc <- create_pdf() |>
 #'    pdf_text(text = "hello", x = 0, y = 0, tf = tf_rotate(rads = pi))
 #' @export
+#' @family transform functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tf_rotate <- function(rads, x = 0, y = 0) {
   
@@ -96,6 +98,7 @@ as.character.pdf_rotate <- function(x, ...) {
 #' doc <- create_pdf() |>
 #'    pdf_text(text = "hello", x = 0, y = 0, tf = tf_scale(x = 10))
 #' @export
+#' @family transform functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 tf_scale <- function(x, y = x) {
   
@@ -154,6 +157,8 @@ as.character.pdf_transform_list <- function(x, ...) {
 #' doc <- create_pdf() |>
 #'    pdf_translate(x = 10, y = 10)
 #' @export
+#' @family transform functions
+#' @family global transform functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_translate <- function(doc, x, y) {
   
@@ -184,6 +189,8 @@ pdf_translate <- function(doc, x, y) {
 #' doc <- create_pdf() |>
 #'    pdf_rotate(rads = pi)
 #' @export
+#' @family transform functions
+#' @family global transform functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_rotate <- function(doc, rads, x = 0, y = 0) {
   
@@ -214,6 +221,8 @@ pdf_rotate <- function(doc, rads, x = 0, y = 0) {
 #' doc <- create_pdf() |>
 #'    pdf_scale(x = 10)
 #' @export
+#' @family transform functions
+#' @family global transform functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_scale <- function(doc, x, y = x) {
   

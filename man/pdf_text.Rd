@@ -70,3 +70,13 @@ Add text to a PDF doc
 doc <- create_pdf() |>
    pdf_text("Hello", x = 20, y = 20, fontsize = 50)
 }
+\seealso{
+Other object creation functions: 
+\code{\link{pdf_circle}()},
+\code{\link{pdf_image}()},
+\code{\link{pdf_line}()},
+\code{\link{pdf_polygon}()},
+\code{\link{pdf_polyline}()},
+\code{\link{pdf_rect}()}
+}
+\concept{object creation functions}

@@ -35,3 +35,13 @@ Add a rectangle to a PDF doc
 doc <- create_pdf() |>
    pdf_rect(10, 10, 100, 100, gp = pgpar(fill = 'red'))
 }
+\seealso{
+Other object creation functions: 
+\code{\link{pdf_circle}()},
+\code{\link{pdf_image}()},
+\code{\link{pdf_line}()},
+\code{\link{pdf_polygon}()},
+\code{\link{pdf_polyline}()},
+\code{\link{pdf_text}()}
+}
+\concept{object creation functions}

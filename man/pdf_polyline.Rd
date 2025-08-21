@@ -33,3 +33,13 @@ Add a polyline to a PDF doc
 doc <- create_pdf() |>
    pdf_polyline(xs = c(100, 200, 200), ys = c(100, 100, 200))
 }
+\seealso{
+Other object creation functions: 
+\code{\link{pdf_circle}()},
+\code{\link{pdf_image}()},
+\code{\link{pdf_line}()},
+\code{\link{pdf_polygon}()},
+\code{\link{pdf_rect}()},
+\code{\link{pdf_text}()}
+}
+\concept{object creation functions}

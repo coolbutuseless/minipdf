@@ -59,3 +59,13 @@ im <- matrix(1:100, 10, 10)
 doc <- create_pdf() |>
    pdf_image(im, 20, 20, scale = 2)
 }
+\seealso{
+Other object creation functions: 
+\code{\link{pdf_circle}()},
+\code{\link{pdf_line}()},
+\code{\link{pdf_polygon}()},
+\code{\link{pdf_polyline}()},
+\code{\link{pdf_rect}()},
+\code{\link{pdf_text}()}
+}
+\concept{object creation functions}

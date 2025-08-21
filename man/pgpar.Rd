@@ -2,7 +2,7 @@
 % Please edit documentation in R/graphics-state.R
 \name{pgpar}
 \alias{pgpar}
-\title{Create graphical parameters}
+\title{Create graphical parameters for PDF objects}
 \usage{
 pgpar(
   col = "black",
@@ -29,7 +29,8 @@ pgpar(
 a graphics parameter object
 }
 \description{
-Create graphical parameters
+This is similar to \code{grid::gpar()} except that values can only 
+be scalars (i.e. length = 1)
 }
 \examples{
 pgpar()

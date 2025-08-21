@@ -20,3 +20,12 @@ Create a scaling specification (for use as \code{tf} argument)
 doc <- create_pdf() |>
    pdf_text(text = "hello", x = 0, y = 0, tf = tf_scale(x = 10))
 }
+\seealso{
+Other transform functions: 
+\code{\link{pdf_rotate}()},
+\code{\link{pdf_scale}()},
+\code{\link{pdf_translate}()},
+\code{\link{tf_rotate}()},
+\code{\link{tf_translate}()}
+}
+\concept{transform functions}

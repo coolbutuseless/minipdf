@@ -2,7 +2,10 @@
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Create graphical parameters 
+#' Create graphical parameters for PDF objects
+#' 
+#' This is similar to \code{grid::gpar()} except that values can only 
+#' be scalars (i.e. length = 1)
 #' 
 #' @param col,fill set graphics parameters for this object
 #' @param alpha additional alpha applied to col, fill

@@ -267,6 +267,7 @@ print.pdf_stream <- function(x, ...) {
 #'    pdf_line(10, 10, 100, 100, col = 'red')
 #' @export
 #' @importFrom utils modifyList
+#' @family object creation functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(), 
                      tf = NULL, clip = NULL) {
@@ -305,6 +306,7 @@ pdf_line <- function(doc, x1, y1, x2, y2, ..., gp = pgpar(),
 #' doc <- create_pdf() |>
 #'    pdf_rect(10, 10, 100, 100, gp = pgpar(fill = 'red'))
 #' @export
+#' @family object creation functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(), 
                      tf = NULL, clip = NULL) {
@@ -342,6 +344,7 @@ pdf_rect <- function(doc, x, y, width, height, ..., gp = pgpar(),
 #' doc <- create_pdf() |>
 #'    pdf_polyline(xs = c(100, 200, 200), ys = c(100, 100, 200))
 #' @export
+#' @family object creation functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(), 
                          tf = NULL, clip = NULL) {
@@ -382,6 +385,7 @@ pdf_polyline <- function(doc, xs, ys, ..., gp = pgpar(),
 #' doc <- create_pdf() |>
 #'    pdf_polygon(xs = c(100, 200, 200), ys = c(100, 100, 200))
 #' @export
+#' @family object creation functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(), 
                         tf = NULL, clip = NULL) {
@@ -422,6 +426,7 @@ pdf_polygon <- function(doc, xs, ys, id = NULL, ..., gp = pgpar(),
 #' doc <- create_pdf() |>
 #'    pdf_circle(x = 200, y = 200, r = 50)
 #' @export
+#' @family object creation functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(), 
                        tf = NULL, clip = NULL) {
@@ -492,6 +497,7 @@ pdf_circle <- function(doc, x, y, r, ..., gp = pgpar(),
 #' doc <- create_pdf() |>
 #'    pdf_text("Hello", x = 20, y = 20, fontsize = 50)
 #' @export
+#' @family object creation functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_text <- function(doc, text, x, y, fontfamily = 'Helvetica', fontface = 'plain', 
                      fontsize = 12, mode = 0, ..., gp = pgpar(),
@@ -549,6 +555,7 @@ pdf_text <- function(doc, text, x, y, fontfamily = 'Helvetica', fontface = 'plai
 #' doc <- create_pdf() |>
 #'    pdf_image(im, 20, 20, scale = 2)
 #' @export
+#' @family object creation functions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pdf_image <- function(doc, im, x, y, scale = 1, interpolate = FALSE, ..., gp = pgpar(), 
                       tf = NULL, clip = NULL) {

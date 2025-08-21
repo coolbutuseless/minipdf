@@ -21,3 +21,10 @@ Define a clipping rectangle for use as a \code{clip} argument
 doc <- create_pdf() |>
    pdf_rect(0, 0, 100, 100, clip = clip_rect(50, 50, 200, 200))
 }
+\seealso{
+Other clipping functions: 
+\code{\link{clip_polygon}()},
+\code{\link{pdf_clip_polygon}()},
+\code{\link{pdf_clip_rect}()}
+}
+\concept{clipping functions}

@@ -33,3 +33,13 @@ Add a circle to a PDF doc
 doc <- create_pdf() |>
    pdf_circle(x = 200, y = 200, r = 50)
 }
+\seealso{
+Other object creation functions: 
+\code{\link{pdf_image}()},
+\code{\link{pdf_line}()},
+\code{\link{pdf_polygon}()},
+\code{\link{pdf_polyline}()},
+\code{\link{pdf_rect}()},
+\code{\link{pdf_text}()}
+}
+\concept{object creation functions}

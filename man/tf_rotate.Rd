@@ -21,3 +21,12 @@ Create a rotation specification (for use as \code{tf} argument)
 doc <- create_pdf() |>
    pdf_text(text = "hello", x = 0, y = 0, tf = tf_rotate(rads = pi))
 }
+\seealso{
+Other transform functions: 
+\code{\link{pdf_rotate}()},
+\code{\link{pdf_scale}()},
+\code{\link{pdf_translate}()},
+\code{\link{tf_scale}()},
+\code{\link{tf_translate}()}
+}
+\concept{transform functions}

@@ -33,3 +33,14 @@ use local clipping with the \code{clip} argument to individual objects.
 doc <- create_pdf() |>
    pdf_clip_polygon(xs = c(0, 100, 100), ys = c(0, 0, 100))
 }
+\seealso{
+Other clipping functions: 
+\code{\link{clip_polygon}()},
+\code{\link{clip_rect}()},
+\code{\link{pdf_clip_rect}()}
+
+Other global clipping functions: 
+\code{\link{pdf_clip_rect}()}
+}
+\concept{clipping functions}
+\concept{global clipping functions}
