@@ -61,6 +61,7 @@ doc <- create_pdf() |>
 }
 \seealso{
 Other object creation functions: 
+\code{\link{pdf_bezier}()},
 \code{\link{pdf_circle}()},
 \code{\link{pdf_line}()},
 \code{\link{pdf_polygon}()},

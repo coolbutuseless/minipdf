@@ -12,6 +12,22 @@
 
 `minipdf` is a package for creating simple PDF documents.
 
+### What’s in the box
+
+- `create_pdf()` to create an empty PDF document
+- `write_pdf()` to write a PDF to file or string
+- `pdf_line()`, `pdf_rect()`, `pdf_circle()`, `pdf_polygon()`,
+  `pdf_polyline()`, `pdf_text()`, `pdf_bezier()`, `pdf_image()` -
+  functions for adding graphical elements to the PDF
+- `pdf_clip_polygon()`, `pdf_clip_rect()` define global clipping regions
+- `clip_polygon()`, `clip_rect()` define per-element clipping regions
+- `pdf_rotate()`, `pdf_translate()`, `pdf_scale()` define global
+  transformations
+- `tf_rotate()`, `tf_translate()`, `tf_scale()` define per-element
+  transformations
+- `pgpar()` define PDF graphical parameters
+- `pdf_newpage()` begin a new page in the PDF
+
 ## Installation
 
 You can install the development version from
@@ -46,7 +62,7 @@ write_pdf(doc) |> cat()
     1 0 obj
     <<
       /Creator (minipdf/R)
-      /CreationDate (D:202508211759)
+      /CreationDate (D:202508222034)
     >>
     endobj
     2 0 obj

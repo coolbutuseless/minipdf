@@ -136,11 +136,17 @@ as.character.pdf_stream <- function(x, ...) {
       )
     },
     
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Global transform
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     pdf_transform = {
       restore_state <- FALSE
       s <- as.character(x$transform)
     },
     
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Image
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     image = {
       
       x$w <- ncol(x$im)
@@ -154,7 +160,19 @@ as.character.pdf_stream <- function(x, ...) {
       )
     },
     
-    stop("Unknown stream: ", deparse1(class(x)))
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Bezier
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    bezier = {
+      s <- glue::glue_data(
+        x,
+        "{x0} {y0} m 
+         {x1} {y1} {x2} {y2} {x3} {y3} c S"
+      ) 
+    },
+    
+    
+    stop("Unknown PDF stream type: '", type, "'")
   )
 
   s <- paste(s, collapse = "\n")
@@ -595,4 +613,58 @@ pdf_image <- function(doc, im, x, y, scale = 1, interpolate = FALSE, ..., gp = p
   pdf_add(doc, obj)
 }
 
+
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Add a cubic bezier to a PDF doc
+#' 
+#' @param x0,y0,x1,y1,x2,y2,x3,y3 start point, two control points and end point
+#'        of bezier curve
+#' @inheritParams pdf_line
+#' @return \code{pdf_doc}
+#' @examples
+#' doc <- create_pdf() |>
+#'   pdf_bezier(seq(0, 400, 6), 0, 250, 25, 25, 250, 400, 400, lwd = 1, alpha = 0.2)
+#' @export
+#' @family object creation functions
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pdf_bezier <- function(doc, 
+                       x0, y0, x1, y1, x2, y2, x3, y3, 
+                       ..., gp = pgpar(), 
+                        tf = NULL, clip = NULL) {
+  
+  stopifnot(exprs = {
+    is_numeric_n(x0)
+    is_numeric_n(y0)
+    is_numeric_n(x1)
+    is_numeric_n(y1)
+    is_numeric_n(x2)
+    is_numeric_n(y2)
+    is_numeric_n(x3)
+    is_numeric_n(y3)
+  })
+  
+  gp <- modifyList(gp, list(...))
+  check_state(gp)
+  
+  obj <- pdf_stream(
+    type = 'bezier', 
+    gp   = gp,
+    tf   = tf,
+    clip = clip,
+    x0   = x0,
+    y0   = y0,
+    x1   = x1,
+    y1   = y1,
+    x2   = x2,
+    y2   = y2,
+    x3   = x3,
+    y3   = y3
+  )
+  
+  pdf_add(doc, obj)
+}
 
