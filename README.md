@@ -62,7 +62,7 @@ write_pdf(doc) |> cat()
     1 0 obj
     <<
       /Creator (minipdf/R)
-      /CreationDate (D:202508222034)
+      /CreationDate (D:202508230822)
     >>
     endobj
     2 0 obj

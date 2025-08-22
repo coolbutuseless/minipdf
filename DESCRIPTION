@@ -1,12 +1,12 @@
 Package: minipdf
 Type: Package
-Title: PDF Document Builder
-Version: 0.2.5.9005
+Title: PDF Document Creator
+Version: 0.2.5.9006
 Authors@R: c(
     person("Mike", "Cheng", role = c("aut", "cre", 'cph'), email = "mikefc@coolbutuseless.com")
     )
 Maintainer: Mike Cheng <mikefc@coolbutuseless.com>
-Description: PDF document builder.
+Description: Create PDF documents.
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.2
@@ -16,6 +16,8 @@ Depends:
 Imports:
     glue
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-LazyData: true
+VignetteBuilder: knitr
