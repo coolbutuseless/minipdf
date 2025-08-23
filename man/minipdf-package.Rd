@@ -4,11 +4,11 @@
 \name{minipdf-package}
 \alias{minipdf}
 \alias{minipdf-package}
-\title{minipdf: PDF Document Builder}
+\title{minipdf: PDF Document Creator}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-PDF document builder.
+PDF is an ISO standard file format for formatting text and images in documents. At its core, these documents are sequences of objects defined in plain text. This package allows for the creation of PDF documents at a very low level without any library or graphics device depenedencies.
 }
 \seealso{
 Useful links:

@@ -45,16 +45,19 @@ doc <- create_pdf(width = 400, height = 250) |>
   pdf_circle(80, 100, 50, fill = 'lightblue', col = 'black') |>
   pdf_rect(150, 50, 100, 100, fill = 'yellow', col = 'red', lty = 2) |> 
   pdf_polygon(c(270, 390, 330), c(50, 50, 150)) |>
-  pdf_text("Hello World!", x = 30, y = 170, fontsize = 50) 
+  pdf_text("Hello World!", x = 30, y = 170, fontsize = 50)
+```
 
+``` r
 write_pdf(doc, "man/figures/helloworld.pdf")
 ```
 
 <img src="man/figures/helloworld.png" width="75%" />
 
+In `write_pdf()` if the output filename is not specified, then the
+function returns the PDF document as a string
+
 ``` r
-# IF the output filename is not specified, then `write_pdf()` returns 
-# the PDF document as a string
 write_pdf(doc) |> cat()
 ```
 
@@ -62,7 +65,7 @@ write_pdf(doc) |> cat()
     1 0 obj
     <<
       /Creator (minipdf/R)
-      /CreationDate (D:202508230822)
+      /CreationDate (D:202508230942)
     >>
     endobj
     2 0 obj
@@ -234,14 +237,15 @@ doc <- create_pdf(width = 400, height = 200) |>
     fontsize   = seq(12, 30, length.out = 10)
   ) |> 
   pdf_image(im = im, x = 300, y = 10, scale = 0.75)
+```
 
-
+``` r
 write_pdf(doc, "man/figures/simple.pdf")
 ```
 
 <img src="man/figures/simple.png" width="75%" />
 
-## Example
+## Multiple objects with differing graphics state
 
 ``` r
 doc <- create_pdf(height = 400, width = 600)
@@ -260,36 +264,35 @@ doc <- pdf_translate(doc, 50, 0)
 
 doc <- pdf_text(doc, "#RStats", 10, 150, fontsize = 120, mode = 1, col = 'black', 
                 fontface = 'bold.italic', lwd = 5)
+```
 
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``` r
 write_pdf(doc, "man/figures/example1.pdf")
 ```
 
 <img src="man/figures/example1.png" width="75%" />
 
-## As a device backend
+## Beziers
 
 ``` r
-library(grid)
-library(ggplot2)
-library(leopard)
+N <- 100
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Open the device, draw the plot, call dev.off()
-# Make sure to assign the value returned when opening the device
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-f <- leopard(verbosity = 0, height = 5)
-ggplot(mtcars) + 
-  geom_point(aes(mpg, wt)) +
-  labs(title = "Demo plot")
-invisible(dev.off())
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# The value returned when opening the device is a function.
-# Call this function to get a list of data.frames
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-dfs <- f()
+doc <- create_pdf() |>
+  pdf_bezier(
+    x0 = seq(0, 400, length.out = N), 
+    y0 = 10, 
+    x1 = 25, 
+    y1 = seq(20, 300, length.out = N), 
+    x2 = seq(100, 80, length.out = N), 
+    y2 = 250, 
+    x3 = 400, 
+    y3 = seq(400, 300, length.out = N), 
+    alpha = 0.2
+  )
 ```
+
+``` r
+write_pdf(doc, "man/figures/beziers.pdf")
+```
+
+<img src="man/figures/beziers.png" width="75%" />

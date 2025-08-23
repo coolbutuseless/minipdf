@@ -111,8 +111,11 @@ doc <- create_pdf(width = 400, height = 250) |>
   pdf_circle(80, 100, 50, fill = 'lightblue', col = 'black') |>
   pdf_rect(150, 50, 100, 100, fill = 'yellow', col = 'red', lty = 2) |> 
   pdf_polygon(c(270, 390, 330), c(50, 50, 150)) |>
-  pdf_text("Hello World!", x = 30, y = 170, fontsize = 50) 
+  pdf_text("Hello World!", x = 30, y = 170, fontsize = 50)
+```
 
+
+```{r}
 write_pdf(doc, "man/figures/helloworld.pdf")
 ```
 
@@ -122,10 +125,10 @@ system("magick -density 300 man/figures/helloworld.pdf -resize 50% man/figures/h
 knitr::include_graphics("man/figures/helloworld.png")
 ```
 
+In `write_pdf()` if the output filename is not specified, then the function returns 
+the PDF document as a string
 
 ```{r comment = ""}
-# IF the output filename is not specified, then `write_pdf()` returns 
-# the PDF document as a string
 write_pdf(doc) |> cat()
 ```
 
@@ -140,7 +143,6 @@ Note that all objects created in this way share a single graphics state i.e.
 they'll all be the same color etc.
 
 ```{r}
-
 im  <- png::readPNG(system.file("img", "Rlogo.png", package="png")) * 255
 
 
@@ -167,8 +169,10 @@ doc <- create_pdf(width = 400, height = 200) |>
     fontsize   = seq(12, 30, length.out = 10)
   ) |> 
   pdf_image(im = im, x = 300, y = 10, scale = 0.75)
+```
 
 
+```{r}
 write_pdf(doc, "man/figures/simple.pdf")
 ```
 
@@ -180,10 +184,7 @@ knitr::include_graphics("man/figures/simple.png")
 
 
 
-
-
-
-## Example 
+## Multiple objects with differing graphics state
 
 ```{r echo=FALSE}
 set.seed(1)
@@ -207,11 +208,10 @@ doc <- pdf_translate(doc, 50, 0)
 
 doc <- pdf_text(doc, "#RStats", 10, 150, fontsize = 120, mode = 1, col = 'black', 
                 fontface = 'bold.italic', lwd = 5)
+```
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```{r}
 write_pdf(doc, "man/figures/example1.pdf")
 ```
 
@@ -221,7 +221,39 @@ system("magick -density 300 man/figures/example1.pdf -resize 25% man/figures/exa
 knitr::include_graphics("man/figures/example1.png")
 ```
 
+## Beziers
 
+
+```{r}
+N <- 100
+
+doc <- create_pdf() |>
+  pdf_bezier(
+    x0 = seq(0, 400, length.out = N), 
+    y0 = 10, 
+    x1 = 25, 
+    y1 = seq(20, 300, length.out = N), 
+    x2 = seq(100, 80, length.out = N), 
+    y2 = 250, 
+    x3 = 400, 
+    y3 = seq(400, 300, length.out = N), 
+    alpha = 0.2
+  )
+```
+
+
+```{r eval=interactive()}
+write_pdf(doc, "man/figures/beziers.pdf")
+```
+
+```{r echo=FALSE, eval=interactive()}
+system("magick -density 300 man/figures/beziers.pdf -resize 25% -depth 8 man/figures/beziers.png")
+```
+
+
+```{r echo=FALSE}
+knitr::include_graphics("man/figures/beziers.png")
+```
 
 
 

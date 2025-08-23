@@ -6,7 +6,11 @@ Authors@R: c(
     person("Mike", "Cheng", role = c("aut", "cre", 'cph'), email = "mikefc@coolbutuseless.com")
     )
 Maintainer: Mike Cheng <mikefc@coolbutuseless.com>
-Description: Create PDF documents.
+Description: PDF is an ISO standard file format for formatting
+    text and images in documents.  At its core, these documents are sequences of 
+    objects defined in plain text.  This package allows for the creation
+    of PDF documents at a very low level without any library or graphics
+    device depenedencies.
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.2
