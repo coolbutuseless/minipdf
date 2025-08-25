@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-PDF is an ISO standard file format for formatting text and images in documents. At its core, these documents are sequences of objects defined in plain text. This package allows for the creation of PDF documents at a very low level without any library or graphics device depenedencies.
+PDF is a standard file format for laying out text and images in documents. At its core, these documents are sequences of objects defined in plain text. This package allows for the creation of PDF documents at a very low level without any library or graphics device dependencies.
 }
 \seealso{
 Useful links:

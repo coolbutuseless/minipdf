@@ -1,16 +1,16 @@
 Package: minipdf
 Type: Package
 Title: PDF Document Creator
-Version: 0.2.5.9006
+Version: 0.2.6
 Authors@R: c(
     person("Mike", "Cheng", role = c("aut", "cre", 'cph'), email = "mikefc@coolbutuseless.com")
     )
 Maintainer: Mike Cheng <mikefc@coolbutuseless.com>
-Description: PDF is an ISO standard file format for formatting
+Description: PDF is a standard file format for laying out
     text and images in documents.  At its core, these documents are sequences of 
     objects defined in plain text.  This package allows for the creation
     of PDF documents at a very low level without any library or graphics
-    device depenedencies.
+    device dependencies.
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.2
