@@ -35,9 +35,9 @@ is_stream <- function(x) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Convert \code{pdf_stream} to character
 #' 
-#' @param x pdf_stream object
+#' @param x \code{pdf_stream} object
 #' @param ... ignored
-#' @return character string
+#' @return character string representation of a pdf stream object
 #' @importFrom glue glue glue_data
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

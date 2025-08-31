@@ -54,8 +54,9 @@ clip_rect <- function(x, y, width, height) {
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Convert clipping spec into PDF string
-#' @param x clip object
+#' @param x clip object created with \code{clip_rect()} or \code{clip_polygon()}
 #' @param ... ignored
+#' @return string representing a clipping specification
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 as.character.clip_rect <- function(x, ...) {

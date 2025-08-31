@@ -28,10 +28,10 @@ pdf_dict <- function(...) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Render \code{pdf_dict} as character string
 #' 
-#' @param x pdf_dict
+#' @param x \code{pdf_dict} object
 #' @param depth print depth. Default: 0.  Used to control indentation
 #' @param ... ignored
-#' @return None.
+#' @return Character representation
 #' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 as.character.pdf_dict <- function(x, depth = 0, ...) {

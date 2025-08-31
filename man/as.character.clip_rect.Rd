@@ -13,9 +13,12 @@
 \method{as.character}{clip_list}(x, ...)
 }
 \arguments{
-\item{x}{clip object}
+\item{x}{clip object created with \code{clip_rect()} or \code{clip_polygon()}}
 
 \item{...}{ignored}
+}
+\value{
+string representing a clipping specification
 }
 \description{
 Convert clipping spec into PDF string

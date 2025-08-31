@@ -7,12 +7,12 @@
 \method{as.character}{pdf_stream}(x, ...)
 }
 \arguments{
-\item{x}{pdf_stream object}
+\item{x}{\code{pdf_stream} object}
 
 \item{...}{ignored}
 }
 \value{
-character string
+character string representation of a pdf stream object
 }
 \description{
 Convert \code{pdf_stream} to character

@@ -7,14 +7,14 @@
 \method{as.character}{pdf_dict}(x, depth = 0, ...)
 }
 \arguments{
-\item{x}{pdf_dict}
+\item{x}{\code{pdf_dict} object}
 
 \item{depth}{print depth. Default: 0.  Used to control indentation}
 
 \item{...}{ignored}
 }
 \value{
-None.
+Character representation
 }
 \description{
 Render \code{pdf_dict} as character string

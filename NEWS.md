@@ -1,4 +1,7 @@
 
+# minipdf 0.2.7 2025-08-31
+
+* Documentation fixes for CRAN
 
 # minipdf 0.2.6 2025-08-25
 
